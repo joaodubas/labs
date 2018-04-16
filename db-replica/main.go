@@ -1,4 +1,4 @@
-package main // import "github.com/joaodubas/db-replica"
+package main // import "github.com/joaodubas/labs/db-replica"
 
 import (
 	"context"
