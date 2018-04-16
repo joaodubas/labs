@@ -1,0 +1,77 @@
+---
+version: '3'
+services:
+  proxy:
+    image: 'haproxy:1.8.7'
+    hostname: proxy
+    volumes:
+      - './conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
+    expose:
+      - 26257 # cockroachdb port
+      - 9080  # stats port
+    ports:
+      - 9080:9080
+    depends_on:
+      - db_one
+      - db_two
+      - db_three
+  db_one:
+    image: 'cockroachdb/cockroach:v2.0.0'
+    hostname: db_one
+    environment: &db_envs
+      COCKROACH_CERTS_DIR: /certs
+      COCKROACH_CA_KEY: /ca-certs/ca.key
+    volumes:
+      - './scripts/cockroachdb/setup.sh:/usr/local/bin/dbsetup.sh'
+      - 'data_db_one:/cockroach/cockroach-data'
+      - 'data_cert_db_one:/cockroach/cert'
+      - './certs/ssl:/certs'
+      - './certs/ca:/ca-certs'
+    ports:
+      - '8080:8080'
+    command: start --certs-dir cert --host db_one
+  db_two:
+    image: 'cockroachdb/cockroach:v2.0.0'
+    hostname: db_two
+    environment: *db_envs
+    volumes:
+      - 'data_db_two:/cockroach/cockroach-data'
+      - 'data_cert_db_two:/cockroach/cert'
+      - './certs/ssl:/certs'
+      - './certs/ca:/ca-certs'
+    command: start --certs-dir cert --host db_two --join db_one
+    depends_on:
+      - db_one
+  db_three:
+    image: 'cockroachdb/cockroach:v2.0.0'
+    hostname: db_three
+    environment: *db_envs
+    volumes:
+      - 'data_db_three:/cockroach/cockroach-data'
+      - 'data_cert_db_three:/cockroach/cert'
+      - './certs/ssl:/certs'
+      - './certs/ca:/ca-certs'
+    command: start --certs-dir cert --host db_three --join db_one
+    depends_on:
+      - db_one
+  svc:
+    image: 'golang:1.10'
+    hostname: svc
+    volumes:
+      - './:/go/src/github.com/joaodubas/db-replica'
+      - './certs/ssl:/certs'
+    depends_on:
+      - proxy
+    working_dir: /go/src/github.com/joaodubas/db-replica
+    command: go run main.go
+    depends_on:
+      - proxy
+volumes:
+  data_db_one:
+  data_db_two:
+  data_db_three:
+  data_cert_db_one:
+  data_cert_db_two:
+  data_cert_db_three:
+  data_cert_user_root:
+  data_cert_user_maxroach:

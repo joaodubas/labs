@@ -1,0 +1,6 @@
+# dirs
+vendor/
+
+# files
+certs/**/*.key
+certs/**/*.crt
