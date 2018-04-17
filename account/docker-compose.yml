@@ -55,7 +55,7 @@ services:
     depends_on:
       - db_one
   mem_one:
-    image: voltdb/voltdb_community:8.0
+    image: voltdb/voltdb-community:8.0
     hostname: mem_one
     environment:
       HOSt_COUNT: 1
