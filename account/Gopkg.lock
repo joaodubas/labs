@@ -3,9 +3,12 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/cockroachdb/cockroach-go"
-  packages = ["crdb"]
-  revision = "59c0560478b705bf9bd12f9252224a0fad7c87df"
+  name = "github.com/VoltDB/voltdb-client-go"
+  packages = [
+    "voltdbclient",
+    "wire"
+  ]
+  revision = "93f757176d6bb2eee4f7386854195c44ce1047aa"
 
 [[projects]]
   branch = "master"
@@ -16,9 +19,15 @@
   ]
   revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
+[[projects]]
+  name = "github.com/spaolacci/murmur3"
+  packages = ["."]
+  revision = "9f5d223c60793748f04a9d5b4b4eacddfc1f755d"
+  version = "v1.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bdffbb776bd0566ff3f7faa6921de5353c4c0772c6bf978c10721d8a8a09e214"
+  inputs-digest = "eb8dbfe68a3e2f1c15f07657e8ec147b1c59bda794974bf6e27ee0cd17c48a88"
   solver-name = "gps-cdcl"
   solver-version = 1
