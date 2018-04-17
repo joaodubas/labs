@@ -54,14 +54,17 @@ services:
     command: start --certs-dir cert --host db_three --join db_one
     depends_on:
       - db_one
+  mem_one:
+    image: voltdb/voltdb_community:8.0
+    hostname: mem_one
+    environment:
+      HOSt_COUNT: 1
   svc:
     image: 'golang:1.10'
     hostname: svc
     volumes:
       - './:/go/src/github.com/joaodubas/db-replica'
       - './certs/ssl:/certs'
-    depends_on:
-      - proxy
     working_dir: /go/src/github.com/joaodubas/db-replica
     command: go run main.go
     depends_on:
