@@ -1,4 +1,4 @@
-package main
+package account // import "github.com/joaodubas/labs/account"
 
 import (
 	"time"
