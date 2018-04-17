@@ -1,4 +1,4 @@
-package main // import "github.com/joaodubas/labs/account"
+package main // import "github.com/joaodubas/labs/account/examples/app"
 
 import (
 	"database/sql"
