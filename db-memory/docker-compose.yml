@@ -1,0 +1,17 @@
+---
+version: '3'
+services:
+  db:
+    image: 'voltdb/voltdb-community:8.0'
+    hostname: db
+    environment:
+      HOST_COUNT: 1
+  svc:
+    image: 'golang:1.10'
+    hostname: svc
+    volumes:
+      - './:/go/src/github.com/joaodubas/db-memory'
+    working_dir: /go/src/github.com/joaodubas/db-memory
+    command: go run main.go
+    depends_on:
+      - db
