@@ -12,6 +12,25 @@ type Account struct {
 	store   Accounter
 }
 
+// NewSystemAccount create a new system account.
+func NewSystemAccount(name string, store Accounter) *Account {
+	return newAccount(name, AccountTypeSystem, store)
+}
+
+// NewUserAccount create a new user account.
+func NewUserAccount(name string, store Accounter) *Account {
+	return newAccount(name, AccountTypeUser, store)
+}
+
+// newAccount create a new account.
+func newAccount(name string, aType accountType, store Accounter) *Account {
+	return &Account{
+		Name:  name,
+		Type:  aType,
+		store: store,
+	}
+}
+
 // All fetch accounts from store.
 func (a Account) All() ([]*Account, error) {
 	return a.store.All()
