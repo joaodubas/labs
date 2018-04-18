@@ -1,0 +1,7 @@
+FROM python:3
+
+ENV HOME_APP /opt/app
+ENV FLASK_APP ${HOME_APP}/app.py
+COPY ./src ${HOME_APP}
+RUN pip install --upgrade pip \
+    && pip install -r /opt/app/requirements.txt
