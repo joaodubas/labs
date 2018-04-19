@@ -42,15 +42,13 @@ func TestAccountStore(t *testing.T) {
 
 		t.Run("Success update", func(t *testing.T) {
 			a := insertAccount()
-			oName, oUpdated := a.Name, a.Updated
+			oName := a.Name
 			nName := "Update test"
 			a.Name = nName
 			if a, err := s.Update(a); err != nil {
 				t.Errorf("failed to update account: %v", err)
 			} else if a.Name == oName {
 				t.Errorf("failed to update name, expected %s, got %s", nName, oName)
-			} else if a.Updated == oUpdated {
-				t.Error("failed to update `updated` prop")
 			}
 		})
 
