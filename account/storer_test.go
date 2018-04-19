@@ -34,7 +34,7 @@ func (s *accountStore) Get(id int) (*account.Account, error) {
 func (s *accountStore) Insert(a *account.Account) (*account.Account, error) {
 	s.mux.Lock()
 	a.ID = len(s.accounts)
-	a.Created = time.Now()
+	a.Created = time.Now().UTC()
 	a.Updated = a.Created
 	s.accounts = append(s.accounts, a)
 	s.mux.Unlock()
@@ -46,7 +46,7 @@ func (s *accountStore) Update(a *account.Account) (*account.Account, error) {
 		return a, fmt.Errorf("Update: %d id is can't be updated", a.ID)
 	}
 	s.mux.Lock()
-	a.Updated = time.Now()
+	a.Updated = time.Now().UTC()
 	s.accounts[a.ID] = a
 	s.mux.Unlock()
 	return a, nil
