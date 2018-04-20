@@ -1,0 +1,40 @@
+---
+version: '3'
+
+services:
+  db:
+    image: 'postgres:10'
+    hostname: &db_host db
+    environment:
+      POSTGRES_DB: &db_db concourse
+      POSTGRES_PASSWORD: &db_pass concourse_pass
+      POSTGRES_USER: &db_user concourse_user
+      PGDATA: /database
+    volumes:
+      - 'db_data:/database'
+
+  ci:
+    image: 'concourse/concourse:3.11.0'
+    hostname: ci
+    command: quickstart
+    privileged: true
+    depends_on: 
+      - db
+    ports: 
+      - '8080:8080'
+    environment:
+      CONCOURSE_POSTGRES_HOST: *db_host
+      CONCOURSE_POSTGRES_USER: *db_user
+      CONCOURSE_POSTGRES_PASSWORD: *db_pass
+      CONCOURSE_POSTGRES_DATABASE: *db_db
+      CONCOURSE_EXTERNAL_URL:
+      CONCOURSE_BASIC_AUTH_USERNAME:
+      CONCOURSE_BASIC_AUTH_PASSWORD:
+      CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH: 'true'
+      CONCOURSE_WORKER_GARDEN_NETWORK:
+    volumes:
+      - 'ci_worker:/worker-state'
+
+volumes:
+  db_data:
+  ci_worker:
