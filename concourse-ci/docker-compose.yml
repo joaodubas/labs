@@ -17,7 +17,7 @@ services:
     image: 'concourse/concourse:3.11.0'
     hostname: ci
     command: quickstart
-    privileged: true
+    privileged: true  # change this to use docker binary/socket/path
     depends_on: 
       - db
     ports: 
