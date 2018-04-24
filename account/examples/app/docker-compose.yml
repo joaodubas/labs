@@ -69,6 +69,7 @@ services:
     command: go run main.go
     depends_on:
       - proxy
+      - mem_one
 volumes:
   data_db_one:
   data_db_two:
