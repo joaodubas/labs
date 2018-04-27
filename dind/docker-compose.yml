@@ -1,0 +1,11 @@
+---
+version: '3'
+services:
+  dind:
+    image: 'local/docker:18.04.0-ce-dind'
+    build: ./
+    privileged: true
+    volumes:
+      - 'lib_docker:/var/lib/docker'
+volumes:
+  lib_docker:
