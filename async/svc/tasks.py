@@ -1,3 +1,12 @@
+"""Usage:
+from svc import tasks
+kw = {
+    'start_date': tasks.datetime.date.today().strftime(tasks.DATE_FORMAT),
+    'end_date': tasks.datetime.date.today().strftime(tasks.DATE_FORMAT),
+    'email': 'joao.dubas@gmail.com'
+}
+rs = tasks.process_report.apply_async(kwargs=kw)
+"""
 from __future__ import absolute_import, unicode_literals
 import datetime
 
