@@ -1,0 +1,13 @@
+---
+version: '3'
+services:
+  broker:
+    image: rabbitmq:3.7.4-management
+  result:
+    image: redis:4.0.9
+  app:
+    image: async-app
+    build: .
+    volumes:
+      - './svc:/app/svc'
+    command: sleep infinity
