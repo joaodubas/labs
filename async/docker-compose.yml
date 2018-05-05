@@ -10,4 +10,4 @@ services:
     build: .
     volumes:
       - './svc:/app/svc'
-    command: pipenv run celery -A svc worker -l info
+    command: pipenv run celery -A svc worker -l info -E
