@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+ipython = "==5.6.0"
+
+[packages]
+celery = {extras = ["redis", "rabbitmq"]}
+
+[requires]
+python_version = "2.7"
