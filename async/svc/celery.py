@@ -30,5 +30,7 @@ def logger():
     return l
 
 if __name__ == '__main__':
+    from .monitor import Monitor
     logger()
+    Monitor(app)()
     app.start()
