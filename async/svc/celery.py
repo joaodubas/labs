@@ -27,12 +27,8 @@ def logger():
     s.setFormatter(f)
 
     # NOTE: define handler for logger
-    l.setHandler(s)
+    l.addHandler(s)
 
     return l
 
-if __name__ == '__main__':
-    from .monitor import Monitor
-    logger()
-    Monitor(app)()
-    app.start()
+logger()
