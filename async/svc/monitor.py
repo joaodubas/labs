@@ -23,17 +23,19 @@ class Monitor(object):
 
     Arguments:
         app (celery.Celery): application instance to be monitored.
+        emitter (.monitor.Emitter): metric emitter instance.
 
     Attributes:
         app (celery.Celery): application monitored.
+        emitter (.monitor.Emitter) metric emitter instance.
         state (celery.events.state.State): application cluster state.
         logger (logging.Logger): logging instance.
 
     """
-    def __init__(self, app):
+    def __init__(self, app, emitter):
         self.app = app
         self.state = app.events.State()
-        self.logger = logging.getLogger('tasks')
+        self.logger = logging.getLogger('tasks.monitor')
         self.logger.info('Configure monitor')
 
     def __call__(self):
