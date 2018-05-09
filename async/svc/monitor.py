@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import json
 import logging
 
 EVENT_MAP = (
@@ -50,28 +51,28 @@ class Monitor(object):
             self.logger.info('Register event handlers {}'.format(handlers))
 
     def task_sent(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_received(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_started(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_succeeded(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_failed(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_rejected(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_revoked(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def task_retried(self, event):
-        self.logger.info(event)
+        self._event_handler(event)
 
     def worker_online(self, event):
         pass
@@ -82,5 +83,19 @@ class Monitor(object):
     def worker_offline(self, event):
         pass
 
-    def _task(self, task_uuid):
-        return self.state.tasks.get(task_uuid)
+    def _event_handler(self, event):
+        self.logger.info(event)
+        writer(event)
+        task = self._task(event)
+        self.logger.info(task.__dict__)
+
+    def _task(self, event):
+        self.state.event(event)
+        return self.state.tasks.get(event['uuid'])
+
+
+def writer(message):
+    with open('svc/events.txt', 'a') as stream:
+        stream.write('\n')
+        stream.write(json.dumps(message))
+        stream.write('\n')
