@@ -7,7 +7,9 @@ app = Celery(
     'tasks',
     backend='redis://result:6379/0',
     broker='pyamqp://guest@broker:5672//',
-    include=['svc.tasks']
+    include=['svc.tasks'],
+    worker_send_taks_events=True,
+    task_send_sent_event=True
 )
 
 
