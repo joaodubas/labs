@@ -19,9 +19,9 @@ EVENT_MAP = (
 
 
 class Monitor(object):
-    """Monitor tasks/worker celery events.
+    """Configure monitoring for tasks/worker celery events.
 
-    Arguments:
+    Args:
         app (celery.Celery): application instance to be monitored.
         emitter (.monitor.Emitter): metric emitter instance.
 
@@ -39,6 +39,19 @@ class Monitor(object):
         self.logger.info('Configure monitor')
 
     def __call__(self):
+        self._dummy_listen()
+
+    def _dummy_listen(self):
+        with self.app.connection() as conn:
+            receiver = self.app.events.Receiver(
+                conn,
+                handlers={'*': self._event_handler}
+            )
+            receiver.capture(limit=None, timeout=None, wakeup=True)
+
+            self.logger.info('Register dummy event handler')
+
+    def _listen(self):
         event_to_method = lambda ev: ev.replace('-', '_')
         method_for_event = lambda ev: getattr(self, event_to_method(ev))
         handlers = {ev: method_for_event(ev) for ev in EVENT_MAP}
@@ -48,7 +61,7 @@ class Monitor(object):
                 conn,
                 handlers=handlers
             )
-            receiver.capture(limit=None, timeout=None, wakeup=None)
+            receiver.capture(limit=None, timeout=None, wakeup=True)
         
             self.logger.info('Register event handlers {}'.format(handlers))
 
@@ -86,12 +99,22 @@ class Monitor(object):
         pass
 
     def _event_handler(self, event):
-        self.logger.info(event)
-        writer(event)
-        task = self._task(event)
-        self.logger.info(task.__dict__)
+        # self.logger.info(event)
+        if 'uuid' in event:
+            task = self._task(event)
+            self.logger.info(task.__class__)
+            # self.logger.info(task.__dict__)
 
     def _task(self, event):
+        """Fetch task for a given event state.
+
+        Args:
+            event (dict):
+
+        Returns:
+            celery.events.state.Task
+
+        """
         self.state.event(event)
         return self.state.tasks.get(event['uuid'])
 
