@@ -6,6 +6,9 @@ kw = {
     'email': 'joao.dubas@gmail.com'
 }
 rs = tasks.process_report.apply_async(kwargs=kw)
+
+from svc import celery, metric, monitor
+m = monitor.Monitor(celery.app, metric.client)
 """
 from __future__ import absolute_import, unicode_literals, print_function
 
