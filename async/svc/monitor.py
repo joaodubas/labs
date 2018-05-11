@@ -89,7 +89,12 @@ class Monitor(object):
         )
 
     def task_failed(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            duration(task.started, task.failed)
+        )
 
     def task_rejected(self, event):
         self._event_handler(event)
