@@ -12,4 +12,4 @@ services:
     build: .
     volumes:
       - './svc:/app/svc'
-    command: pipenv run celery worker -A svc -l info -n async-01 --heartbeat-interval 30
+    command: pipenv run celery worker -A svc -l info -E --heartbeat-interval 30
