@@ -35,21 +35,12 @@ class Monitor(object):
     def __init__(self, app, emitter):
         self.app = app
         self.state = app.events.State()
+        self.emitter = emitter
         self.logger = logging.getLogger('tasks.monitor')
         self.logger.info('Configure monitor')
 
     def __call__(self):
-        self._dummy_listen()
-
-    def _dummy_listen(self):
-        with self.app.connection() as conn:
-            receiver = self.app.events.Receiver(
-                conn,
-                handlers={'*': self._event_handler}
-            )
-            receiver.capture(limit=None, timeout=None, wakeup=True)
-
-            self.logger.info('Register dummy event handler')
+        self._listen()
 
     def _listen(self):
         event_to_method = lambda ev: ev.replace('-', '_')
@@ -66,10 +57,20 @@ class Monitor(object):
             self.logger.info('Register event handlers {}'.format(handlers))
 
     def task_sent(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            0.0
+        )
 
     def task_received(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            task.received - task.sent
+        )
 
     def task_started(self, event):
         self._event_handler(event)
@@ -100,10 +101,19 @@ class Monitor(object):
 
     def _event_handler(self, event):
         # self.logger.info(event)
+        # if 'uuid' in event:
+        #     task = self._task(event)
+        #     self.logger.info(task.__class__)
+        #     self.logger.info(task.__dict__)
+        # else:
+        #     worker = self._worker(event)
+        #     self.logger.info(worker.__class__)
+        #     self.logger.info(worker.__dict__)
         if 'uuid' in event:
             task = self._task(event)
-            self.logger.info(task.__class__)
-            # self.logger.info(task.__dict__)
+            if 'process_report' in task.name:
+                self.logger.info(event)
+                self.logger.info(task.__dict__)
 
     def _task(self, event):
         """Fetch task for a given event state.
@@ -117,6 +127,37 @@ class Monitor(object):
         """
         self.state.event(event)
         return self.state.tasks.get(event['uuid'])
+
+    def _worker(self, event):
+        """Fetch worker for a given event state.
+
+        Args:
+            event (dict):
+
+        Returns:
+            celery.events.state.Worker
+
+        """
+        self.state.event(event)
+        return self.state.workers.get(event['hostname'])
+
+    def _emit(self, event, duration):
+        task = self._task(event)
+        return dict(
+            measurement='tasks',
+            fields={
+                'count': 1,
+                'duration_seconds': duration,
+                'retries_count': event['retries']
+            },
+            tags={
+                'worker': event['hostname'],
+                'state': event['state'],
+                'queue': task.name.rsplit('.', 1)[0],
+                'task': task.name.rsplit('.', 1)[-1],
+            }
+            timestamp=event['timestamp'],
+        )
 
 
 def writer(message):
