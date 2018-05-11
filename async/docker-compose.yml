@@ -7,6 +7,10 @@ services:
     image: 'redis:4.0.9'
   metric:
     image: 'influxdb:1.5.2'
+  dash:
+    image: 'grafana/grafana:5.1.2'
+    ports:
+      - '3000:3000'
   app:
     image: async-app
     build: .
