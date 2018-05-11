@@ -15,6 +15,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import csv
 import datetime
 import logging
+import time
 from collections import namedtuple
 from cStringIO import StringIO
 
@@ -25,6 +26,13 @@ from .celery import app
 
 DATE_FORMAT = '%Y-%m-%d'
 logger = logging.getLogger('tasks')
+
+
+@app.task
+def process_failure(start_date, end_date, email):
+    time.sleep(10)
+    raise ValueError('What did you expected?')
+
 
 Funnel = namedtuple(
     'Funnel',
