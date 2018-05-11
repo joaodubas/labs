@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
-import json
+import datetime
 import logging
 
 EVENT_MAP = (
@@ -69,14 +69,24 @@ class Monitor(object):
         self._emit(
             event,
             task,
-            task.received - task.sent
+            duration(task.sent, task.received)
         )
 
     def task_started(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            duration(task.received, task.started)
+        )
 
     def task_succeeded(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            duration(task.started, task.succeeded)
+        )
 
     def task_failed(self, event):
         self._event_handler(event)
@@ -100,20 +110,15 @@ class Monitor(object):
         pass
 
     def _event_handler(self, event):
-        # self.logger.info(event)
-        # if 'uuid' in event:
-        #     task = self._task(event)
-        #     self.logger.info(task.__class__)
-        #     self.logger.info(task.__dict__)
-        # else:
-        #     worker = self._worker(event)
-        #     self.logger.info(worker.__class__)
-        #     self.logger.info(worker.__dict__)
+        self.logger.info(event)
         if 'uuid' in event:
             task = self._task(event)
-            if 'process_report' in task.name:
-                self.logger.info(event)
-                self.logger.info(task.__dict__)
+            self.logger.info(task.__class__)
+            self.logger.info(task.__dict__)
+        else:
+            worker = self._worker(event)
+            self.logger.info(worker.__class__)
+            self.logger.info(worker.__dict__)
 
     def _task(self, event):
         """Fetch task for a given event state.
@@ -141,27 +146,37 @@ class Monitor(object):
         self.state.event(event)
         return self.state.workers.get(event['hostname'])
 
-    def _emit(self, event, duration):
-        task = self._task(event)
-        return dict(
+    def _emit(self, event, task, duration):
+        metric = dict(
             measurement='tasks',
             fields={
                 'count': 1,
                 'duration_seconds': duration,
-                'retries_count': event['retries']
+                'retries_count': task.retries,
             },
             tags={
                 'worker': event['hostname'],
                 'state': event['state'],
                 'queue': task.name.rsplit('.', 1)[0],
                 'task': task.name.rsplit('.', 1)[-1],
-            }
-            timestamp=event['timestamp'],
+            },
+            dt=datetime.datetime.fromtimestamp(event['timestamp']),
         )
+        return self.emitter.emit(**metric)
 
 
-def writer(message):
-    with open('svc/events.txt', 'a') as stream:
-        stream.write('\n')
-        stream.write(json.dumps(message))
-        stream.write('\n')
+def duration(start, end):
+    """Calculate the difference between two timestamps.
+
+    Args:
+        start (Optional[float]): start time for the event.
+        end (Optional[float]): end time for the event.
+    
+    Returns:
+        float: representing the difference in seconds between end/start times.
+            If one of times is `None`, a duration of 0.0 is returned.
+
+    """
+    if None in (start, end):
+        return 0.0
+    return end - start
