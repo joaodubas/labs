@@ -152,6 +152,7 @@ class Monitor(object):
         return self.state.workers.get(event['hostname'])
 
     def _emit(self, event, task, duration):
+        queue_name, task_name = queue_task(task)
         metric = dict(
             measurement='tasks',
             fields={
@@ -162,8 +163,8 @@ class Monitor(object):
             tags={
                 'worker': event['hostname'],
                 'state': event['state'],
-                'queue': task.name.rsplit('.', 1)[0],
-                'task': task.name.rsplit('.', 1)[-1],
+                'queue': queue_name,
+                'task': task_name,
             },
             dt=datetime.datetime.fromtimestamp(event['timestamp']),
         )
@@ -185,3 +186,18 @@ def duration(start, end):
     if None in (start, end):
         return 0.0
     return end - start
+
+
+def queue_task(task):
+    """Fetch queue and task name from task instance.
+
+    Args:
+        task (celery.events.state.Task): task state instance
+
+    Returns
+        Tuple[str]: tuple with queue and task name.
+
+    """
+    if not task.name:
+        return 'unknown', 'unknown'
+    return task.name.rsplit('.', 1)
