@@ -103,7 +103,12 @@ class Monitor(object):
         self._event_handler(event)
 
     def task_retried(self, event):
-        self._event_handler(event)
+        task = self._task(event)
+        self._emit(
+            event,
+            task,
+            duration(task.received, task.retried)
+        )
 
     def worker_online(self, event):
         pass
@@ -118,11 +123,9 @@ class Monitor(object):
         self.logger.info(event)
         if 'uuid' in event:
             task = self._task(event)
-            self.logger.info(task.__class__)
             self.logger.info(task.__dict__)
         else:
             worker = self._worker(event)
-            self.logger.info(worker.__class__)
             self.logger.info(worker.__dict__)
 
     def _task(self, event):
@@ -152,6 +155,22 @@ class Monitor(object):
         return self.state.workers.get(event['hostname'])
 
     def _emit(self, event, task, duration):
+        """Emit metric related to this event.
+
+        Args:
+            event (dict):
+            task (celery.events.state.Task):
+            duration (float):
+
+        Returns:
+            bool: indicating if the metric was successfuly sent.
+
+        """
+        # NOTE: some events are received without an event identification.
+        if 'state' not in event:
+            self.logger.info('No metric emitted for task {}'.format(event['uuid']))
+            return False
+
         queue_name, task_name = queue_task(task)
         metric = dict(
             measurement='tasks',
