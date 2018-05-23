@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS_CELERY",
-      "label": "celery",
+      "name": "DS_ASYNC-METRIC",
+      "label": "async-metric",
       "description": "",
       "type": "datasource",
       "pluginId": "influxdb",
@@ -46,7 +46,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1526590161075,
+  "iteration": 1527077791866,
   "links": [],
   "panels": [
     {
@@ -54,7 +54,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_CELERY}",
+      "datasource": "${DS_ASYNC-METRIC}",
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -64,13 +64,14 @@
       },
       "id": 2,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -206,7 +207,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_CELERY}",
+      "datasource": "${DS_ASYNC-METRIC}",
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -216,13 +217,14 @@
       },
       "id": 4,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
+        "current": true,
+        "max": true,
         "min": false,
         "show": true,
-        "total": false,
-        "values": false
+        "total": true,
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -352,7 +354,7 @@
       }
     }
   ],
-  "refresh": "1m",
+  "refresh": false,
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
@@ -361,7 +363,7 @@
       {
         "allValue": ".*",
         "current": {},
-        "datasource": "${DS_CELERY}",
+        "datasource": "${DS_ASYNC-METRIC}",
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -381,7 +383,7 @@
       {
         "allValue": ".*",
         "current": {},
-        "datasource": "${DS_CELERY}",
+        "datasource": "${DS_ASYNC-METRIC}",
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -401,7 +403,7 @@
       {
         "allValue": ".*",
         "current": {},
-        "datasource": "${DS_CELERY}",
+        "datasource": "${DS_ASYNC-METRIC}",
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -421,8 +423,8 @@
     ]
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2018-05-23T11:58:00.000Z",
+    "to": "2018-05-23T12:02:00.000Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -452,5 +454,5 @@
   "timezone": "",
   "title": "celery task",
   "uid": "asFnYlnik",
-  "version": 5
+  "version": 2
 }
