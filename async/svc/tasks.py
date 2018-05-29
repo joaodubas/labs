@@ -6,12 +6,16 @@ kw = {
     'email': 'joao.dubas@gmail.com'
 }
 rs = tasks.process_report.apply_async(kwargs=kw)
+
+from svc import celery, metric, monitor
+m = monitor.Monitor(celery.app, metric.client)
 """
 from __future__ import absolute_import, unicode_literals, print_function
 
 import csv
 import datetime
 import logging
+import time
 from collections import namedtuple
 from cStringIO import StringIO
 
@@ -22,6 +26,21 @@ from .celery import app
 
 DATE_FORMAT = '%Y-%m-%d'
 logger = logging.getLogger('tasks')
+
+
+@app.task
+def process_failure(start_date, end_date, email):
+    time.sleep(10)
+    raise ValueError('What did you expected?')
+
+
+@app.task(bind=True, max_retries=3)
+def process_retry(self, start_Date, end_date, email):
+    try:
+        raise ValueError('Live another day!')
+    except ValueError as e:
+        raise self.retry(countdown=1, exc=e)
+
 
 Funnel = namedtuple(
     'Funnel',
