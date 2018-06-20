@@ -1,0 +1,19 @@
+---
+version: '3'
+services:
+  streams:
+    image: joaodubas/redis:5.0-rc3
+    environment:
+      TERM: xterm-color
+  producer:
+    image: golang:1.10
+    volumes:
+      - './src/producer:/go/src/app'
+    working_dir: /go/src/app
+    command: go run main.go
+  consumer:
+    image: golang:1.10
+    volumes:
+      - './src/consumer:/go/src/app'
+    working_dir: /go/src/app
+    command: go run main.go
