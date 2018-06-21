@@ -8,12 +8,12 @@ services:
   producer:
     image: golang:1.10
     volumes:
-      - './src/producer:/go/src/app'
+      - './producer:/go/src/app'
     working_dir: /go/src/app
     command: go run main.go
   consumer:
     image: golang:1.10
     volumes:
-      - './src/consumer:/go/src/app'
+      - './consumer:/go/src/app'
     working_dir: /go/src/app
     command: go run main.go
