@@ -58,11 +58,31 @@ func recv(c redis.Conn, sID string) {
 		sID,
 	}
 	r, err := redis.Values(c.Do("XREADGROUP", args...))
-	// rp, err := redis.Values(r, err)
-	// m, err := redis.Strings(rp, err)
 	if err != nil {
 		log.Printf("recv: failed to read for group %v", err)
 	} else {
-		log.Printf("recv: received reply (%d) %v", len(r), r)
+		// TODO (jpd): convert this into a method to unmarshal redis stream message
+		for _, m := range r {
+			for i, n := range m.([]interface{}) {
+				if i == 0 {
+					log.Printf("recv: received stream (%d) %v", len(n.([]uint8)), string(n.([]uint8)))
+				} else {
+					for _, o := range n.([]interface{}) {
+						var key string
+						for j, p := range o.([]interface{}) {
+							if j == 0 {
+								key = p.(string)
+								log.Printf("recv: received key (%d) %s", len(p.(string)), p.(string))
+							} else {
+								for _, q := range p.([]interface{}) {
+									log.Printf("recv: received message (%d) %s", len(q.([]uint8)), string(q.([]uint8)))
+								}
+							}
+						}
+						log.Printf("should ack %s", key)
+					}
+				}
+			}
+		}
 	}
 }
