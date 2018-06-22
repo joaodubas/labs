@@ -3,8 +3,10 @@ version: '3'
 services:
   streams:
     image: joaodubas/redis:5.0-rc3
+    build: .
     environment:
       TERM: xterm-color
+    command: redis-server --protected-mode no
   producer:
     image: golang:1.10
     volumes:
