@@ -23,7 +23,7 @@ func main() {
 	c := conn()
 	group(c)
 	for {
-		recv(c, "0-0")
+		recv(c, "0")
 		time.Sleep(2 * time.Second)
 	}
 }
