@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -20,7 +21,7 @@ const (
 func main() {
 	fmt.Println("consumer")
 	c := conn()
-	// group(c)
+	group(c)
 	for {
 		recv(c, "0-0")
 		time.Sleep(2 * time.Second)
@@ -37,8 +38,8 @@ func conn() redis.Conn {
 
 func group(c redis.Conn) {
 	r, err := c.Do("XGROUP", "CREATE", StreamName, GroupName, "0")
-	if err != nil {
-		log.Fatalf("group: failure to create stream group %v", err)
+	if err != nil && !strings.Contains(err.Error(), "name already exists") {
+		log.Fatalf("group: failure to create stream group %s", err.Error())
 	}
 	log.Printf("group: created successfully %v", r)
 }
