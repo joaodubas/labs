@@ -22,8 +22,9 @@ func main() {
 	fmt.Println("consumer")
 	c := conn()
 	group(c)
+	mID := "0"
 	for {
-		recv(c, "0")
+		mID = recv(c, mID)
 		time.Sleep(2 * time.Second)
 	}
 }
@@ -44,7 +45,7 @@ func group(c redis.Conn) {
 	log.Printf("group: created successfully %v", r)
 }
 
-func recv(c redis.Conn, sID string) {
+func recv(c redis.Conn, sID string) string {
 	args := []interface{}{
 		"GROUP",
 		GroupName,
@@ -75,11 +76,10 @@ func recv(c redis.Conn, sID string) {
 					)
 				} else {
 					for _, o := range n.([]interface{}) {
-						var key string
 						// NOTE (jpd): from here on we have a message.
 						for j, p := range o.([]interface{}) {
 							if j == 0 {
-								key = p.(string)
+								sID = p.(string)
 								log.Printf(
 									"recv: received key (%d) %s",
 									len(p.(string)),
@@ -96,12 +96,13 @@ func recv(c redis.Conn, sID string) {
 							}
 						}
 						// NOTE (jpd): after process a message, ack it.
-						ack(c, key)
+						ack(c, sID)
 					}
 				}
 			}
 		}
 	}
+	return sID
 }
 
 func ack(c redis.Conn, messageID string) {
