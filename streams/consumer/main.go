@@ -107,7 +107,7 @@ func recv(c redis.Conn, sID string) string {
 
 func ack(c redis.Conn, messageID string) {
 	if r, err := c.Do("XACK", StreamName, GroupName, messageID); err != nil {
-		log.Printf("ack: failed to ack message %s", messageID)
+		log.Printf("ack: failed to ack message %s (%v)", messageID, err)
 	} else {
 		log.Printf("ack: success to ack message %s (%v)", messageID, r)
 	}
