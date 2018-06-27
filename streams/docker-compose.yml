@@ -28,7 +28,19 @@ services:
     image: golang:1.10
     depends_on:
       - producer
+      - producer-py
     volumes:
       - './consumer:/go/src/app'
     working_dir: /go/src/app
     command: go run main.go
+  consumer-py:
+    image: joaodubas/consumer-py:3.6
+    build:
+      context: ./consumer-py
+    depends_on:
+      - producer
+      - producer-py
+    volumes:
+        - './consumer-py:/usr/local/src/app'
+    command: python consumer.py
+
