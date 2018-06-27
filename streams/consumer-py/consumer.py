@@ -32,7 +32,12 @@ def conn(log: logging.Logger) -> redis.Redis:
 
 
 def group(log: logging.Logger, cli: redis.Redis):
+    try:
 	cli.execute_command("XGROUP", "CREATE", 'log', 'Group', "0")
+    except redis.RedisError as e:
+        log.exception('group: create failed {}'.format(e))
+        return
+    log.info('group: create sucess')
 
 
 def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
@@ -50,9 +55,9 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
             message_id
         )
     except redis.RedisError as e:
-        log.exception('send: failed to log {}'.format(e))
-        sys.exit(1)
-    log.info('send: success {}'.format(r))
+        log.exception('recv: failed to fetch {}'.format(e))
+        return
+    log.info('recv: success {}'.format(r))
 
 
 def logger() -> logging.Logger:
