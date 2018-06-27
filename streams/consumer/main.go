@@ -22,7 +22,7 @@ func main() {
 	fmt.Println("consumer")
 	c := conn()
 	group(c)
-	mID := "0"
+	mID := ">"
 	for {
 		mID = recv(c, mID)
 		time.Sleep(2 * time.Second)
