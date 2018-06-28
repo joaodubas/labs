@@ -12,8 +12,9 @@ def consume():
     cli = conn(log)
     group(log, cli)
     while True:
-        message_id = recv(log, cli, message_id)
-        time.sleep(2)
+        # message_id = recv(log, cli, message_id)
+        recv(log, cli, message_id)
+        time.sleep(1)
 
 
 def conn(log: logging.Logger) -> redis.Redis:
@@ -52,7 +53,7 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
             'COUNT',
             '10',
             'BLOCK',
-            '2000',
+            '500',
             'STREAMS',
             'log',
             message_id

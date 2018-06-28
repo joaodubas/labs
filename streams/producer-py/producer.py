@@ -24,7 +24,7 @@ def produce():
             'time',
             datetime.datetime.utcnow().astimezone(tz).strftime(rfc3339)
         )
-        time.sleep(1)
+        time.sleep(0.062)
 
 
 def conn(log: logging.Logger) -> redis.Redis:

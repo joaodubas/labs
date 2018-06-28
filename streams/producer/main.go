@@ -16,7 +16,7 @@ func main() {
 	c := conn()
 	for {
 		send(c, "host", "host a", "time", time.Now().Format(time.RFC3339Nano))
-		time.Sleep(1 * time.Second)
+		time.Sleep(62 * time.Millisecond)
 		// read(c)
 		// time.Sleep(1 * time.Second)
 	}

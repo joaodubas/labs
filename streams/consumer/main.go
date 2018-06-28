@@ -24,8 +24,9 @@ func main() {
 	group(c)
 	mID := ">"
 	for {
-		mID = recv(c, mID)
-		time.Sleep(2 * time.Second)
+		// mID = recv(c, mID)
+		recv(c, mID)
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -53,7 +54,7 @@ func recv(c redis.Conn, sID string) string {
 		"COUNT",
 		10,
 		"BLOCK",
-		2000,
+		500,
 		"STREAMS",
 		StreamName,
 		sID,
