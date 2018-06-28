@@ -1,0 +1,46 @@
+---
+version: '3'
+services:
+  streams:
+    image: joaodubas/redis:5.0-rc3
+    build: .
+    environment:
+      TERM: xterm-color
+    command: redis-server --protected-mode no
+  producer:
+    image: golang:1.10
+    depends_on:
+      - streams
+    volumes:
+      - './producer:/go/src/app'
+    working_dir: /go/src/app
+    command: go run main.go
+  producer-py:
+    image: joaodubas/producer-py:3.6
+    build:
+      context: ./producer-py
+    depends_on:
+      - streams
+    volumes:
+        - './producer-py:/usr/local/src/app'
+    command: python producer.py
+  consumer:
+    image: golang:1.10
+    depends_on:
+      - producer
+      - producer-py
+    volumes:
+      - './consumer:/go/src/app'
+    working_dir: /go/src/app
+    command: go run main.go
+  consumer-py:
+    image: joaodubas/consumer-py:3.6
+    build:
+      context: ./consumer-py
+    depends_on:
+      - producer
+      - producer-py
+    volumes:
+        - './consumer-py:/usr/local/src/app'
+    command: python consumer.py
+
