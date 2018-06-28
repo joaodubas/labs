@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 
 import redis
 
@@ -11,8 +12,8 @@ def consume():
     cli = conn(log)
     group(log, cli)
     while True:
-        recv(log, cli, message_id)
-        time.sleep(1)
+        message_id = recv(log, cli, message_id)
+        time.sleep(2)
 
 
 def conn(log: logging.Logger) -> redis.Redis:
@@ -33,10 +34,11 @@ def conn(log: logging.Logger) -> redis.Redis:
 
 def group(log: logging.Logger, cli: redis.Redis):
     try:
-	cli.execute_command("XGROUP", "CREATE", 'log', 'Group', "0")
+        cli.execute_command("XGROUP", "CREATE", 'log', 'Group', "0")
     except redis.RedisError as e:
-        log.exception('group: create failed {}'.format(e))
-        return
+        if 'Group name already exists' not in e.__str__():
+            log.exception('group: create failed {}'.format(e))
+            return
     log.info('group: create sucess')
 
 
@@ -44,6 +46,7 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
     try:
         r = cli.execute_command(
             'XREADGROUP',
+            'GROUP',
             'Group',
             'ConsumerPY',
             'COUNT',
@@ -57,7 +60,30 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
     except redis.RedisError as e:
         log.exception('recv: failed to fetch {}'.format(e))
         return
-    log.info('recv: success {}'.format(r))
+    for keys in r:
+        key, messages = keys
+        log.info('recv: log key {}'.format(key.decode('utf-8')))
+        for mid, items in messages:
+            log.info('recv: message id {}'.format(mid.decode('utf-8')))
+            d = {}
+            while items:
+                d[items.pop().decode('utf-8')] = items.pop().decode('utf-8')
+            log.info('recv: log {}'.format(d))
+            ack(log, cli, mid.decode('utf-8'))
+            message_id = mid
+    return message_id
+
+
+def ack(log: logging.Logger, cli: redis.Redis, message_id: str):
+    try:
+        r = cli.execute_command('XACK', 'log', 'Group', message_id)
+    except redis.RedisError as e:
+        log.exception('ack: failed to ack message {} ({})'.format(
+            message_id,
+            e
+        ))
+        return
+    log.info('ack: success to ack message {} ({})'.format(message_id, r))
 
 
 def logger() -> logging.Logger:
