@@ -35,7 +35,7 @@ def process_failure(start_date, end_date, email):
 
 
 @app.task(bind=True, max_retries=3)
-def process_retry(self, start_Date, end_date, email):
+def process_retry(self, start_date, end_date, email):
     try:
         raise ValueError('Live another day!')
     except ValueError as e:
