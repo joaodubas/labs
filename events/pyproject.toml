@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "events"
+version = "0.1.0"
+description = "Event producer/consumer implementation"
+authors = ["Geru Tecnologia <dev@geru.com.br>"]
+license = "ISC"
+
+[tool.poetry.dependencies]
+python = "~2.7"
+confluent-kafka = {version = "^0.11.5", extras = ["avro"]}
+
+[tool.poetry.dev-dependencies]
+ipython = "~5"
+pytest = "^3.6"
+pytest-cov = "^2.5"
+pytest-runner = "^4.2"

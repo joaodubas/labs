@@ -1,0 +1,43 @@
+---
+version: '3.6'
+services:
+  manager:
+    image: 'hlebalbau/kafka-manager:1.3.3.18'
+    depends_on:
+      - kafka
+    ports:
+      - '10000:9000'
+    environment:
+      ZK_HOSTS: 'zookeeper:2181'
+  kafka:
+    image: 'confluentinc/cp-kafka:4.1.1-2'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  schema:
+    image: 'confluentinc/cp-schema-registry:4.1.1-2'
+    depends_on:
+      - kafka
+    ports:
+      - '10081:8081'
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
+  zookeeper:
+    image: 'confluentinc/cp-zookeeper:4.1.1-2'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  app:
+    image: 'geru/events:dev'
+    build: .
+    depends_on:
+      - schema
+    volumes:
+      - './:/opt/app'
+    command: poetry run sleep infinity
