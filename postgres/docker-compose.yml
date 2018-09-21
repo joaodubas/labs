@@ -1,0 +1,11 @@
+---
+version: '3'
+services:
+  monitor:
+    image: 'severalnines/clustercontrol:1.5.1'
+  main:
+    image: 'postgres:10.3'
+  replica_stream:
+    image: 'postgres:10.3'
+  replica_logical:
+    image: 'postgres:10.3'
