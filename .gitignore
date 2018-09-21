@@ -1,3 +1,7 @@
 # PATHS
-**/vendor
-.vscode
+vendor/
+.vscode/
+__pycache__/
+
+# FILES
+*.pyc
