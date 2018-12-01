@@ -2,13 +2,12 @@
 version: '3'
 services:
   streams:
-    image: joaodubas/redis:5.0-rc3
-    build: .
+    image: redis:5.0.2
     environment:
       TERM: xterm-color
     command: redis-server --protected-mode no
   producer:
-    image: golang:1.10
+    image: golang:1.11
     depends_on:
       - streams
     volumes:
@@ -25,7 +24,7 @@ services:
         - './producer-py:/usr/local/src/app'
     command: python producer.py
   consumer:
-    image: golang:1.10
+    image: golang:1.11
     depends_on:
       - producer
       - producer-py
@@ -43,4 +42,3 @@ services:
     volumes:
         - './consumer-py:/usr/local/src/app'
     command: python consumer.py
-
