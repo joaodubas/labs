@@ -14,11 +14,10 @@ const StreamName = "log"
 func main() {
 	fmt.Println("will do something amazing")
 	c := conn()
+	// TODO (jpd): this loop should be inside a goroutine.
 	for {
 		send(c, "host", "host a", "time", time.Now().Format(time.RFC3339Nano))
 		time.Sleep(62 * time.Millisecond)
-		// read(c)
-		// time.Sleep(1 * time.Second)
 	}
 }
 
@@ -30,18 +29,24 @@ func conn() radix.Client {
 	return c
 }
 
+// send a message for the specified stream.
+//
+// `message` is defined as key, value pairs in a sequence of arguments.
 func send(c radix.Client, args ...string) {
+	// TODO (jpd): change send to be a goroutine.
 	args = append([]string{StreamName, "*"}, args...)
 
 	if err := c.Do(radix.Cmd(nil, "XADD", args...)); err != nil {
-		log.Printf("doLog: failure to add log %v", err)
+		log.Printf("send: failure to add log %v", err)
 		return
 	}
 
-	log.Printf("doLog: added log %v", args)
+	log.Printf("send: added log %v", args)
 }
 
+// read messages from specified stream.
 func read(c radix.Client) {
+	// TODO (jpd): change read to be a goroutine.
 	var v interface{}
 	if err := c.Do(radix.Cmd(&v, "XREAD", "COUNT", "10", "BLOCK", "2000", "STREAMS", "log", "0")); err != nil {
 		log.Printf("read: failure to read log %v", err)
