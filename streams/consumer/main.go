@@ -80,11 +80,11 @@ func recv(c redis.Conn, sID string) string {
 						// NOTE (jpd): from here on we have a message.
 						for j, p := range o.([]interface{}) {
 							if j == 0 {
-								sID = p.(string)
+								sID = string(p.([]uint8))
 								log.Printf(
 									"recv: received key (%d) %s",
-									len(p.(string)),
-									p.(string),
+									len(p.([]uint8)),
+									sID,
 								)
 							} else {
 								for _, q := range p.([]interface{}) {
