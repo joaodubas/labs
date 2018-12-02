@@ -46,7 +46,7 @@ stream using:
 
 ## POC
 
-In this poc we have two producers and two consumers for the same group. All
+In this POC we have two producers and two consumers for the same group. All
 data is sent through the same stream.
 
 Some features are missing here:
