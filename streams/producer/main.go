@@ -17,7 +17,7 @@ func main() {
 	// TODO (jpd): this loop should be inside a goroutine.
 	for {
 		send(c, "host", "host a", "time", time.Now().Format(time.RFC3339Nano))
-		time.Sleep(62 * time.Millisecond)
+		time.Sleep(1 * time.Second)
 	}
 }
 
