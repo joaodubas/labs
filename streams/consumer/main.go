@@ -74,11 +74,19 @@ func recv(c redis.Conn, sID string) string {
 			for i, n := range m.([]interface{}) {
 				if i == 0 {
 					// NOTE (jpd): name of stream
-					log.Printf(
-						"recv: received stream (%d) %v",
-						len(n.([]uint8)),
-						string(n.([]uint8)),
-					)
+					if k, err := redis.String(n, nil); err != nil {
+						log.Printf(
+							"recv: failed to convert key (%v):\n%v",
+							n,
+							err,
+						)
+					} else {
+						log.Printf(
+							"recv: received stream (%d) %s",
+							len(k),
+							k,
+						)
+					}
 				} else {
 					for _, o := range n.([]interface{}) {
 						// NOTE (jpd): from here on we have a message.
@@ -93,12 +101,10 @@ func recv(c redis.Conn, sID string) string {
 								)
 							} else {
 								// NOTE (jpd): message content
-								for _, q := range p.([]interface{}) {
-									log.Printf(
-										"recv: received message (%d) %s",
-										len(q.([]uint8)),
-										string(q.([]uint8)),
-									)
+								if sm, err := redis.StringMap(p, nil); err != nil {
+									log.Printf("recv: failed to convert message (%v):i\n%v", p, err)
+								} else {
+									log.Printf("recv: received message %v", sm)
 								}
 							}
 						}
