@@ -2,8 +2,7 @@
 version: '3'
 services:
   streams:
-    image: joaodubas/redis:5.0-rc3
-    build: .
+    image: redis:5
     environment:
       TERM: xterm-color
     command: redis-server --protected-mode no

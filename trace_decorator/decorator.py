@@ -13,7 +13,6 @@ def trace_decorator(fn):
         for idx, tb in enumerate(traceback.extract_stack()):
             if idx > TRACE_UPPER_LIMIT:
                 break
-                os.path.relpath
             rs.append(format_traceback(tb))
         print(' >> '.join(rs))
         return fn()
