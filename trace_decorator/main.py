@@ -3,7 +3,6 @@
 from __future__ import unicode_literals, print_function
 
 from greeter import greeter
-# from decorator import trace_decorator
 
 
 def ola():
@@ -13,8 +12,6 @@ def ola():
 def mundo():
     return greeter()
 
-
-# greeter = trace_decorator(greeter)
 
 if __name__ == '__main__':
     print(ola())
