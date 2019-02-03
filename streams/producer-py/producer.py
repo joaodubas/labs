@@ -7,6 +7,7 @@ import redis
 
 
 def produce():
+    """Send messages, every second, to a given redis stream."""
     tz = datetime.timezone(
         datetime.timedelta(0),
         name='Z'
@@ -24,17 +25,26 @@ def produce():
             'time',
             datetime.datetime.utcnow().astimezone(tz).strftime(rfc3339)
         )
-        time.sleep(0.062)
+        time.sleep(1.0)
 
 
 def conn(log: logging.Logger) -> redis.Redis:
+    """Make connection to redis server.
+
+    Args:
+        log: common logger instance.
+
+    Returns:
+        Redis connection.
+
+    """
     cli = redis.Redis(host='streams', port='6379')
     try:
         cli.ping()
     except redis.ConnectionError as e:
         log.exception('conn: error connecting {}'.format(e))
         sys.exit(1)
-    except redis.ConnectionError as e:
+    except redis.RedisError as e:
         log.exception('conn: redis error {}'.format(e))
         sys.exit(1)
     except Exception as e:

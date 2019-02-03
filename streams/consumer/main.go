@@ -30,6 +30,7 @@ func main() {
 	}
 }
 
+// conn stablish a connection with redis and return it.
 func conn() redis.Conn {
 	c, err := redis.Dial("tcp", "streams:6379")
 	if err != nil {
@@ -38,6 +39,7 @@ func conn() redis.Conn {
 	return c
 }
 
+// group create a consumer group for a given stream.
 func group(c redis.Conn) {
 	r, err := c.Do("XGROUP", "CREATE", StreamName, GroupName, "0")
 	if err != nil && !strings.Contains(err.Error(), "name already exists") {
@@ -46,6 +48,7 @@ func group(c redis.Conn) {
 	log.Printf("group: created successfully %v", r)
 }
 
+// recv will block waiting to receive a given number of messages in a stream.
 func recv(c redis.Conn, sID string) string {
 	args := []interface{}{
 		"GROUP",
@@ -70,29 +73,38 @@ func recv(c redis.Conn, sID string) string {
 		for _, m := range r {
 			for i, n := range m.([]interface{}) {
 				if i == 0 {
-					log.Printf(
-						"recv: received stream (%d) %v",
-						len(n.([]uint8)),
-						string(n.([]uint8)),
-					)
+					// NOTE (jpd): name of stream
+					if k, err := redis.String(n, nil); err != nil {
+						log.Printf(
+							"recv: failed to convert key (%v):\n%v",
+							n,
+							err,
+						)
+					} else {
+						log.Printf(
+							"recv: received stream (%d) %s",
+							len(k),
+							k,
+						)
+					}
 				} else {
 					for _, o := range n.([]interface{}) {
 						// NOTE (jpd): from here on we have a message.
 						for j, p := range o.([]interface{}) {
 							if j == 0 {
-								sID = p.(string)
+								// NOTE (jpd): message id
+								sID = string(p.([]uint8))
 								log.Printf(
 									"recv: received key (%d) %s",
-									len(p.(string)),
-									p.(string),
+									len(p.([]uint8)),
+									sID,
 								)
 							} else {
-								for _, q := range p.([]interface{}) {
-									log.Printf(
-										"recv: received message (%d) %s",
-										len(q.([]uint8)),
-										string(q.([]uint8)),
-									)
+								// NOTE (jpd): message content
+								if sm, err := redis.StringMap(p, nil); err != nil {
+									log.Printf("recv: failed to convert message (%v):i\n%v", p, err)
+								} else {
+									log.Printf("recv: received message %v", sm)
 								}
 							}
 						}

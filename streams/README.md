@@ -46,7 +46,7 @@ stream using:
 
 ## POC
 
-In this poc we have two producers and two consumers for the same group. All
+In this POC we have two producers and two consumers for the same group. All
 data is sent through the same stream.
 
 Some features are missing here:
@@ -60,11 +60,14 @@ Some features are missing here:
 [0]: https://redis.io/topics/streams-intro
 [1]: https://twitter.com/antirez
 [2]: https://www.youtube.com/watch?v=qXEyuUxQXZM
-[3]: https://redis.io/commands/xadd
-[4]: https://redis.io/commands/xlen
-[5]: https://redis.io/commands/xrange
-[6]: https://redis.io/commands/xrevrange
-[7]: https://redis.io/commands/xread
-[8]: https://redis.io/commands/xgroup
-[9]: https://redis.io/commands/xreadgroup
-[10]: https://redis.io/commands/xpending
+[3]: https://redis.io/commands#stream
+[4]: https://medium.com/@Alibaba_Cloud/redis-streams-redis-5-0s-newest-data-type-3e2b7286ebae
+[5]: https://brandur.org/redis-streams
+[6]: https://tirkarthi.github.io/programming/2018/08/20/redis-streams-python.html
+[7]: http://charlesleifer.com/blog/redis-streams-with-python/
+[8]: http://charlesleifer.com/blog/multi-process-task-queue-using-redis-streams/
+[9]: https://faust.readthedocs.io/en/latest/
+[10]: https://www.syslog-ng.com/community/b/blog/posts/parsing-log-messages-with-the-syslog-ng-python-parser
+[11]: https://github.com/EasyPost/syslog-rfc5424-parser
+[12]: https://github.com/influxdata/go-syslog
+[13]: https://github.com/jeromer/syslogparser
