@@ -67,3 +67,7 @@ Some features are missing here:
 [7]: http://charlesleifer.com/blog/redis-streams-with-python/
 [8]: http://charlesleifer.com/blog/multi-process-task-queue-using-redis-streams/
 [9]: https://faust.readthedocs.io/en/latest/
+[10]: https://www.syslog-ng.com/community/b/blog/posts/parsing-log-messages-with-the-syslog-ng-python-parser
+[11]: https://github.com/EasyPost/syslog-rfc5424-parser
+[12]: https://github.com/influxdata/go-syslog
+[13]: https://github.com/jeromer/syslogparser
