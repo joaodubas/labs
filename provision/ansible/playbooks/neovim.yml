@@ -1,0 +1,8 @@
+---
+- hosts: dev
+  # vars:
+  #   neovim_config_repo:
+  #     url: ''
+  #     version: ''
+  roles:
+    - dotstrap.neovim

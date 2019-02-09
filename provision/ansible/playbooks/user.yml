@@ -1,0 +1,29 @@
+---
+- hosts: dev
+  become: yes
+  tasks:
+    - name: create wheel group
+      group:
+        name: wheel
+        state: present
+    - name: allow wheel to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+    - name: create non root user
+      user:
+        name: ubuntu
+        comment: Ubuntu common user
+        uid: 1000
+        shell: /bin/bash
+        create_home: yes
+        groups: sudo,docker,wheel
+        append: yes
+    - name: add authorized keys to ubuntu user
+      authorized_key:
+        user: ubuntu
+        key: "{{ lookup('file', '/opt/ssh/do_rsa.pub') }}"
+        state: present

@@ -1,0 +1,14 @@
+---
+- hosts: dev
+  become: yes
+  vars:
+    pip_install_packages:
+      - name: tmuxp
+  tasks:
+    - name: install tmux
+      apt:
+        name: tmux
+        state: present
+        update_cache: yes
+  roles:
+    - geerlingguy.pip

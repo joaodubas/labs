@@ -1,0 +1,17 @@
+---
+- hosts: dev
+  become: yes
+  tasks:
+    - name: install git
+      apt:
+        name: git
+        state: present
+    - name: configure git
+      git_config:
+        name: "{{ item.name }}"
+        scope: "{{ item.scope }}"
+        value: "{{ item.value }}"
+      loop:
+        - { name: 'user.email', scope: 'system', value: 'joao.dubas@gmail.com' }
+        - { name: 'user.name', scope: 'system', value: 'Joao P Dubas' }
+        - { name: 'core.editor', scope: 'system', value: 'nvim' }
