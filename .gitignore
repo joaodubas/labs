@@ -17,7 +17,5 @@ __pycache__/
 *.retry
 **/.terraform
 *.tfstate*
-!docker/.exists
-docker
-!ssh/.exists
-ssh
+**/docker/
+**/ssh/
