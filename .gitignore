@@ -1,7 +1,23 @@
-# PATHS
-vendor/
-.vscode/
-__pycache__/
+## golang
+**/vendor/
 
-# FILES
+## ide
+.vscode/
+
+## python
+__pycache__/
 *.pyc
+
+## certificates
+**/certs/**/*.key
+**/certs/**/*.crt
+
+## provision
+**/ansible/tmp
+*.retry
+**/.terraform
+*.tfstate*
+!docker/.exists
+docker
+!ssh/.exists
+ssh
