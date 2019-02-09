@@ -1,0 +1,28 @@
+---
+version: '3'
+services:
+  ops:
+    image: 'joaodubas/ops-tools:0.0.4'
+    build:
+      context: .
+    volumes:
+      - './terraform:/opt/terraform'
+      - './ansible:/opt/ansible'
+      - './ssh:/opt/ssh'
+      - './docker:/root/.docker'
+      - 'ansible_root:/root/.ansible'
+    hostname: ops
+    environment:
+      DIGITALOCEAN_TOKEN: &do_token ${DIGITALOCEAN_TOKEN:-no-token}
+      SSH_PUB_KEY: &ssh_pub_key '/opt/ssh/do_rsa.pub'
+      SSH_PVT_KEY: &ssh_pvt_key '/opt/ssh/do_rsa'
+      SSH_FINGERPRINT: &ssh_fingerprint  ${SSH_FINGERPRINT:-no-ssh-fingerprint}
+      DO_API_TOKEN: *do_token
+      TF_VAR_do_token: *do_token
+      TF_VAR_pvt_key: *ssh_pvt_key
+      TF_VAR_ssh_fingerprint: *ssh_fingerprint
+    working_dir: /opt/terraform
+    entrypoint: sleep
+    command: 365d
+volumes:
+  ansible_root:
