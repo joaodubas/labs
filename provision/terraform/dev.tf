@@ -25,7 +25,7 @@ resource "digitalocean_droplet" "dev_server" {
       "EXPORT PATH=$PATH:/usr/bin",
       # install python
       "apt-get -y update",
-      "apt-get -y install python"
+      "apt-get -y install python python3 python-pip python3-pip"
     ]
   }
 
