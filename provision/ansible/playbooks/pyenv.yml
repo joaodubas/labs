@@ -2,3 +2,11 @@
 - hosts: dev
   roles:
     - nephelaiio.pyenv
+  tasks:
+    - name: source bash_profile
+      blockinfile:
+        path: '$HOME/.bashrc'
+        block: |
+          if [ -f ~/.bash_profile ]; then
+              . ~/.bash_profile
+          fi
