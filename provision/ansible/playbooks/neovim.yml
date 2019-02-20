@@ -1,8 +1,8 @@
 ---
 - hosts: dev
-  # vars:
-  #   neovim_config_repo:
-  #     url: ''
-  #     version: ''
+  vars:
+    neovim_config_repo:
+      url: 'https://github.com/joaodubas/webfaction-dotfiles'
+      version: 'nvim'
   roles:
     - dotstrap.neovim
