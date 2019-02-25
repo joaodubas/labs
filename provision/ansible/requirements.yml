@@ -11,3 +11,5 @@
 - src: nephelaiio.pyenv
   version: 1.0.10
 - src: ivansible.lin_hosters
+- src: viasite-ansible.zsh
+  version: v3.2.3
