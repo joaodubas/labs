@@ -10,5 +10,13 @@
         name: tmux
         state: present
         update_cache: yes
+    - name: install tmux deps
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - gawk
+        - xsel
   roles:
     - geerlingguy.pip
