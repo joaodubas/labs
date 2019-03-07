@@ -1,0 +1,16 @@
+---
+- hosts: dev
+  become: yes
+  tasks:
+    - name: add apt key
+      apt_key:
+        url: https://dl.yarnpkg.com/debian/pubkey.gpg
+        state: present
+    - name: add repository
+      apt_repository:
+        repo: deb https://dl.yarnpkg.com/debian/ stable main
+        state: present
+    - name: install package
+      apt:
+        name: yarn
+        update_cache: yes
