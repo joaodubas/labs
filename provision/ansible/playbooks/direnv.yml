@@ -1,0 +1,9 @@
+---
+- hosts: dev
+  become: yes
+  vars:
+    direnv:
+      bin_url: 'https://github.com/direnv/direnv/releases/download/v2.19.2/direnv.linux-amd64'
+      bin_sha256: c85f8d0f48bbeffb4671b4e231637ce0b2bded6a5cb65cf42eba0d3e18ecf607
+  roles:
+    - role: laggyluke.direnv

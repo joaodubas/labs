@@ -13,3 +13,5 @@
 - src: ivansible.lin_hosters
 - src: viasite-ansible.zsh
   version: v3.2.3
+- src: laggyluke.direnv
+  version: v2.6.0
