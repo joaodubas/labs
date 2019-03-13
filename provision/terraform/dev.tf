@@ -35,3 +35,22 @@ resource "digitalocean_droplet" "dev_server" {
     command = "docker-machine create --driver generic --generic-ip-address ${digitalocean_droplet.dev_server.ipv4_address} --generic-ssh-key ${var.pvt_key} dev"
   }
 }
+
+resource "digitalocean_domain" "dev_default" {
+  name = "dubas.dev"
+  ip_address = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
+
+resource "digitalocean_record" "dev_coder" {
+  domain = "${digitalocean_domain.dev_default.name}"
+  type = "A"
+  name = "coder"
+  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
+
+resource "digitalocean_record" "dev_sentry" {
+  domain = "${digitalocean_domain.dev_default.name}"
+  type = "A"
+  name = "sentry"
+  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
