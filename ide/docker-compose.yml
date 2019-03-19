@@ -1,0 +1,26 @@
+---
+version: '3.4'
+services:
+  coder:
+    image: 'joaodubas/code-server:dev'
+    build:
+      context: .
+    hostname: coder
+    restart: unless-stopped
+    volumes:
+      - '/var/lib/docker:/var/lib/docker'
+      - '/usr/bin/docker:/usr/bin/docker'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'src_data:/opt/src'
+      - '/opt/emcasa:/opt/emcasa'
+      - '/opt/personal:/opt/personal'
+    environment:
+      NODE_ENV: production
+    working_dir: /opt/src
+    command: --data-dir /opt/src --allow-http --password Ozw3MSWwN2OCueyjzw9mWj6r9jBgPs9R 
+volumes:
+  src_data: {}
+networks:
+  default:
+    external:
+      name: proxy_upstream
