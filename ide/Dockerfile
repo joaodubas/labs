@@ -11,6 +11,14 @@ RUN apt-get update \
     && locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
+# fetch/install python
+
+# fetch/install golang
+
+# fetch/install erlang/elixir
+
+# fetch/install node/yarn
+
 # fetch/install code server
 ENV CODE_VERSION 1.32.0-310
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-x64
