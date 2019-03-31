@@ -5,6 +5,7 @@ RUN groupadd --gid 1000 coder \
   && useradd --uid 1000 --gid coder --shell /bin/bash --create-home coder
 
 # install system deps
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
       git \
@@ -12,6 +13,13 @@ RUN apt-get update \
       net-tools \
       openssl \
       curl \
+      wget \
+      ca-certificates \
+      gpg \
+      gpg-agent \
+      dirmngr \
+      libssl-dev \
+      libffi-dev \
       tk-dev \
       uuid-dev \
       g++ \
@@ -22,6 +30,7 @@ RUN apt-get update \
       libodbc1 \
 			libsctp1 \
 			libwxgtk3.0 \
+      libncurses5-dev \
       unixodbc-dev \
 			libsctp-dev \
 			libwxgtk3.0-dev \
@@ -241,8 +250,8 @@ RUN set -ex \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 # fetch/install code server
-ENV CODE_VERSION 1.32.0-310
-ENV CODE_PATH code-server-${CODE_VERSION}-linux-x64
+ENV CODE_VERSION 1.408-vsc1.32.0
+ENV CODE_PATH code-server${CODE_VERSION}-linux-x64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
 WORKDIR /opt
