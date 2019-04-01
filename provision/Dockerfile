@@ -28,7 +28,7 @@ RUN echo "install docker-machine ... " \
         openssl-dev \
         build-base \
     && pip install --upgrade pip cffi \
-    && pip install --upgrade ansible \
+    && pip install --upgrade ansible==2.7.6 \
     && pip install --upgrade pycrypt pywinrm \
     && apk --update add sshpass openssh-client rsync \
     && mkdir -p /etc/ansible \
