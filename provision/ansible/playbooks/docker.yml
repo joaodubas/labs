@@ -1,0 +1,6 @@
+---
+- name: docker install
+  hosts: dev
+  remote_user: root
+  roles:
+    - geerlingguy.docker
