@@ -186,8 +186,7 @@ RUN set -xe \
 	&& rm -rf /usr/src/rebar3-src
 
 # fetch/install elixir
-ENV ELIXIR_VERSION="v1.8.1" \
-  	LANG=C.UTF-8
+ENV ELIXIR_VERSION="v1.8.1"
 
 RUN set -xe \
 	&& ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/${ELIXIR_VERSION}.tar.gz" \
@@ -250,7 +249,7 @@ RUN set -ex \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 # fetch/install code server
-ENV CODE_VERSION 1.408-vsc1.32.0
+ENV CODE_VERSION 1.604-vsc1.32.0
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
