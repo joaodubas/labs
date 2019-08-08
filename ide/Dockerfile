@@ -249,8 +249,8 @@ RUN set -ex \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 # fetch/install code server
-ENV CODE_VERSION 1.903-vsc1.33.1
-ENV CODE_PATH code-server${CODE_VERSION}-linux-x64
+ENV CODE_VERSION 2.preview.1-vsc1.36.1
+ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
 WORKDIR /opt
