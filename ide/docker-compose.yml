@@ -15,11 +15,11 @@ services:
       - '/usr/bin/docker:/usr/bin/docker'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/usr/local/bin/docker-compose:/usr/bin/docker-compose'
-      - 'src_data:/opt/src'
+      - 'src_data_preview:/opt/src'
     working_dir: /opt/src
     command: --user-data-dir /opt/src --port 8443 --auth password
 volumes:
-  src_data: {}
+  src_data_preview: {}
 networks:
   default:
     external:
