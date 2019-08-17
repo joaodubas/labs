@@ -2,7 +2,7 @@
 version: '3'
 services:
   ops:
-    image: 'joaodubas/ops-tools:0.0.5'
+    image: 'joaodubas/ops-tools:0.0.6'
     build:
       context: .
     volumes:
@@ -25,4 +25,4 @@ services:
     entrypoint: sleep
     command: 365d
 volumes:
-  ansible_root:
+  ansible_root: {}
