@@ -249,7 +249,7 @@ RUN set -ex \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 # fetch/install code server
-ENV CODE_VERSION 2.preview.4-vsc1.37.0
+ENV CODE_VERSION 2.preview.6-vsc1.37.0
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
@@ -258,18 +258,6 @@ RUN curl -L ${CODE_URL} | tar xz \
   && cp ${CODE_PATH}/code-server /usr/local/bin \
   && cd / \
   && rm -rf /opt/${CODE_PATH}
-
-# install code server extensions
-# RUN code-server \
-#     --install-extension peterjausovec.vscode-docker \
-#     --install-extension editorconfig.editorconfig \
-#     --install-extension eamodio.gitlens \
-#     --install-extension ms-vscode.go \
-#     --install-extension prisma.vscode-graphql \
-#     --install-extension ms-python.python \
-#     --install-extension octref.vetur \
-#     --install-extension vscodevim.vim \
-#     --install-extension mjmcloug.vscode-elixir
 
 WORKDIR /root/project
 EXPOSE 8443
