@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.11.11
+FROM hashicorp/terraform:0.12.6
 
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
@@ -7,7 +7,7 @@ ENV DM_VERSION=v0.16.0
 ENV DM_RELEASE=docker-machine-Linux-x86_64
 ENV DM_BASE_URL=https://github.com/docker/machine/releases/download/${DM_VERSION}
 ENV DM_URL=${DM_BASE_URL}/${DM_RELEASE}
-ENV DC_VERSION=18.09.1
+ENV DC_VERSION=19.03.1
 ENV DC_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DC_VERSION}.tgz
 
 RUN echo "install docker-machine ... " \
@@ -28,7 +28,7 @@ RUN echo "install docker-machine ... " \
         openssl-dev \
         build-base \
     && pip install --upgrade pip cffi \
-    && pip install --upgrade ansible==2.7.6 \
+    && pip install --upgrade ansible==2.8.4 \
     && pip install --upgrade pycrypt pywinrm \
     && apk --update add sshpass openssh-client rsync \
     && mkdir -p /etc/ansible \
