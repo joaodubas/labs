@@ -57,7 +57,8 @@ ENV LANG en_US.UTF-8
 ENV PATH /usr/local/bin:$PATH
 
 # fetch/install asdf
-RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.4 \
+ENV ASDF_VERSION v0.7.4
+RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
   && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc \
   && ${HOME}/.asdf/bin/asdf plugin-add python \
@@ -69,29 +70,34 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.4 \
   && ${HOME}/.asdf/bin/asdf plugin-add golang
 
 # fetch/install python
-RUN ${HOME}/.asdf/bin/asdf install python 3.7.4 \
-  && ${HOME}/.asdf/bin/asdf global python 3.7.4
+ENV PYTHON_VERSION 3.7.4
+RUN ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
+ENV GO_VERSION 1.12.9
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
-RUN ${HOME}/.asdf/bin/asdf install golang 1.12.9 \
-  && ${HOME}/.asdf/bin/asdf global golang 1.12.9 \
+RUN ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
   && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install erlang
-RUN ${HOME}/.asdf/bin/asdf install erlang 22.0.7 \
-  && ${HOME}/.asdf/bin/asdf global erlang 22.0.7
+ENV ERLANG_VERSION 22.0.7
+RUN ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-RUN ${HOME}/.asdf/bin/asdf install elixir 1.9.1-otp-22 \
-  && ${HOME}/.asdf/bin/asdf global elixir 1.9.1-otp-22
+ENV ELIXIR_VERSION 1.9.1-otp-22
+RUN ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
+ENV NODE_VERSION 12.8.1
 RUN PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
-  && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs 12.8.1 \
-  && ${HOME}/.asdf/bin/asdf global nodejs 12.8.1
+  && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
 
 # fetch/install code server
 ENV CODE_VERSION 1.1156-vsc1.33.1
