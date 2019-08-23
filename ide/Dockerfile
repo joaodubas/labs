@@ -73,20 +73,16 @@ RUN ${HOME}/.asdf/bin/asdf install python 3.7.4 \
   && ${HOME}/.asdf/bin/asdf global python 3.7.4
 
 # fetch/install golang
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:$PATH
 RUN ${HOME}/.asdf/bin/asdf install golang 1.12.9 \
-  && ${HOME}/.asdf/bin/asdf global golang 1.12.9
-# ENV GOPATH /go
-# ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
-# RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+  && ${HOME}/.asdf/bin/asdf global golang 1.12.9 \
+  && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
+  && chmod -R 777 "${GOPATH}"
 
 # fetch/install erlang
 RUN ${HOME}/.asdf/bin/asdf install erlang 22.0.7 \
   && ${HOME}/.asdf/bin/asdf global erlang 22.0.7
-
-# extra useful tools here: rebar & rebar3
-# RUN ${HOME}/.asdf/bin/asdf install rebar 2.6.4 \
-#   && ${HOME}/.asdf/bin/asdf install rebar 3.11.0 \
-#   && ${HOME}/.asdf/bin/asdf global rebar 3.11.0
 
 # fetch/install elixir
 RUN ${HOME}/.asdf/bin/asdf install elixir 1.9.1-otp-22 \
