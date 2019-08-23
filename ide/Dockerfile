@@ -98,6 +98,9 @@ ENV NODE_VERSION 12.8.1
 RUN PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
+ENV YARN_VERSION 1.17.3
+RUN ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
 
 # fetch/install code server
 ENV CODE_VERSION 1.1156-vsc1.33.1
