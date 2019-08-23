@@ -58,8 +58,8 @@ ENV PATH /usr/local/bin:$PATH
 
 # fetch/install asdf
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.4 \
-  && echo -e '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
-  && echo -e '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc \
+  && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
+  && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc \
   && ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf plugin-add erlang \
   && ${HOME}/.asdf/bin/asdf plugin-add rebar \
