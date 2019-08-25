@@ -17,7 +17,7 @@ import datetime
 import logging
 import time
 from collections import namedtuple
-from cStringIO import StringIO
+from io import StringIO
 
 from celery import chain, chord, group
 
