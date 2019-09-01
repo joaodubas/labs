@@ -1,7 +1,0 @@
----
-- hosts: dev
-  become: yes
-  vars:
-    nodejs_version: '10.x'
-  roles:
-    - geerlingguy.nodejs

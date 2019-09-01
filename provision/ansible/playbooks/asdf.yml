@@ -1,0 +1,30 @@
+---
+- hosts: dev
+  vars:
+    version:
+      erlang: '22.0.7'
+      elixir: '1.9.1-otp-22'
+      golang: '1.12.9'
+      nodejs: '12.9.1'
+      yarn: '1.17.3'
+  roles:
+    - role: cimon-io.asdf
+      asdf_version: 'v0.7.4'
+      asdf_user: '{{ ansible_env.USER }}'
+      asdf_user_home: '{{ ansible_env.HOME }}'
+      asdf_plugins:
+        - name: 'erlang'
+          versions: ['{{ version.erlang }}']
+          global: '{{ version.erlang }}'
+        - name: 'elixir'
+          versions: ['{{ version.elixir }}']
+          global: '{{ version.elixir }}'
+        - name: 'golang'
+          versions: ['{{ version.golang }}']
+          global: '{{ version.golang }}'
+        - name: 'nodejs'
+          versions: ['{{ version.nodejs }}']
+          global: '{{ version.nodejs }}'
+        - name: 'yarn'
+          versions: ['{{ version.yarn }}']
+          global: '{{ version.yarn }}'

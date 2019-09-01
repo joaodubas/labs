@@ -1,12 +1,17 @@
 ---
 - hosts: dev
+  vars:
+    python_2: '2.7.16'
+    python_3: '3.7.4'
   roles:
-    - nephelaiio.pyenv
-  tasks:
-    - name: source bash_profile
-      blockinfile:
-        path: '$HOME/.bashrc'
-        block: |
-          if [ -f ~/.bash_profile ]; then
-              . ~/.bash_profile
-          fi
+    - role: avanov.pyenv
+      pyenv_path: '{{ ansible_env.HOME }}/.pyenv'
+      pyenv_enable_autocompletion: true
+      pyenv_python_versions:
+        - '{{ python_2 }}'
+        - '{{ python_3 }}'
+      pyenv_virtualenvs:
+        - venv_name: neovim-2
+          py_version: '{{ python_2 }}'
+        - venv_name: neovim-3
+          py_version: '{{ python_3 }}'
