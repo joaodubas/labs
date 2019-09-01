@@ -3,4 +3,4 @@
   become: yes
   roles:
     - role: viasite-ansible.zsh
-      zsh_user: ubuntu
+      zsh_user: '{{ ansible_env.USER }}'
