@@ -1,17 +1,14 @@
 ---
 - src: geerlingguy.docker
   version: 2.5.2
-- src: gantsign.golang
-  version: 2.0.4
 - src: geerlingguy.pip
   version: 1.3.0
 - src: dotstrap.neovim
-- src: geerlingguy.nodejs
-  version: 4.2.2
 - src: nephelaiio.pyenv
   version: 1.0.10
-- src: ivansible.lin_hosters
 - src: viasite-ansible.zsh
   version: v3.2.3
 - src: laggyluke.direnv
   version: v2.6.0
+- src: cimon-io.asdf
+  version: v1.0.0

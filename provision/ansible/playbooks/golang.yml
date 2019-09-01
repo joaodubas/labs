@@ -1,6 +1,0 @@
----
-- hosts: dev
-  roles:
-    - role: gantsign.golang
-      golang_version: 1.11.5
-      golang_gopath: '$HOME/local/go'
