@@ -2,7 +2,7 @@
 version: '3.4'
 services:
   coder:
-    image: 'joaodubas/code-server:preview'
+    image: 'joaodubas/code-server:dev'
     build:
       context: .
     hostname: coder
@@ -15,11 +15,13 @@ services:
       - '/usr/bin/docker:/usr/bin/docker'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/usr/local/bin/docker-compose:/usr/bin/docker-compose'
-      - 'src_data_preview:/opt/src'
+      - 'src_data:/opt/src'
+      - 'gopath_data:/go'
     working_dir: /opt/src
     command: --user-data-dir /opt/src --port 8443 --auth password
 volumes:
-  src_data_preview: {}
+  src_data: {}
+  gopath_data: {}
 networks:
   default:
     external:
