@@ -103,8 +103,8 @@ RUN ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
 
 # fetch/install code server
-ENV CODE_VERSION 1.1156-vsc1.33.1
-ENV CODE_PATH code-server${CODE_VERSION}-linux-x64
+ENV CODE_VERSION 2.1478-vsc1.38.1
+ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
 WORKDIR /opt

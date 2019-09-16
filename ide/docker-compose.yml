@@ -16,10 +16,12 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/usr/local/bin/docker-compose:/usr/bin/docker-compose'
       - 'src_data:/opt/src'
+      - 'gopath_data:/go'
     working_dir: /opt/src
-    command: --user-data-dir /opt/src --allow-http
+    command: --user-data-dir /opt/src --port 8443 --auth password
 volumes:
   src_data: {}
+  gopath_data: {}
 networks:
   default:
     external:
