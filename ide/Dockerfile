@@ -19,6 +19,7 @@ RUN apt-get update \
     git \
     gpg \
     gpg-agent \
+    jq \
     libbz2-dev \
     libc6-dev \
     libffi-dev \
@@ -77,6 +78,19 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
   && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
+
+# fetch/install java
+ENV JAVA_VERSION azul-zulu-13.27.9
+RUN ${HOME}/.asdf/bin/asdf plugin-add java \
+  && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
+  && echo '\n. ${HOME}/.asdf/plugins/java/asdf-java-wrapper.bash' >> ~/.bashrc
+
+# fetch/install kotlin
+ENV KOTLIN_VERSION 1.3.50
+RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
+  && ${HOME}/.asdf/bin/asdf install kotlin ${KOTLIN_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
 ENV ERLANG_VERSION 22.0.7
