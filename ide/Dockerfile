@@ -80,11 +80,11 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
-ENV JAVA_VERSION azul-zulu-13.27.9
+ENV JAVA_VERSION adopt-openjdk-13+33_openj9-0.16.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add java \
   && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
   && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
-  && echo '\n. ${HOME}/.asdf/plugins/java/asdf-java-wrapper.bash' >> ~/.bashrc
+  && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.sh' >> ~/.bashrc
 
 # fetch/install kotlin
 ENV KOTLIN_VERSION 1.3.50
