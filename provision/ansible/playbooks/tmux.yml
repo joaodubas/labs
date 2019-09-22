@@ -1,16 +1,17 @@
 ---
 - hosts: dev
-  become: yes
   vars:
     pip_install_packages:
       - name: tmuxp
   tasks:
     - name: install tmux
+      become: yes
       apt:
         name: tmux
         state: present
         update_cache: yes
     - name: install tmux deps
+      become: yes
       apt:
         name: "{{ item }}"
         state: present
@@ -18,5 +19,9 @@
       loop:
         - gawk
         - xsel
+    - name: install tmux plugins
+      git:
+        repo: 'https://github.com/tmux-plugins/tpm.git'
+        dest: '{{ ansible_env.HOME }}/.tmux/plugins/tpm'
   roles:
     - geerlingguy.pip
