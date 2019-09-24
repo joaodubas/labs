@@ -70,7 +70,7 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.12.9
+ENV GO_VERSION 1.13
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
@@ -105,12 +105,12 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 12.8.1
+ENV NODE_VERSION 12.10.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.17.3
+ENV YARN_VERSION 1.18.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
