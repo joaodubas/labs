@@ -19,6 +19,7 @@ RUN apt-get update \
     git \
     gpg \
     gpg-agent \
+    jq \
     libbz2-dev \
     libc6-dev \
     libffi-dev \
@@ -60,50 +61,62 @@ ENV PATH /usr/local/bin:$PATH
 ENV ASDF_VERSION v0.7.4
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
   && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
-  && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc \
-  && ${HOME}/.asdf/bin/asdf plugin-add python \
-  && ${HOME}/.asdf/bin/asdf plugin-add erlang \
-  && ${HOME}/.asdf/bin/asdf plugin-add rebar \
-  && ${HOME}/.asdf/bin/asdf plugin-add elixir \
-  && ${HOME}/.asdf/bin/asdf plugin-add nodejs \
-  && ${HOME}/.asdf/bin/asdf plugin-add yarn \
-  && ${HOME}/.asdf/bin/asdf plugin-add golang
+  && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
 
 # fetch/install python
 ENV PYTHON_VERSION 3.7.4
-RUN ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
+RUN ${HOME}/.asdf/bin/asdf plugin-add python \
+  && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.12.9
+ENV GO_VERSION 1.13
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
-RUN ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
+RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
+  && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
   && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
   && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
+# fetch/install java
+ENV JAVA_VERSION adopt-openjdk-13+33_openj9-0.16.0
+RUN ${HOME}/.asdf/bin/asdf plugin-add java \
+  && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
+  && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.sh' >> ~/.bashrc
+
+# fetch/install kotlin
+ENV KOTLIN_VERSION 1.3.50
+RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
+  && ${HOME}/.asdf/bin/asdf install kotlin ${KOTLIN_VERSION} \
+  && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
+
 # fetch/install erlang
 ENV ERLANG_VERSION 22.0.7
-RUN ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
+RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
+  && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
   && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
 ENV ELIXIR_VERSION 1.9.1-otp-22
-RUN ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
+RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
+  && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 12.8.1
-RUN PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
+ENV NODE_VERSION 12.10.0
+RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
+  && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.17.3
-RUN ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
+ENV YARN_VERSION 1.18.0
+RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
+  && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
 
 # fetch/install code server
-ENV CODE_VERSION 2.1478-vsc1.38.1
+ENV CODE_VERSION 2.1523-vsc1.38.1
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
