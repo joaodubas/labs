@@ -115,6 +115,18 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
 
+# fetch/install exercism
+ENV EXERCISM_VERSION v3.0.12
+ENV EXERCISM_FILE exercism-linux-64bit.tgz
+ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VERSION}/${EXERCISM_FILE}
+WORKDIR /tmp
+RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
+    && mv exercism /usr/local/bin \
+    && mkdir -p /root/.config/exercism \
+    && mv shell/exercism_completion.bash /root/.config/exercism \
+    && echo '\n. ${HOME}/.config/exercism/exercism_completion.bash' >> ~/.bashrc \
+    && rm -rf ./*
+
 # fetch/install code server
 ENV CODE_VERSION 2.1523-vsc1.38.1
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
