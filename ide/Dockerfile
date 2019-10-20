@@ -1,4 +1,4 @@
-FROM ubuntu:18.10
+FROM ubuntu:19.10
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
@@ -41,6 +41,7 @@ RUN apt-get update \
     llvm \
     locales \
     make \
+    neovim \
     net-tools \
     openssl \
     pkg-config \
@@ -55,7 +56,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
-ENV PATH /usr/local/bin:$PATH
 
 # fetch/install asdf
 ENV ASDF_VERSION v0.7.4
@@ -72,7 +72,6 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add python \
 # fetch/install golang
 ENV GO_VERSION 1.13
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:$PATH
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
   && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
@@ -139,6 +138,8 @@ RUN curl -L ${CODE_URL} | tar xz \
   && rm -rf /opt/${CODE_PATH}
 
 WORKDIR /root/project
+VOLUME /root/exercism
+ENV PATH $GOPATH/bin:/usr/local/bin:$PATH
 EXPOSE 8443
 ENTRYPOINT ["code-server"]
 CMD ["-d", "$PWD"]
