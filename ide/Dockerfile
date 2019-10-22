@@ -1,4 +1,4 @@
-FROM ubuntu:19.04
+FROM ubuntu:18.04
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
@@ -8,7 +8,7 @@ RUN groupadd --gid 1000 coder \
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y software-properties-common \
-  && add-apt-repository ppa:neovim-ppa/stable \
+  && add-apt-repository ppa:neovim-ppa/unstable \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
     autoconf \
@@ -67,13 +67,13 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSIO
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
 
 # fetch/install python
-ENV PYTHON_VERSION 3.7.4
+ENV PYTHON_VERSION 3.8.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.13
+ENV GO_VERSION 1.13.3
 ENV GOPATH /go
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
@@ -95,24 +95,24 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
   && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
-ENV ERLANG_VERSION 22.0.7
+ENV ERLANG_VERSION 22.1.4
 RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
   && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
   && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-ENV ELIXIR_VERSION 1.9.1-otp-22
+ENV ELIXIR_VERSION 1.9.2-otp-22
 RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
   && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 12.10.0
+ENV NODE_VERSION 12.12.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.18.0
+ENV YARN_VERSION 1.19.1
 RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
