@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:19.04
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
@@ -7,6 +7,9 @@ RUN groupadd --gid 1000 coder \
 # install system deps
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:neovim-ppa/stable \
+  && apt-get update \
   && apt-get install -y --no-install-recommends \
     autoconf \
     automake \
@@ -120,11 +123,24 @@ ENV EXERCISM_FILE exercism-linux-64bit.tgz
 ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VERSION}/${EXERCISM_FILE}
 WORKDIR /tmp
 RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
-    && mv exercism /usr/local/bin \
-    && mkdir -p /root/.config/exercism \
-    && mv shell/exercism_completion.bash /root/.config/exercism \
-    && echo '\n. ${HOME}/.config/exercism/exercism_completion.bash' >> ~/.bashrc \
-    && rm -rf ./*
+  && mv exercism /usr/local/bin \
+  && mkdir -p /root/.config/exercism \
+  && mv shell/exercism_completion.bash /root/.config/exercism \
+  && echo '\n. ${HOME}/.config/exercism/exercism_completion.bash' >> ~/.bashrc \
+  && rm -rf ./*
+
+# fetch/install neovim
+ENV RIPGREP_VERSION 11.0.2
+ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
+ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
+RUN curl -fLo --created-dirs \
+    /root/.local/share/nvim/site/autoload/plug.vim \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+  && git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf \
+  && /root/.fzf/install \
+  && curl -LO ${RIPGREP_URL} \
+  && dpkg -i ${RIPGREP_FILE} \
+  && rm ${RIPGREP_FILE}
 
 # fetch/install code server
 ENV CODE_VERSION 2.1523-vsc1.38.1
