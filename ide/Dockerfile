@@ -1,4 +1,4 @@
-FROM ubuntu:18.10
+FROM ubuntu:18.04
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
@@ -7,6 +7,9 @@ RUN groupadd --gid 1000 coder \
 # install system deps
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:neovim-ppa/unstable \
+  && apt-get update \
   && apt-get install -y --no-install-recommends \
     autoconf \
     automake \
@@ -41,6 +44,7 @@ RUN apt-get update \
     llvm \
     locales \
     make \
+    neovim \
     net-tools \
     openssl \
     pkg-config \
@@ -55,7 +59,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
-ENV PATH /usr/local/bin:$PATH
 
 # fetch/install asdf
 ENV ASDF_VERSION v0.7.4
@@ -64,15 +67,14 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSIO
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
 
 # fetch/install python
-ENV PYTHON_VERSION 3.7.4
+ENV PYTHON_VERSION 3.8.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.13
+ENV GO_VERSION 1.13.3
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:$PATH
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
   && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
@@ -93,27 +95,52 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
   && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
-ENV ERLANG_VERSION 22.0.7
+ENV ERLANG_VERSION 22.1.4
 RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
   && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
   && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-ENV ELIXIR_VERSION 1.9.1-otp-22
+ENV ELIXIR_VERSION 1.9.2-otp-22
 RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
   && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 12.10.0
+ENV NODE_VERSION 12.12.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.18.0
+ENV YARN_VERSION 1.19.1
 RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
+
+# fetch/install exercism
+ENV EXERCISM_VERSION v3.0.12
+ENV EXERCISM_FILE exercism-linux-64bit.tgz
+ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VERSION}/${EXERCISM_FILE}
+WORKDIR /tmp
+RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
+  && mv exercism /usr/local/bin \
+  && mkdir -p /root/.config/exercism \
+  && mv shell/exercism_completion.bash /root/.config/exercism \
+  && echo '\n. ${HOME}/.config/exercism/exercism_completion.bash' >> ~/.bashrc \
+  && rm -rf ./*
+
+# fetch/install neovim
+ENV RIPGREP_VERSION 11.0.2
+ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
+ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
+RUN curl -fLo --created-dirs \
+    /root/.local/share/nvim/site/autoload/plug.vim \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+  && git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf \
+  && /root/.fzf/install \
+  && curl -LO ${RIPGREP_URL} \
+  && dpkg -i ${RIPGREP_FILE} \
+  && rm ${RIPGREP_FILE}
 
 # fetch/install code server
 ENV CODE_VERSION 2.1523-vsc1.38.1
@@ -127,6 +154,8 @@ RUN curl -L ${CODE_URL} | tar xz \
   && rm -rf /opt/${CODE_PATH}
 
 WORKDIR /root/project
+VOLUME /root/exercism
+ENV PATH $GOPATH/bin:/usr/local/bin:$PATH
 EXPOSE 8443
 ENTRYPOINT ["code-server"]
 CMD ["-d", "$PWD"]
