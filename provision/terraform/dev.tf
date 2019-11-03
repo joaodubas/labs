@@ -14,9 +14,10 @@ resource "digitalocean_droplet" "dev_server" {
   ssh_keys = [
     "${var.ssh_fingerprint}"
   ]
-  connection = {
+  connection {
     user = "root"
     type = "ssh"
+    host = "${digitalocean_droplet.dev_server.ipv4_address}"
     private_key = "${file(var.pvt_key)}"
     timeout = "2m"
   }
@@ -52,5 +53,26 @@ resource "digitalocean_record" "dev_sentry" {
   domain = "${digitalocean_domain.dev_default.name}"
   type = "A"
   name = "sentry"
+  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
+
+resource "digitalocean_record" "dev_pgadmin" {
+  domain = "${digitalocean_domain.dev_default.name}"
+  type = "A"
+  name = "pgadmin"
+  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
+
+resource "digitalocean_record" "dev_sourcegraph" {
+  domain = "${digitalocean_domain.dev_default.name}"
+  type = "A"
+  name = "sourcegraph"
+  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+}
+
+resource "digitalocean_record" "dev_admin_sourcegraph" {
+  domain = "${digitalocean_domain.dev_default.name}"
+  type = "A"
+  name = "admin.sourcegraph"
   value = "${digitalocean_droplet.dev_server.ipv4_address}"
 }
