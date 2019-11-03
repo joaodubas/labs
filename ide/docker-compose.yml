@@ -15,13 +15,16 @@ services:
       - '/usr/bin/docker:/usr/bin/docker'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/usr/local/bin/docker-compose:/usr/bin/docker-compose'
+      - './config/nvim:/root/.config/nvim'
       - 'src_data:/opt/src'
       - 'gopath_data:/go'
+      - 'exercism_config_data:/root/.config/exercism'
     working_dir: /opt/src
     command: --user-data-dir /opt/src --port 8443 --auth password
 volumes:
   src_data: {}
   gopath_data: {}
+  exercism_config_data: {}
 networks:
   default:
     external:
