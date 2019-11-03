@@ -133,17 +133,23 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
 ENV RIPGREP_VERSION 11.0.2
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-RUN curl -fLo --created-dirs \
+RUN echo "install plug" \
+  && curl -fLo \
     /root/.local/share/nvim/site/autoload/plug.vim \
+    --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+  && echo "install fzf" \
   && git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf \
   && /root/.fzf/install \
+  && echo "install ripgrep" \
   && curl -LO ${RIPGREP_URL} \
   && dpkg -i ${RIPGREP_FILE} \
-  && rm ${RIPGREP_FILE}
+  && rm ${RIPGREP_FILE} \
+  && echo "install pynvim" \
+  && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install code server
-ENV CODE_VERSION 2.1523-vsc1.38.1
+ENV CODE_VERSION 2.1665-vsc1.39.2
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
 ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
