@@ -149,10 +149,10 @@ RUN echo "install plug" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install code server
-ENV CODE_VERSION 2.1665-vsc1.39.2
+ENV CODE_VERSION 2.1688-vsc1.39.2
 ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
-ENV CODE_URL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
+ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
 WORKDIR /opt
 RUN curl -L ${CODE_URL} | tar xz \
   && cp ${CODE_PATH}/code-server /usr/local/bin \
