@@ -2,7 +2,7 @@
 version: '3'
 services:
   proxy:
-    image: 'haproxy:1.8.7'
+    image: 'haproxy:2.1.0'
     hostname: proxy
     volumes:
       - './conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
@@ -16,7 +16,7 @@ services:
       - db_two
       - db_three
   db_one:
-    image: 'cockroachdb/cockroach:v2.0.0'
+    image: &db_image 'cockroachdb/cockroach:v19.2.1'
     hostname: db_one
     environment: &db_envs
       COCKROACH_CERTS_DIR: /certs
@@ -31,7 +31,7 @@ services:
       - '8080:8080'
     command: start --certs-dir cert --host db_one
   db_two:
-    image: 'cockroachdb/cockroach:v2.0.0'
+    image: *db_image
     hostname: db_two
     environment: *db_envs
     volumes:
@@ -43,7 +43,7 @@ services:
     depends_on:
       - db_one
   db_three:
-    image: 'cockroachdb/cockroach:v2.0.0'
+    image: *db_image
     hostname: db_three
     environment: *db_envs
     volumes:
@@ -55,7 +55,7 @@ services:
     depends_on:
       - db_one
   svc:
-    image: 'golang:1.10'
+    image: 'golang:1.13.4'
     hostname: svc
     volumes:
       - './:/go/src/github.com/joaodubas/db-replica'
