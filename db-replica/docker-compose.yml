@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '3.7'
 services:
   proxy:
     image: 'haproxy:2.1.0'
@@ -58,11 +58,11 @@ services:
     image: 'golang:1.13.4'
     hostname: svc
     volumes:
-      - './:/go/src/github.com/joaodubas/db-replica'
+      - './:/go/src/github.com/joaodubas/labs/db-replica'
       - './certs/ssl:/certs'
     depends_on:
       - proxy
-    working_dir: /go/src/github.com/joaodubas/db-replica
+    working_dir: /go/src/github.com/joaodubas/labs/db-replica
     command: go run main.go
     depends_on:
       - proxy
