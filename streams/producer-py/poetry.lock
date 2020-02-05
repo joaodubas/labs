@@ -38,7 +38,7 @@ description = "IPython: Productive Interactive Computing"
 name = "ipython"
 optional = false
 python-versions = ">=3.6"
-version = "7.11.1"
+version = "7.12.0"
 
 [package.dependencies]
 appnope = "*"
@@ -167,7 +167,7 @@ python-versions = "*"
 version = "0.1.7"
 
 [metadata]
-content-hash = "f69b7bbb5befe0633ebe6565ea31e493c5e6840bba98ac78267acbd0d35ec362"
+content-hash = "abec9a36d07553f302752137ddd59faca4e0048ec2841e88319311a1b553209e"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -175,7 +175,7 @@ appnope = ["5b26757dc6f79a3b7dc9fab95359328d5747fcb2409d331ea66d0272b90ab2a0", "
 backcall = ["38ecd85be2c1e78f77fd91700c76e14667dc21e2713b63876c0eb901196e01e4", "bbbf4b1e5cd2bdb08f915895b51081c041bac22394fdfcfdfbe9f14b77c08bf2"]
 colorama = ["05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d", "f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"]
 decorator = ["2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82", "c39efa13fbdeb4506c476c9b3babf6a718da943dab7811c206005a4a956c080c"]
-ipython = ["0f4bcf18293fb666df8511feec0403bdb7e061a5842ea6e88a3177b0ceb34ead", "387686dd7fc9caf29d2fddcf3116c4b07a11d9025701d220c589a430b0171d8a"]
+ipython = ["d9459e7237e2e5858738ff9c3e26504b79899b58a6d49e574d352493d80684c6", "f6689108b1734501d3b59c84427259fd5ac5141afe2e846cfa8598eb811886c9"]
 ipython-genutils = ["72dd37233799e619666c9f639a9da83c34013a73e8bbc79a7a6348d93c61fab8", "eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"]
 jedi = ["0191c447165f798e6a730285f2eee783fff81b0d3df261945ecb80983b5c3ca7", "b7493f73a2febe0dc33d51c99b474547f7f6c0b2c8fb2b21f453eef204c12148"]
 parso = ["5052bb33be034cba784193e74b1cde6ebf29ae8b8c1e4ad94df0c4209bfc4826", "db5881df1643bf3e66c097bfd8935cf03eae73f4cb61ae4433c9ea4fb6613446"]
