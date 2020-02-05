@@ -148,6 +148,17 @@ RUN echo "install plug" \
   && echo "install pynvim" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
+# fetch/install grpc
+ENV GRPC_VERSION 3.11.3
+ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
+ENV GRPC_FILE ${GRPC_PATH}.zip
+ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
+RUN curl -LO ${GRPC_URL} \
+  && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
+  && ln -s /opt/${GRPC_PATH}/bin/protoc /usr/local/bin/ \
+  && cp --recursive /opt/${GRPC_PATH}/include/google /usr/local/include \
+  && rm ${GRPC_FILE}
+
 # fetch/install code server
 ENV CODE_SERVER_VERSION 2.1698
 ENV CODE_VERSION ${CODE_SERVER_VERSION}-vsc1.41.1
