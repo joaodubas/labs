@@ -7,7 +7,7 @@ authors = ["Joao P Dubas <joao.dubas@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 celery = {version = "^4.4", extras = ["redis", "rabbitmq"]}
-influxdb = "^5.2"
+influxdb = "^5.3"
 
 [tool.poetry.dev-dependencies]
 
