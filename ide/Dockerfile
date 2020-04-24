@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
