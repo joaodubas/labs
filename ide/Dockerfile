@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # setup unprivileged user
 RUN groupadd --gid 1000 coder \
@@ -37,8 +37,8 @@ RUN apt-get update \
     libsqlite3-dev \
     libssl-dev \
     libtool \
-    libwxgtk3.0 \
-    libwxgtk3.0-dev \
+    libwxgtk3.0-gtk3-0v5 \
+    libwxgtk3.0-gtk3-dev \
     libxslt-dev \
     libyaml-dev \
     llvm \
@@ -61,7 +61,7 @@ RUN apt-get update \
 ENV LANG en_US.UTF-8
 
 # fetch/install asdf
-ENV ASDF_VERSION v0.7.6
+ENV ASDF_VERSION v0.7.4
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
   && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
@@ -86,7 +86,7 @@ ENV JAVA_VERSION adopt-openjdk-13.0.2+8_openj9-0.18.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add java \
   && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
   && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
-  && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.sh' >> ~/.bashrc
+  && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.bash' >> ~/.bashrc
 
 # fetch/install kotlin
 ENV KOTLIN_VERSION 1.3.61
@@ -149,7 +149,7 @@ RUN echo "install plug" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install grpc
-ENV GRPC_VERSION 3.11.3
+ENV GRPC_VERSION 3.11.4
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
@@ -160,16 +160,14 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_SERVER_VERSION 2.1698
-ENV CODE_VERSION ${CODE_SERVER_VERSION}-vsc1.41.1
-ENV CODE_PATH code-server${CODE_VERSION}-linux-x86_64
+# https://github.com/cdr/code-server/releases/download/3.1.1/code-server-3.1.1-linux-x86_64.tar.gz
+ENV CODE_VERSION 3.2.0
+ENV CODE_PATH code-server-${CODE_VERSION}-linux-x86_64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
-ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_SERVER_VERSION}/${CODE_FILE}
-WORKDIR /opt
+ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
+WORKDIR /usr/local/lib
 RUN curl -L ${CODE_URL} | tar xz \
-  && cp ${CODE_PATH}/code-server /usr/local/bin \
-  && cd / \
-  && rm -rf /opt/${CODE_PATH}
+  && ln -s ${PWD}/${CODE_PATH}/code-server /usr/local/bin
 
 WORKDIR /root/project
 VOLUME /root/exercism

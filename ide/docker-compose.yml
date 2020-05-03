@@ -2,7 +2,7 @@
 version: '3.4'
 services:
   coder:
-    image: 'joaodubas/code-server:dev'
+    image: 'joaodubas/code-server:3.2.0'
     build:
       context: .
     hostname: coder
@@ -20,7 +20,7 @@ services:
       - 'gopath_data:/go'
       - 'exercism_config_data:/root/.config/exercism'
     working_dir: /opt/src
-    command: --user-data-dir /opt/src --port 8443 --auth password
+    command: '--user-data-dir /opt/src --bind-addr 0.0.0.0:8443 --auth password'
 volumes:
   src_data: {}
   gopath_data: {}
