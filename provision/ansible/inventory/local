@@ -1,0 +1,2 @@
+[dev]
+localhost ansible_connection=local ansible_user=${ANSIBLE_USER} ansible_become_pass=${ANSIBLE_PASS}
