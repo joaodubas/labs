@@ -160,14 +160,15 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-# https://github.com/cdr/code-server/releases/download/3.1.1/code-server-3.1.1-linux-x86_64.tar.gz
-ENV CODE_VERSION 3.2.0
-ENV CODE_PATH code-server-${CODE_VERSION}-linux-x86_64
+ENV CODE_VERSION 3.3.0
+ENV CODE_RELEASE v3.3.0
+ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
-ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_VERSION}/${CODE_FILE}
+ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_RELEASE}/${CODE_FILE}
 WORKDIR /usr/local/lib
-RUN curl -L ${CODE_URL} | tar xz \
-  && ln -s ${PWD}/${CODE_PATH}/code-server /usr/local/bin
+RUN echo "Downloading ${CODE_URL}" \
+  && curl -L ${CODE_URL} | tar xz \
+  && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin
 
 WORKDIR /root/project
 VOLUME /root/exercism
