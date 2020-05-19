@@ -19,3 +19,4 @@ __pycache__/
 *.tfstate*
 **/docker/
 **/ssh/
+**/docker-compose.override.yml
