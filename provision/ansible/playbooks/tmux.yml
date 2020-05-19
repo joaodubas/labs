@@ -1,6 +1,7 @@
 ---
 - hosts: dev
   vars:
+    pip_package: python3-pip
     pip_install_packages:
       - name: tmuxp
   tasks:

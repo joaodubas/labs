@@ -3,7 +3,7 @@
   become: yes
   vars:
     direnv:
-      bin_url: 'https://github.com/direnv/direnv/releases/download/v2.19.2/direnv.linux-amd64'
-      bin_sha256: c85f8d0f48bbeffb4671b4e231637ce0b2bded6a5cb65cf42eba0d3e18ecf607
+      bin_url: 'https://github.com/direnv/direnv/releases/download/v2.21.2/direnv.linux-amd64'
+      bin_sha256: 6b61c3f4ff96d99344906d80a570dc8c0bd479de82b18bf9d9c802ce61612b8a
   roles:
     - role: laggyluke.direnv

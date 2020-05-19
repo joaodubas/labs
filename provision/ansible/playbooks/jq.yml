@@ -1,0 +1,10 @@
+---
+- hosts: dev
+  tasks:
+    # NOTE (jpd): list all java versions in asdf depends on jq
+    - name: install jq
+      become: yes
+      apt:
+        name: jq
+        state: present
+        update_cache: yes
