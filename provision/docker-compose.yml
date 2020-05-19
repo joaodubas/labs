@@ -2,7 +2,7 @@
 version: '3'
 services:
   ops:
-    image: 'joaodubas/ops-tools:0.0.7'
+    image: 'joaodubas/ops-tools:0.0.8'
     build:
       context: .
     volumes:
