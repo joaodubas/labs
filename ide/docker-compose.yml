@@ -2,7 +2,7 @@
 version: '3.4'
 services:
   coder:
-    image: 'joaodubas/code-server:3.3.0'
+    image: 'joaodubas/code-server:3.3.1'
     build:
       context: .
     hostname: coder
