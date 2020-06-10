@@ -9,16 +9,16 @@ resource "digitalocean_droplet" "dev_server" {
   size = "s-2vcpu-4gb"
   private_networking = true
   tags = [
-    "${digitalocean_tag.dev_tag.name}"
+    digitalocean_tag.dev_tag.name
   ]
   ssh_keys = [
-    "${var.ssh_fingerprint}"
+    var.ssh_fingerprint
   ]
   connection {
     user = "root"
     type = "ssh"
-    host = "${digitalocean_droplet.dev_server.ipv4_address}"
-    private_key = "${file(var.pvt_key)}"
+    host = digitalocean_droplet.dev_server.ipv4_address
+    private_key = file(var.pvt_key)
     timeout = "2m"
   }
   provisioner "remote-exec" {
@@ -39,40 +39,54 @@ resource "digitalocean_droplet" "dev_server" {
 
 resource "digitalocean_domain" "dev_default" {
   name = "dubas.dev"
-  ip_address = "${digitalocean_droplet.dev_server.ipv4_address}"
+  ip_address = digitalocean_droplet.dev_server.ipv4_address
 }
 
 resource "digitalocean_record" "dev_coder" {
-  domain = "${digitalocean_domain.dev_default.name}"
+  domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "coder"
-  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+  value = digitalocean_droplet.dev_server.ipv4_address
 }
 
 resource "digitalocean_record" "dev_sentry" {
-  domain = "${digitalocean_domain.dev_default.name}"
+  domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "sentry"
-  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+  value = digitalocean_droplet.dev_server.ipv4_address
 }
 
 resource "digitalocean_record" "dev_pgadmin" {
-  domain = "${digitalocean_domain.dev_default.name}"
+  domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "pgadmin"
-  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+  value = digitalocean_droplet.dev_server.ipv4_address
 }
 
 resource "digitalocean_record" "dev_sourcegraph" {
-  domain = "${digitalocean_domain.dev_default.name}"
+  domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "sourcegraph"
-  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+  value = digitalocean_droplet.dev_server.ipv4_address
 }
 
 resource "digitalocean_record" "dev_admin_sourcegraph" {
-  domain = "${digitalocean_domain.dev_default.name}"
+  domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "admin.sourcegraph"
-  value = "${digitalocean_droplet.dev_server.ipv4_address}"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_elastic" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "elastic"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_grafana" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "grafana"
+  value = digitalocean_droplet.dev_server.ipv4_address
 }

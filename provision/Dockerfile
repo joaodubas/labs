@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.12.24
+FROM hashicorp/terraform:0.12.26
 
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
@@ -20,16 +20,16 @@ RUN echo "install docker-machine ... " \
     && chmod 755 /usr/local/bin/docker-machine \
     && echo "install ansible ..." \
     && apk --update add sudo \
-    && apk --update add python py-pip openssl ca-certificates \
+    && apk --update add python3 py3-pip openssl ca-certificates \
     && apk --update add --virtual \
         build-dependencies \
-        python-dev \
+        python3-dev \
         libffi-dev \
         openssl-dev \
         build-base \
-    && pip install --upgrade pip cffi \
-    && pip install --upgrade ansible==2.9.4 \
-    && pip install --upgrade pycrypt pywinrm \
+    && pip3 install --upgrade pip cffi \
+    && pip3 install --upgrade ansible==2.9.9 \
+    && pip3 install --upgrade pycrypt pywinrm \
     && apk --update add sshpass openssh-client rsync \
     && mkdir -p /etc/ansible \
     && echo "localhost" > /etc/ansible/hosts \
