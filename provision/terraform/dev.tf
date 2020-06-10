@@ -76,3 +76,17 @@ resource "digitalocean_record" "dev_admin_sourcegraph" {
   name = "admin.sourcegraph"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
+
+resource "digitalocean_record" "dev_elastic" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "elastic"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_grafana" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "grafana"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
