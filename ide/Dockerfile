@@ -61,19 +61,20 @@ RUN apt-get update \
 ENV LANG en_US.UTF-8
 
 # fetch/install asdf
-ENV ASDF_VERSION v0.7.4
+ENV PATH /root/.asdf/bin:$PATH
+ENV ASDF_VERSION v0.7.8
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
   && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
 
 # fetch/install python
-ENV PYTHON_VERSION 3.8.1
+ENV PYTHON_VERSION 3.8.3
 RUN ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.13.7
+ENV GO_VERSION 1.14.4
 ENV GOPATH /go
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
@@ -82,37 +83,37 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
-ENV JAVA_VERSION adopt-openjdk-13.0.2+8_openj9-0.18.0
+ENV JAVA_VERSION adopt-openjdk-14.0.1+7_openj9-0.20.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add java \
   && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
   && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
   && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.bash' >> ~/.bashrc
 
 # fetch/install kotlin
-ENV KOTLIN_VERSION 1.3.61
+ENV KOTLIN_VERSION 1.3.72
 RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
   && ${HOME}/.asdf/bin/asdf install kotlin ${KOTLIN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
-ENV ERLANG_VERSION 22.2.5
+ENV ERLANG_VERSION 23.0.2
 RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
   && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
   && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-ENV ELIXIR_VERSION 1.10.0-otp-22
+ENV ELIXIR_VERSION 1.10.3-otp-23
 RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
   && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 13.7.0
+ENV NODE_VERSION 14.4.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
   && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.21.1
+ENV YARN_VERSION 1.22.4
 RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
@@ -130,7 +131,7 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && rm -rf ./*
 
 # fetch/install neovim
-ENV RIPGREP_VERSION 11.0.2
+ENV RIPGREP_VERSION 12.1.1
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
 RUN echo "install plug" \
@@ -149,7 +150,7 @@ RUN echo "install plug" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install grpc
-ENV GRPC_VERSION 3.11.4
+ENV GRPC_VERSION 3.12.3
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
@@ -160,7 +161,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.4.0
+ENV CODE_VERSION 3.4.1
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
