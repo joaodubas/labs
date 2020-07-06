@@ -1,5 +1,6 @@
 ---
 - hosts: dev
+  become: yes
   vars:
     ripgrep:
       version: '0.10.0'
