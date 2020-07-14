@@ -149,6 +149,8 @@ RUN echo "install plug" \
   && rm ${RIPGREP_FILE} \
   && echo "install pynvim" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
+ENV FZF_DEFAULT_COMMAND rg --files
+ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
 # fetch/install grpc
 ENV GRPC_VERSION 3.12.3
@@ -172,9 +174,14 @@ RUN echo "Downloading ${CODE_URL}" \
   && curl -L ${CODE_URL} | tar xz \
   && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin
 
+# fetch/install tini
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
+RUN chmod +x /usr/local/bin/tini
+
 WORKDIR /root/project
 VOLUME /root/exercism
 ENV PATH $GOPATH/bin:/usr/local/bin:$PATH
 EXPOSE 8443
-ENTRYPOINT ["code-server"]
+ENTRYPOINT ["tini", "--", "code-server"]
 CMD ["-d", "$PWD"]
