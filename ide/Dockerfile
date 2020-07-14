@@ -13,6 +13,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     autoconf \
     automake \
+    bsdmainutils \
     build-essential \
     ca-certificates \
     curl \
