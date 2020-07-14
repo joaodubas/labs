@@ -2,6 +2,11 @@
 
 " global extensions {{{
 let g:coc_global_extensions = ['coc-json', 'coc-yaml', 'coc-marketplace', 'coc-python', 'coc-elixir', 'coc-go']
+call coc#config('elixir', {
+    \ 'command': g:ElixirLS.lsp,
+    \ 'filetypes': ['elixir', 'eelixir']
+    \ })
+call coc#config('elixir.pathToElixirL', g:ElixirLS.lsp)
 " }}}
 
 " coc.nvim default settings
