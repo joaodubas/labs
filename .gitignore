@@ -3,6 +3,8 @@
 
 ## ide
 .vscode/
+ide/config/nvim/plugged/
+ide/config/nvim/undodir/
 
 ## python
 __pycache__/
