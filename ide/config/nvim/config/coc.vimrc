@@ -6,7 +6,7 @@ call coc#config('elixir', {
     \ 'command': g:ElixirLS.lsp,
     \ 'filetypes': ['elixir', 'eelixir']
     \ })
-call coc#config('elixir.pathToElixirL', g:ElixirLS.lsp)
+call coc#config('elixir.pathToElixirLS', g:ElixirLS.lsp)
 " }}}
 
 " coc.nvim default settings
