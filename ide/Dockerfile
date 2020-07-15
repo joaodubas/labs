@@ -13,6 +13,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     autoconf \
     automake \
+    bsdmainutils \
     build-essential \
     ca-certificates \
     curl \
@@ -83,7 +84,7 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
-ENV JAVA_VERSION adopt-openjdk-14.0.1+7_openj9-0.20.0
+ENV JAVA_VERSION openjdk-14.0.1
 RUN ${HOME}/.asdf/bin/asdf plugin-add java \
   && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
   && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
@@ -148,6 +149,8 @@ RUN echo "install plug" \
   && rm ${RIPGREP_FILE} \
   && echo "install pynvim" \
   && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
+ENV FZF_DEFAULT_COMMAND rg --files
+ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
 # fetch/install grpc
 ENV GRPC_VERSION 3.12.3
@@ -171,9 +174,14 @@ RUN echo "Downloading ${CODE_URL}" \
   && curl -L ${CODE_URL} | tar xz \
   && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin
 
+# fetch/install tini
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
+RUN chmod +x /usr/local/bin/tini
+
 WORKDIR /root/project
 VOLUME /root/exercism
 ENV PATH $GOPATH/bin:/usr/local/bin:$PATH
 EXPOSE 8443
-ENTRYPOINT ["code-server"]
+ENTRYPOINT ["tini", "--", "code-server"]
 CMD ["-d", "$PWD"]

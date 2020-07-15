@@ -1,18 +1,16 @@
+" vim: set foldmethod=marker foldlevel=0 nomodeline:
+
+" global extensions {{{
 let g:coc_global_extensions = ['coc-json', 'coc-yaml', 'coc-marketplace', 'coc-python', 'coc-elixir', 'coc-go']
+call coc#config('elixir', {
+    \ 'command': g:ElixirLS.lsp,
+    \ 'filetypes': ['elixir', 'eelixir']
+    \ })
+call coc#config('elixir.pathToElixirLS', g:ElixirLS.lsp)
+" }}}
 
 " coc.nvim default settings
 " based on post: https://octetz.com/posts/vim-as-go-ide
-
-" if hidden is not set, TextEdit might fail.
-set hidden
-" Better display for messages
-set cmdheight=2
-" Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
-" always show signcolumns
-set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -52,16 +50,16 @@ nmap <leader>f  <Plug>(coc-format-selected)
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent> <space>e :<C-u>CocList extensions<cr>
 " Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>c :<C-u>CocList commands<cr>
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o :<C-u>CocList outline<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+nnoremap <silent> <space>j :<C-u>CocNext<CR>
 " Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+nnoremap <silent> <space>k :<C-u>CocPrev<CR>
 " Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>p :<C-u>CocListResume<CR>
