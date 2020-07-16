@@ -84,9 +84,37 @@ resource "digitalocean_record" "dev_elastic" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_elasticui" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "elasticui"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_grafana" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "grafana"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_emcasa_backend" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "api.emcasa"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_emcasa_octopus" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "octopus.emcasa"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_emcasa_salesforce" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "salesforce.emcasa"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
