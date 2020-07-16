@@ -14,7 +14,7 @@ Plug 'tpope/vim-fugitive'
 " Plug 'elixir-editors/vim-elixir'
 " Plug 'slashmili/alchemist.vim'
 " navigation
-Plug '~/.fzf'
+Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
 " coloscheme
 Plug 'drewtempelmeyer/palenight.vim'
