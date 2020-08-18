@@ -5,6 +5,7 @@ services:
     image: 'joaodubas/code-server:3.4.1'
     build:
       context: .
+    init: true
     hostname: coder
     restart: unless-stopped
     environment:

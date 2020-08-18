@@ -8,6 +8,7 @@ services:
     command: redis-server --protected-mode no
   producer:
     image: golang:1.11
+    init: true
     depends_on:
       - streams
     volumes:
@@ -18,6 +19,7 @@ services:
     image: joaodubas/producer-py:3.6
     build:
       context: ./producer-py
+    init: true
     depends_on:
       - streams
     volumes:
@@ -25,6 +27,7 @@ services:
     command: python producer.py
   consumer:
     image: golang:1.11
+    init: true
     depends_on:
       - producer
       - producer-py
@@ -36,6 +39,7 @@ services:
     image: joaodubas/consumer-py:3.6
     build:
       context: ./consumer-py
+    init: true
     depends_on:
       - producer
       - producer-py
