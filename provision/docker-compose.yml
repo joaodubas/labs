@@ -5,6 +5,7 @@ services:
     image: 'joaodubas/ops-tools:0.0.9'
     build:
       context: .
+    init: true
     volumes:
       - './terraform:/opt/terraform'
       - './ansible:/opt/ansible'

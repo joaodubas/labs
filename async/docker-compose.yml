@@ -16,4 +16,5 @@ services:
     build: .
     volumes:
       - './svc:/app/svc'
+    init: true
     command: poetry run celery worker -A svc -l info -E --heartbeat-interval 30
