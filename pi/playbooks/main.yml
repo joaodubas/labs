@@ -47,6 +47,7 @@
       - name: 'user.name'
         scope: global
         value: 'João P Dubas'
+    asdf_version: 'v0.8.0-rc1'
   tasks:
     - name: setup packages
       become: yes
@@ -77,10 +78,18 @@
         - antibody
     - name: configure git
       git_config:
-        name: "{{ item.name }}"
-        scope: "{{ item.scope }}"
-        value: "{{ item.value }}"
+        name: '{{ item.name }}'
+        scope: '{{ item.scope }}'
+        value: '{{ item.value }}'
       loop: '{{ vars.git }}'
       tags:
         - config
         - git
+    - name: install asdf
+      git:
+        repo: 'https://github.com/asdf-vm/asdf.git'
+        dest: '{{ ansible_env.HOME }}/.config/asdf'
+        version: '{{ vars.asdf_version }}'
+      tags:
+        - install
+        - asdf
