@@ -1,8 +1,8 @@
 ---
-version: '3'
+version: '3.7'
 services:
   ops:
-    image: 'joaodubas/ops-tools:0.0.9'
+    image: 'joaodubas/ops-tools:0.0.10'
     build:
       context: .
     init: true
