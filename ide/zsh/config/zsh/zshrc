@@ -1,0 +1,66 @@
+# vim: set foldmethod=marker foldlevel=0 nomodeline:
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-${HOME}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-${HOME}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# based in:
+# 1. https://thevaluable.dev/zsh-install-configure/
+# 2. https://www.viget.com/articles/zsh-config-productivity-plugins-for-mac-oss-default-shell/
+
+# terminal {{{
+export TERM="xterm-256color"
+# }}}
+
+# history {{{
+export HISTFILE="${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zsh_history"
+export HISTSIZE=50000
+export SAVEHIST=10000
+
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt inc_append_history
+setopt share_history
+# }}}
+
+# changing directories {{{
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushdminus
+# }}}
+
+# completion {{{
+setopt auto_menu
+setopt always_to_end
+setopt complete_in_word
+setopt flow_control
+setopt menu_complete
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+# }}}
+
+# other {{{
+setopt prompt_subst
+# }}}
+
+# plugins {{{
+source <(antibody init)
+antibody bundle romkatv/powerlevel10k
+antibody bundle zsh-users/zsh-autosuggestions
+antibody bundle zsh-users/zsh-completions
+antibody bundle zsh-users/zsh-history-substring-search
+antibody bundle zsh-users/zsh-syntax-highlighting
+# }}}
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
