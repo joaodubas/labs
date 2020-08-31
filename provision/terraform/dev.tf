@@ -63,6 +63,13 @@ resource "digitalocean_record" "dev_pgadmin" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_voltdb" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "voltdb"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_sourcegraph" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
