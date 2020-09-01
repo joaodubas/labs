@@ -77,63 +77,69 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG ${LANGAGUE}
 ENV LC_ALL ${LANGUAGE}
 ENV HOME /home/coder
+ENV XDG_CONFIG_HOME ${HOME}/.config
+ENV XDG_DATA_HOME ${HOME}/.local/share
+ENV XDG_CACHE_HOME ${HOME}/.cache
+ENV ASDF_HOME_DIR ${XDG_CONFIG_HOME}/asdf
+ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 # fetch/install asdf
-ENV PATH /root/.asdf/bin:$PATH
+ENV PATH ${XDG_CONFIG_HOME}/asdf/bin:$PATH
 ENV ASDF_VERSION v0.8.0-rc1
-RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
-  && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
-  && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
+RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${ASDF_VERSION} \
+  && echo '\n. ${ASDF_HOME_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
+  && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
 
 # fetch/install python
 ENV PYTHON_VERSION 3.8.5
-RUN ${HOME}/.asdf/bin/asdf plugin-add python \
-  && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
+RUN asdf plugin-add python \
+  && asdf install python ${PYTHON_VERSION} \
+  && asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
 ENV GO_VERSION 1.15
-ENV GOPATH /go
-RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
-  && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global golang ${GO_VERSION} \
+ENV GOPATH ${HOME}/.config/go
+ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
+RUN asdf plugin-add golang \
+  && asdf install golang ${GO_VERSION} \
+  && asdf global golang ${GO_VERSION} \
   && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
 ENV JAVA_VERSION openjdk-15
-RUN ${HOME}/.asdf/bin/asdf plugin-add java \
-  && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
-  && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.bash' >> ~/.bashrc
+RUN asdf plugin-add java \
+  && asdf install java ${JAVA_VERSION} \
+  && asdf global java ${JAVA_VERSION} \
+  && echo '\n. ${ASDF_DATA_DIR}/plugins/java/set-java-home.bash' >> ${HOME}/.zshrc.ext
 
 # fetch/install kotlin
 ENV KOTLIN_VERSION 1.4.0
-RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
-  && ${HOME}/.asdf/bin/asdf install kotlin ${KOTLIN_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
+RUN asdf plugin-add kotlin \
+  && asdf install kotlin ${KOTLIN_VERSION} \
+  && asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
 ENV ERLANG_VERSION 23.0.3
-RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
-  && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
+RUN asdf plugin-add erlang \
+  && asdf install erlang ${ERLANG_VERSION} \
+  && asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
 ENV ELIXIR_VERSION 1.10.4-otp-23
-RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
-  && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
+RUN asdf plugin-add elixir \
+  && asdf install elixir ${ELIXIR_VERSION} \
+  && asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
 ENV NODE_VERSION 14.8.0
-RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
-  && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
-  && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global nodejs ${NODE_VERSION}
+RUN asdf plugin-add nodejs \
+  && ${ASDF_DATA_DIR}/plugins/nodejs/bin/import-release-team-keyring \
+  && asdf install nodejs ${NODE_VERSION} \
+  && asdf global nodejs ${NODE_VERSION}
 ENV YARN_VERSION 1.22.4
-RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
-  && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
-  && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
+RUN asdf plugin-add yarn \
+  && asdf install yarn ${YARN_VERSION} \
+  && asdf global yarn ${YARN_VERSION}
 
 USER root
 
@@ -144,9 +150,10 @@ ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VE
 WORKDIR /tmp
 RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && mv exercism /usr/local/bin \
-  && mkdir -p /root/.config/exercism \
-  && mv shell/exercism_completion.bash /root/.config/exercism \
-  && echo '\n. ${HOME}/.config/exercism/exercism_completion.bash' >> ~/.bashrc \
+  && mkdir -p ${XDG_CONFIG_HOME}/exercism \
+  && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
+  && echo '\n. ${XDG_CONFIG_HOME}/exercism/exercism_completion.bash' >> ${HOME}/.xshrc.ext \
+  && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
 # fetch/install neovim
