@@ -82,6 +82,8 @@ ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV ASDF_HOME_DIR ${XDG_CONFIG_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
+ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
+
 # fetch/install asdf
 ENV PATH ${XDG_CONFIG_HOME}/asdf/bin:$PATH
 ENV ASDF_VERSION v0.8.0-rc1
@@ -93,7 +95,9 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${AS
 ENV PYTHON_VERSION 3.8.5
 RUN asdf plugin-add python \
   && asdf install python ${PYTHON_VERSION} \
-  && asdf global python ${PYTHON_VERSION}
+  && asdf global python ${PYTHON_VERSION} \
+  && echo "install pynvim" \
+  && ${ASDF_DATA_DIR}/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install golang
 ENV GO_VERSION 1.15
@@ -141,6 +145,18 @@ RUN asdf plugin-add yarn \
   && asdf install yarn ${YARN_VERSION} \
   && asdf global yarn ${YARN_VERSION}
 
+# fetch/install neovim plug
+RUN curl -fLo \
+    ${XDG_DATA_HOME}/nvim/site/autoload/plug.vim \
+    --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# fetch/install fzf
+RUN mkdir -p ${ZDOTDIR} \
+  && touch ${ZDOTDIR}/.zshrc \
+  && git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf \
+  && ${HOME}/.fzf/install
+
 USER root
 
 # fetch/install exercism
@@ -156,24 +172,13 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
-# fetch/install neovim
+# fetch/install ripgrep
 ENV RIPGREP_VERSION 12.1.1
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-RUN echo "install plug" \
-  && curl -fLo \
-    /root/.local/share/nvim/site/autoload/plug.vim \
-    --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-  && echo "install fzf" \
-  && git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf \
-  && /root/.fzf/install \
-  && echo "install ripgrep" \
-  && curl -LO ${RIPGREP_URL} \
+RUN curl -LO ${RIPGREP_URL} \
   && dpkg -i ${RIPGREP_FILE} \
-  && rm ${RIPGREP_FILE} \
-  && echo "install pynvim" \
-  && /root/.asdf/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
+  && rm ${RIPGREP_FILE}
 ENV FZF_DEFAULT_COMMAND rg --files
 ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
