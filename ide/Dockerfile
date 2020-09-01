@@ -63,19 +63,19 @@ ENV LANG en_US.UTF-8
 
 # fetch/install asdf
 ENV PATH /root/.asdf/bin:$PATH
-ENV ASDF_VERSION v0.7.8
+ENV ASDF_VERSION v0.8.0-rc1
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION} \
   && echo '\n. ${HOME}/.asdf/asdf.sh' >> ~/.bashrc \
   && echo '\n. ${HOME}/.asdf/completions/asdf.bash' >> ~/.bashrc
 
 # fetch/install python
-ENV PYTHON_VERSION 3.8.3
+ENV PYTHON_VERSION 3.8.5
 RUN ${HOME}/.asdf/bin/asdf plugin-add python \
   && ${HOME}/.asdf/bin/asdf install python ${PYTHON_VERSION} \
   && ${HOME}/.asdf/bin/asdf global python ${PYTHON_VERSION}
 
 # fetch/install golang
-ENV GO_VERSION 1.14.4
+ENV GO_VERSION 1.15
 ENV GOPATH /go
 RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && ${HOME}/.asdf/bin/asdf install golang ${GO_VERSION} \
@@ -84,32 +84,32 @@ RUN ${HOME}/.asdf/bin/asdf plugin-add golang \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
-ENV JAVA_VERSION openjdk-14.0.1
+ENV JAVA_VERSION openjdk-15
 RUN ${HOME}/.asdf/bin/asdf plugin-add java \
   && ${HOME}/.asdf/bin/asdf install java ${JAVA_VERSION} \
   && ${HOME}/.asdf/bin/asdf global java ${JAVA_VERSION} \
   && echo '\n. ${HOME}/.asdf/plugins/java/set-java-home.bash' >> ~/.bashrc
 
 # fetch/install kotlin
-ENV KOTLIN_VERSION 1.3.72
+ENV KOTLIN_VERSION 1.4.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add kotlin \
   && ${HOME}/.asdf/bin/asdf install kotlin ${KOTLIN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
-ENV ERLANG_VERSION 23.0.2
+ENV ERLANG_VERSION 23.0.3
 RUN ${HOME}/.asdf/bin/asdf plugin-add erlang \
   && ${HOME}/.asdf/bin/asdf install erlang ${ERLANG_VERSION} \
   && ${HOME}/.asdf/bin/asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-ENV ELIXIR_VERSION 1.10.3-otp-23
+ENV ELIXIR_VERSION 1.10.4-otp-23
 RUN ${HOME}/.asdf/bin/asdf plugin-add elixir \
   && ${HOME}/.asdf/bin/asdf install elixir ${ELIXIR_VERSION} \
   && ${HOME}/.asdf/bin/asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 14.4.0
+ENV NODE_VERSION 14.8.0
 RUN ${HOME}/.asdf/bin/asdf plugin-add nodejs \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring \
   && PATH=${HOME}/.asdf/bin:${PATH} ${HOME}/.asdf/bin/asdf install nodejs ${NODE_VERSION} \
@@ -153,7 +153,7 @@ ENV FZF_DEFAULT_COMMAND rg --files
 ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
 # fetch/install grpc
-ENV GRPC_VERSION 3.12.3
+ENV GRPC_VERSION 3.13.0
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
@@ -164,7 +164,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.4.1
+ENV CODE_VERSION 3.5.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
