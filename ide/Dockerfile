@@ -1,9 +1,5 @@
 FROM ubuntu:20.04
 
-# setup unprivileged user
-RUN groupadd --gid 1000 coder \
-  && useradd --uid 1000 --gid coder --shell /bin/bash --create-home coder
-
 # install system deps
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
@@ -50,17 +46,37 @@ RUN apt-get update \
     openssl \
     pkg-config \
     python-openssl \
+    sudo \
     tk-dev \
     unixodbc-dev \
     unzip \
     uuid-dev \
     wget \
     xz-utils \
+    zsh \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
 
+# setup unprivileged user
+RUN groupadd --gid 1000 coder \
+  && useradd \
+      --uid 1000 \
+      --gid coder \
+      --groups sudo \
+      --shell $(which zsh) \
+      --home-dir /home/coder \
+      --create-home \
+      coder \
+  && echo 'coder:coder' | chpasswd
+
+USER coder
+WORKDIR /home/coder
+
+ENV LANGUAGE en_US.UTF-8
+ENV LANG ${LANGAGUE}
+ENV LC_ALL ${LANGUAGE}
+ENV HOME /home/coder
 # fetch/install asdf
 ENV PATH /root/.asdf/bin:$PATH
 ENV ASDF_VERSION v0.8.0-rc1
@@ -118,6 +134,8 @@ ENV YARN_VERSION 1.22.4
 RUN ${HOME}/.asdf/bin/asdf plugin-add yarn \
   && ${HOME}/.asdf/bin/asdf install yarn ${YARN_VERSION} \
   && ${HOME}/.asdf/bin/asdf global yarn ${YARN_VERSION}
+
+USER root
 
 # fetch/install exercism
 ENV EXERCISM_VERSION v3.0.13
@@ -179,9 +197,9 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
 RUN chmod +x /usr/local/bin/tini
 
-WORKDIR /root/project
-VOLUME /root/exercism
-ENV PATH $GOPATH/bin:/usr/local/bin:$PATH
+USER coder
+WORKDIR ${HOME}/project
+VOLUME ${HOME}/exercism
 EXPOSE 8443
 ENTRYPOINT ["tini", "--", "code-server"]
 CMD ["-d", "$PWD"]
