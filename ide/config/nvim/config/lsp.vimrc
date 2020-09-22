@@ -1,65 +1,41 @@
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
 
-" global extensions {{{
-let g:coc_global_extensions = ['coc-json', 'coc-yaml', 'coc-marketplace', 'coc-python', 'coc-elixir', 'coc-go']
-call coc#config('elixir', {
-    \ 'command': g:ElixirLS.lsp,
-    \ 'filetypes': ['elixir', 'eelixir']
-    \ })
-call coc#config('elixir.pathToElixirLS', g:ElixirLS.lsp)
+" elixir lsp setup {{{
+lua << EOF
+local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config"
+local config_dir = xdg_config_home .. "/nvim/plugged"
+local on_attach_nvim = function(client)
+  require'completion'.on_attach(client)
+  require'diagnostic'.on_attach(client)
+end
+
+require'nvim_lsp'.elixirls.setup{
+  cmd = { config_dir .. "/elixir-ls/release/language_server.sh" };
+  on_attach = on_attach_nvim
+}
+EOF
 " }}}
 
-" coc.nvim default settings
-" based on post: https://octetz.com/posts/vim-as-go-ide
+" configure lsp {{{
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+" }}}
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" configure completion {{{
+set completeopt=menuone,noinsert,noselect
+let g:completion_enable_auto_popup = 0
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+inoremap <silent><expr> <c-p> completion#trigger_completion()
+" }}}
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use U to show documentation in preview window
-nnoremap <silent> U :call <SID>show_documentation()<CR>
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Remap for format selected region
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p :<C-u>CocListResume<CR>
+" configure diagnostic {{{
+let g:diagnostic_enable_virtual_text = 1
+let g:diagnostic_auto_popup_while_jump = 1
+" }}}
