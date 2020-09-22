@@ -3,7 +3,9 @@
 " plugin setup {{{
 call plug#begin()
 " autocomplete/lsp
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'nvim-lua/diagnostic-nvim'
 Plug 'elixir-lsp/elixir-ls', {'do': { -> g:ElixirLS.compile() }}
 " editor
 Plug 'editorconfig/editorconfig-vim'
