@@ -3,7 +3,9 @@
 " plugin setup {{{
 call plug#begin()
 " autocomplete/lsp
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'nvim-lua/diagnostic-nvim'
 Plug 'elixir-lsp/elixir-ls', {'do': { -> g:ElixirLS.compile() }}
 " editor
 Plug 'editorconfig/editorconfig-vim'
@@ -39,13 +41,16 @@ let g:ElixirLS = {}
 let ElixirLS.path = stdpath('config') . '/plugged/elixir-ls'
 let ElixirLS.lsp = ElixirLS.path . '/release/language_server.sh'
 let ElixirLS.cmd = join([
-    \ 'asdf install &&',
-    \ 'mix do',
+    \ 'cp .release-tool-versions .tool-versions',
+    \ '&& asdf install',
+    \ '&& mix do',
     \ 'local.hex --force --if-missing,',
     \ 'local.rebar --force,',
+    \ 'deps.clean --all,',
     \ 'deps.get,',
     \ 'compile,',
-    \ 'elixir_ls.release'
+    \ 'elixir_ls.release',
+    \ '&& rm .tool-versions'
     \ ], ' ')
 
 function ElixirLS.on_stdout(_job_id, data, _event)
