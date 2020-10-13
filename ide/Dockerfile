@@ -191,6 +191,8 @@ RUN curl -LO ${GRPC_URL} \
   && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
   && ln -s /opt/${GRPC_PATH}/bin/protoc /usr/local/bin/ \
   && cp --recursive /opt/${GRPC_PATH}/include/google /usr/local/include \
+  && chmod --recursive 755 /opt/${GRPC_PATH}/bin \
+  && chmod --recursive o+r /usr/local/include \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
@@ -202,7 +204,8 @@ ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_RELEASE
 WORKDIR /usr/local/lib
 RUN echo "Downloading ${CODE_URL}" \
   && curl -L ${CODE_URL} | tar xz \
-  && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin
+  && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin \
+  && chmod 755 ${PWD}/${CODE_PATH}/bin/code-server
 
 # fetch/install tini
 ENV TINI_VERSION v0.19.0
