@@ -167,6 +167,7 @@ ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VE
 WORKDIR /tmp
 RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && mv exercism /usr/local/bin \
+  && echo ${XDG_CONFIG_HOME} \
   && mkdir -p ${XDG_CONFIG_HOME}/exercism \
   && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
   && echo '\n. ${XDG_CONFIG_HOME}/exercism/exercism_completion.bash' >> ${HOME}/.zshrc.ext \
@@ -208,14 +209,10 @@ RUN echo "Downloading ${CODE_URL}" \
   && ln -s ${PWD}/${CODE_PATH}/bin/code-server /usr/local/bin \
   && chmod 755 ${PWD}/${CODE_PATH}/bin/code-server
 
-# fetch/install tini
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
-RUN chmod +x /usr/local/bin/tini
-
+# runtime
 USER coder
 WORKDIR ${HOME}/project
 VOLUME ${HOME}/exercism
 EXPOSE 8443
-ENTRYPOINT ["tini", "--", "code-server"]
+ENTRYPOINT ["code-server"]
 CMD ["-d", "$PWD"]
