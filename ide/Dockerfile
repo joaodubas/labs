@@ -56,6 +56,7 @@ RUN apt-get update \
     zsh \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
+  && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && locale-gen en_US.UTF-8
 
 # setup unprivileged user
@@ -168,7 +169,7 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && mv exercism /usr/local/bin \
   && mkdir -p ${XDG_CONFIG_HOME}/exercism \
   && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
-  && echo '\n. ${XDG_CONFIG_HOME}/exercism/exercism_completion.bash' >> ${HOME}/.xshrc.ext \
+  && echo '\n. ${XDG_CONFIG_HOME}/exercism/exercism_completion.bash' >> ${HOME}/.zshrc.ext \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
