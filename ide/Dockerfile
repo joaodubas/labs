@@ -198,7 +198,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.6.0
+ENV CODE_VERSION 3.6.2
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
