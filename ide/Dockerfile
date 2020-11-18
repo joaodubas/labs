@@ -60,11 +60,12 @@ RUN apt-get update \
   && locale-gen en_US.UTF-8
 
 # setup unprivileged user
-RUN groupadd --gid 1000 coder \
+RUN groupadd --gid 999 docker \
+  && groupadd --gid 1000 coder \
   && useradd \
       --uid 1000 \
       --gid coder \
-      --groups sudo \
+      --groups docker,sudo \
       --shell $(which zsh) \
       --home-dir /home/coder \
       --create-home \
@@ -198,7 +199,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.6.2
+ENV CODE_VERSION 3.7.1
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
