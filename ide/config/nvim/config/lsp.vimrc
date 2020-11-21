@@ -4,14 +4,32 @@
 lua << EOF
 local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config"
 local config_dir = xdg_config_home .. "/nvim/plugged"
-local on_attach_nvim = function(client)
-  require'completion'.on_attach(client)
-  require'diagnostic'.on_attach(client)
+
+local lsp_status = require('lsp-status')
+local diagnostic = require('diagnostic')
+local completion = require('completion')
+local lsp        = require('lspconfig')
+
+local on_attach = function(client, bufnr)
+  lsp_status.on_attach(client, bufnr)
+  diagnostic.on_attach(client, bufnr)
+  completion.on_attach(client, bufnr)
 end
 
-require'nvim_lsp'.elixirls.setup{
-  cmd = { config_dir .. "/elixir-ls/release/language_server.sh" };
-  on_attach = on_attach_nvim
+lsp_status.register_progress()
+lsp_status.config({
+  status_symbol = '',
+  indicator_errors = 'e',
+  indicator_warnings = 'w',
+  indicator_info = 'i',
+  indicator_hint = 'h',
+  indicator_ok = 'ok',
+})
+
+lsp.elixirls.setup{
+  cmd = { config_dir .. "/elixir-ls/release/language_server.sh" },
+  on_attach = on_attach,
+  capabilities = lsp_status.capabilities
 }
 EOF
 " }}}
