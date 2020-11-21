@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   coder:
-    image: 'joaodubas/code-server:3.7.1-zsh'
+    image: 'joaodubas/code-server:3.7.2-zsh'
     build:
       context: .
     init: true
