@@ -141,14 +141,14 @@ testing = ["importlib-resources"]
 
 [[package]]
 name = "influxdb"
-version = "5.3.0"
+version = "5.3.1"
 description = "InfluxDB client"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-msgpack = "0.6.1"
+msgpack = "*"
 python-dateutil = ">=2.6.0"
 pytz = "*"
 requests = ">=2.17.0"
@@ -361,8 +361,8 @@ importlib-metadata = [
     {file = "importlib_metadata-0.19.tar.gz", hash = "sha256:23d3d873e008a513952355379d93cbcab874c58f4f034ff657c7a87422fa64e8"},
 ]
 influxdb = [
-    {file = "influxdb-5.3.0-py2.py3-none-any.whl", hash = "sha256:b4c034ee9c9ee888d43de547cf40c616bba35f0aa8f11e5a6f056bf5855970ac"},
-    {file = "influxdb-5.3.0.tar.gz", hash = "sha256:9bcaafd57ac152b9824ab12ed19f204206ef5df8af68404770554c5b55b475f6"},
+    {file = "influxdb-5.3.1-py2.py3-none-any.whl", hash = "sha256:65040a1f53d1a2a4f88a677e89e3a98189a7d30cf2ab61c318aaa89733280747"},
+    {file = "influxdb-5.3.1.tar.gz", hash = "sha256:46f85e7b04ee4b3dee894672be6a295c94709003a7ddea8820deec2ac4d8b27a"},
 ]
 kombu = [
     {file = "kombu-5.0.2-py2.py3-none-any.whl", hash = "sha256:6dc509178ac4269b0e66ab4881f70a2035c33d3a622e20585f965986a5182006"},
