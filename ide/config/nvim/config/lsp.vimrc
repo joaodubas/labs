@@ -6,13 +6,11 @@ local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.
 local config_dir = xdg_config_home .. "/nvim/plugged"
 
 local lsp_status = require('lsp-status')
-local diagnostic = require('diagnostic')
 local completion = require('completion')
 local lsp        = require('lspconfig')
 
 local on_attach = function(client, bufnr)
   lsp_status.on_attach(client, bufnr)
-  diagnostic.on_attach(client, bufnr)
   completion.on_attach(client, bufnr)
 end
 
