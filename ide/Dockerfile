@@ -43,6 +43,7 @@ RUN apt-get update \
     make \
     neovim \
     net-tools \
+    openssh-client \
     openssl \
     pkg-config \
     python-openssl \
@@ -88,7 +89,7 @@ ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 
 # fetch/install asdf
 ENV PATH ${XDG_CONFIG_HOME}/asdf/bin:$PATH
-ENV ASDF_VERSION v0.8.0-rc1
+ENV ASDF_VERSION v0.8.0
 RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${ASDF_VERSION} \
   && echo '\n. ${ASDF_HOME_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
   && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
@@ -199,7 +200,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.7.2
+ENV CODE_VERSION 3.7.4
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
