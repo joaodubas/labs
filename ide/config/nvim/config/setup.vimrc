@@ -5,16 +5,12 @@ call plug#begin()
 " autocomplete/lsp
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
+Plug 'nvim-lua/lsp-status.nvim'
 Plug 'elixir-lsp/elixir-ls', {'do': { -> g:ElixirLS.compile() }}
 " editor
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive'
-" languages
-" Plug 'fatih/vim-go'
-" Plug 'elixir-editors/vim-elixir'
-" Plug 'slashmili/alchemist.vim'
 " navigation
 Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
@@ -37,6 +33,7 @@ colorscheme palenight
 " }}}
 
 " elixir-ls setup {{{
+" based on: https://bernheisel.com/blog/vim-elixir-ls-plug/
 let g:ElixirLS = {}
 let ElixirLS.path = stdpath('config') . '/plugged/elixir-ls'
 let ElixirLS.lsp = ElixirLS.path . '/release/language_server.sh'
@@ -46,6 +43,7 @@ let ElixirLS.cmd = join([
     \ '&& mix do',
     \ 'local.hex --force --if-missing,',
     \ 'local.rebar --force,',
+    \ 'clean,',
     \ 'deps.clean --all,',
     \ 'deps.get,',
     \ 'compile,',

@@ -1,8 +1,8 @@
 ---
-version: '3.4'
+version: '3.7'
 services:
   coder:
-    image: 'joaodubas/code-server:3.4.1'
+    image: 'joaodubas/code-server:3.8.0-zsh'
     build:
       context: .
     init: true
@@ -11,20 +11,19 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-      - '/var/lib/docker:/var/lib/docker'
-      - '/usr/bin/docker:/usr/bin/docker'
-      - '/var/run/docker.sock:/var/run/docker.sock'
-      - '/usr/local/bin/docker-compose:/usr/bin/docker-compose'
-      - './config/nvim:/root/.config/nvim'
+      - './config/nvim:/home/coder/.config/nvim'
+      - './config/zsh:/home/coder/.config/zsh'
       - 'src_data:/opt/src'
       - 'gopath_data:/go'
-      - 'exercism_config_data:/root/.config/exercism'
+      - 'exercism_config_data:/home/coder/.config/exercism'
+      - 'zsh_cache_data:/home/coder/.cache/zsh'
     working_dir: /opt/src
     command: '--user-data-dir /opt/src --bind-addr 0.0.0.0:8443 --auth password'
 volumes:
   src_data: {}
   gopath_data: {}
   exercism_config_data: {}
+  zsh_cache_data: {}
 networks:
   default:
     external:
