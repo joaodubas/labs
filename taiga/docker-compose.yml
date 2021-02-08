@@ -1,0 +1,97 @@
+version: '3.7'
+x-taiga-common: &taiga_common
+  image: &taiga_image 'taigaio/taiga5:5.5.9'
+  volumes:
+    - 'media:/srv/taiga-back/media'
+    - './settings/front/conf.json:/etc/opt/taiga-front/conf.json:ro'
+    - './settings/back/settings.py:/etc/opt/taiga-back/settings.py:ro'
+services:
+  broker:
+    image: 'rabbitmq:3.8.9-alpine'
+    environment:
+      RABBITMQ_DEFAULT_VHOST: taiga
+      RABBITMQ_NODENAME: rabbit@localhost
+    hostname: broker
+    networks:
+      default:
+        aliases:
+          - broker
+    restart: unless-stopped
+    volumes:
+      - 'broker:/var/lib/rabbitmq'
+  database:
+    image: 'postgres:13.1-alpine'
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: changeme
+    hostname: database
+    networks:
+      default:
+        aliases:
+          - database
+      proxy:
+        aliases:
+          - taiga_database
+    restart: unless-stopped
+    stop_signal: SIGINT
+    volumes:
+      - 'database:/var/lib/postgresql/data'
+  events:
+    image: *taiga_image
+    healthcheck:
+      interval: 5s
+      # Taiga-events seems unable to reconnect to message broker when connection cannot be
+      # established or is closed. There also does not seem to be another way to tell if the server
+      # is actually able to communicate with the broker.
+      test: "wget -q -t 1 http://localhost:8080 2>&1 | grep -q '426 Upgrade Required' && ! egrep -m 1 -q '^Unhandled rejection ' /var/log/taiga-events.log"
+    hostname: taiga_events
+    networks:
+      default:
+        aliases:
+          - events
+      proxy:
+        aliases:
+          - taiga_events
+    restart: unless-stopped
+    volumes:
+      - './settings/event/conf.json:/etc/opt/taiga-events/config.json:ro'
+  migrations:
+    <<: *taiga_common
+    command:
+      - migrate
+      # Make sure this command is run only during the initial setup as it will
+      # overwrite existing data.
+      # - populate-db
+    networks:
+      - default
+    restart: 'no'
+  server:
+    <<: *taiga_common
+    command: run-server
+    environment:
+      UWSGI_HTTP: ~
+      UWSGI_HTTP_SOCKET: :8080
+      UWSGI_OFFLOAD_THREADS: 4
+      UWSGI_UWSGI_SOCKET: :3031
+    healthcheck:
+      test: 'wget -q -t 1 --spider http://localhost:8080/api/v1/'
+    hostname: server
+    networks:
+      default:
+        aliases:
+          - server
+      proxy:
+        aliases:
+          - taiga_server
+    restart: unless-stopped
+    stop_signal: SIGHUP
+volumes:
+  broker: {}
+  database: {}
+  media: {}
+networks:
+  default: {}
+  proxy:
+    external:
+      name: proxy_upstream
