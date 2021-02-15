@@ -95,7 +95,7 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${AS
   && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
 
 # fetch/install python
-ENV PYTHON_VERSION 3.9.0
+ENV PYTHON_VERSION 3.9.1
 RUN asdf plugin-add python \
   && asdf install python ${PYTHON_VERSION} \
   && asdf global python ${PYTHON_VERSION} \
@@ -103,7 +103,7 @@ RUN asdf plugin-add python \
   && ${ASDF_DATA_DIR}/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
 
 # fetch/install golang
-ENV GO_VERSION 1.15.2
+ENV GO_VERSION 1.15.8
 ENV GOPATH ${HOME}/.config/go
 ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN asdf plugin-add golang \
@@ -113,32 +113,32 @@ RUN asdf plugin-add golang \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install java
-ENV JAVA_VERSION openjdk-15
+ENV JAVA_VERSION openjdk-16
 RUN asdf plugin-add java \
   && asdf install java ${JAVA_VERSION} \
   && asdf global java ${JAVA_VERSION} \
   && echo '\n. ${ASDF_DATA_DIR}/plugins/java/set-java-home.bash' >> ${HOME}/.zshrc.ext
 
 # fetch/install kotlin
-ENV KOTLIN_VERSION 1.4.10
+ENV KOTLIN_VERSION 1.4.30
 RUN asdf plugin-add kotlin \
   && asdf install kotlin ${KOTLIN_VERSION} \
   && asdf global kotlin ${KOTLIN_VERSION}
 
 # fetch/install erlang
-ENV ERLANG_VERSION 23.1.1
+ENV ERLANG_VERSION 23.2.4
 RUN asdf plugin-add erlang \
   && asdf install erlang ${ERLANG_VERSION} \
   && asdf global erlang ${ERLANG_VERSION}
 
 # fetch/install elixir
-ENV ELIXIR_VERSION 1.11.0-otp-23
+ENV ELIXIR_VERSION 1.11.3-otp-23
 RUN asdf plugin-add elixir \
   && asdf install elixir ${ELIXIR_VERSION} \
   && asdf global elixir ${ELIXIR_VERSION}
 
 # fetch/install node/yarn
-ENV NODE_VERSION 14.13.1
+ENV NODE_VERSION 15.8.0
 RUN asdf plugin-add nodejs \
   && ${ASDF_DATA_DIR}/plugins/nodejs/bin/import-release-team-keyring \
   && asdf install nodejs ${NODE_VERSION} \
@@ -200,7 +200,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.8.0
+ENV CODE_VERSION 3.9.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
