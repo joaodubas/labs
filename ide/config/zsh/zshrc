@@ -64,6 +64,7 @@ antibody bundle zsh-users/zsh-syntax-highlighting
 
 # user configuration {{{
 [[ -r "${HOME}/.zshrc.local" ]] && source ${HOME}/.zshrc.local
+[[ -r "${HOME}/.zshrc.ext" ]] && source ${HOME}/.zshrc.ext
 # }}}
 
 
