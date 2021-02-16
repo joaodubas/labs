@@ -5,6 +5,7 @@
 .vscode/
 ide/config/nvim/plugged/
 ide/config/nvim/undodir/
+.nvimlog
 
 ## python
 __pycache__/

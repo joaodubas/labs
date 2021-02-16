@@ -7,16 +7,21 @@ ENV DM_VERSION=v0.16.2
 ENV DM_RELEASE=docker-machine-Linux-x86_64
 ENV DM_BASE_URL=https://github.com/docker/machine/releases/download/${DM_VERSION}
 ENV DM_URL=${DM_BASE_URL}/${DM_RELEASE}
-ENV DC_VERSION=20.10.2
-ENV DC_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DC_VERSION}.tgz
+ENV DO_VERSION=20.10.2
+ENV DO_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DC_VERSION}.tgz
+ENV DC_VERSION=1.28.2
+ENV DC_URL=https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-Linux-x86_64
 
 RUN echo "install system deps " \
     && apk --update add curl \
     && echo "install docker ..." \
     && mkdir -p /tmp/download \
-    && curl -L ${DC_URL} | tar -xz -C /tmp/download \
+    && curl -L ${DO_URL} | tar -xz -C /tmp/download \
     && mv /tmp/download/docker/* /usr/local/bin \
     && rm -rf /tmp/download \
+    && echo "install docker-compose..." \
+    && curl -L ${DC_URL} -o /usr/local/bin/docker-compose \
+    && chmod 755 /usr/local/bin/docker-compose \
     && echo "install docker-machine ..." \
     && curl -L ${DM_URL} -o /usr/local/bin/docker-machine \
     && chmod 755 /usr/local/bin/docker-machine \

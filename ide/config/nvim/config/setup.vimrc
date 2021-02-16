@@ -7,6 +7,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'elixir-lsp/elixir-ls', {'do': { -> g:ElixirLS.compile() }}
+Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 " editor
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
