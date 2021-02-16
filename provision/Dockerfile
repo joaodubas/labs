@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.14.4
+FROM hashicorp/terraform:0.14.6
 
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
@@ -8,7 +8,7 @@ ENV DM_RELEASE=docker-machine-Linux-x86_64
 ENV DM_BASE_URL=https://github.com/docker/machine/releases/download/${DM_VERSION}
 ENV DM_URL=${DM_BASE_URL}/${DM_RELEASE}
 ENV DO_VERSION=20.10.2
-ENV DO_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DC_VERSION}.tgz
+ENV DO_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
 ENV DC_VERSION=1.28.2
 ENV DC_URL=https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-Linux-x86_64
 
@@ -34,6 +34,7 @@ RUN echo "install system deps " \
         libffi-dev \
         openssl-dev \
         build-base \
+        cargo \
     && pip3 install --upgrade pip cffi \
     && pip3 install --upgrade ansible==2.10.4 \
     && pip3 install --upgrade pycrypt pywinrm \
