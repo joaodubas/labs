@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.14.4
+FROM hashicorp/terraform:0.14.6
 
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
