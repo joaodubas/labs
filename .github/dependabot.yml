@@ -1,0 +1,26 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/async"
+  schedule:
+    interval: daily
+    time: "08:00"
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/streams/consumer-py"
+  schedule:
+    interval: daily
+    time: "08:00"
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/streams/producer-py"
+  schedule:
+    interval: daily
+    time: "08:00"
+  open-pull-requests-limit: 10
+- package-ecosystem: docker
+  directory: "/ide"
+  schedule:
+    interval: daily
+    time: "08:00"
+  open-pull-requests-limit: 10
