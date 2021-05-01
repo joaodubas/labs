@@ -2,12 +2,12 @@
 - hosts: dev
   vars:
     version:
-      erlang: '23.2.4'
-      elixir: '1.11.3-otp-23'
-      golang: '1.15.8'
+      erlang: '23.3.1'
+      elixir: '1.11.4-otp-23'
+      golang: '1.16.3'
       java: 'openjdk-16'
-      kotlin: '1.4.30'
-      nodejs: '15.8.0'
+      kotlin: '1.4.32'
+      nodejs: '15.14.0'
       yarn: '1.22.10'
   # NOTE (jpd): install jq before installing asdf
   roles:
