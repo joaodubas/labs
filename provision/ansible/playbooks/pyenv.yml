@@ -2,7 +2,7 @@
 - hosts: dev
   vars:
     python_2: '2.7.16'
-    python_3: '3.7.4'
+    python_3: '3.9.4'
   roles:
     - role: avanov.pyenv
       pyenv_path: '{{ ansible_env.HOME }}/.pyenv'
