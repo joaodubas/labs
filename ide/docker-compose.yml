@@ -10,6 +10,8 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
+      ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes:
       - './config/nvim:/home/coder/.config/nvim'
       - './config/zsh:/home/coder/.config/zsh'
