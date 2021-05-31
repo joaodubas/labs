@@ -19,6 +19,7 @@ services:
       - 'gopath_data:/go'
       - 'exercism_config_data:/home/coder/.config/exercism'
       - 'zsh_cache_data:/home/coder/.cache/zsh'
+      - 'asdf_cache_data:/home/coder/.cache/asdf'
     working_dir: /opt/src
     command: '--user-data-dir /opt/src --bind-addr 0.0.0.0:8443 --auth password'
 volumes:
@@ -26,6 +27,7 @@ volumes:
   gopath_data: {}
   exercism_config_data: {}
   zsh_cache_data: {}
+  asdf_cache_data: {}
 networks:
   default:
     external:
