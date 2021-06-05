@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   coder:
-    image: 'joaodubas/code-server:3.10.0-zsh'
+    image: 'joaodubas/code-server:3.10.2'
     build:
       context: .
     init: true
@@ -10,6 +10,8 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
+      ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes:
       - './config/nvim:/home/coder/.config/nvim'
       - './config/zsh:/home/coder/.config/zsh'
@@ -17,6 +19,7 @@ services:
       - 'gopath_data:/go'
       - 'exercism_config_data:/home/coder/.config/exercism'
       - 'zsh_cache_data:/home/coder/.cache/zsh'
+      - 'asdf_cache_data:/home/coder/.cache/asdf'
     working_dir: /opt/src
     command: '--user-data-dir /opt/src --bind-addr 0.0.0.0:8443 --auth password'
 volumes:
@@ -24,6 +27,7 @@ volumes:
   gopath_data: {}
   exercism_config_data: {}
   zsh_cache_data: {}
+  asdf_cache_data: {}
 networks:
   default:
     external:
