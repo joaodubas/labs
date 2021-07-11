@@ -5,7 +5,9 @@ resource "digitalocean_tag" "dev_tag" {
 resource "digitalocean_droplet" "dev_server" {
   name = "dev"
   region = "nyc3"
-  image = "ubuntu-18-04-x64"
+  # image = "ubuntu-18-04-x64"
+  image = "42892184"
+  # size = "s-4vcpu-8gb"
   size = "s-2vcpu-4gb"
   private_networking = true
   tags = [
@@ -88,6 +90,20 @@ resource "digitalocean_record" "dev_grafana" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "grafana"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_gitea" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "gitea"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_drone" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "drone"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
