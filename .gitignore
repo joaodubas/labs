@@ -1,11 +1,13 @@
 ## golang
 **/vendor/
 
-## ide
+## terminal/ide
 .vscode/
 ide/config/nvim/plugged/
 ide/config/nvim/undodir/
+.netrwhist
 .nvimlog
+.zcompdump
 
 ## python
 __pycache__/
@@ -18,8 +20,10 @@ __pycache__/
 ## provision
 **/ansible/tmp
 *.retry
-**/.terraform
+**/.terraform*
 *.tfstate*
 **/docker/
 **/ssh/
+
+## compose overrides
 **/docker-compose.override.yml
