@@ -1,0 +1,73 @@
+---
+# based on: https://blog.ruanbekker.com/blog/2021/03/09/cicd-with-droneci-and-gitea-using-docker-compose/
+version: '3.7'
+
+services:
+  git:
+    image: 'gitea/gitea:1.14.4'
+    environment:
+      APP_NAME: ${GIT_APP_NAME:-gitea}
+      USER_UID: ${UID:-1000}
+      USER_GID: ${GID:-1000}
+      RUN_MODE: ${GIT_RUN_MODE:-prod}
+      DOMAIN: ${GIT_DOMAIN:-localhost}
+      SSH_DOMAIN: ${GIT_SSH_DOMAIN:-localhost}
+      HTTP_PORT: ${GIT_HTTP_PORT:-3000}
+      ROOT_URL: http://${GIT_DOMAIN:-localhost}:3000
+      SSH_PORT: ${GIT_SSH_PORT:-222}
+      SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
+      DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
+      DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
+    restart: unless-stopped
+    volumes:
+      - 'git_data:/data'
+    networks:
+      - git_cicd_net
+    ports:
+      - '222:22'
+  ci:
+    image: 'drone/drone:2.0.4'
+    environment:
+      DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
+      DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
+      DRONE_GITEA_SERVER: 'http://git:3000'
+      DRONE_GIT_ALWAYS_AUTH: ${DRONE_GIT_ALWAYS_AUTH:-false}
+      DRONE_RPC_SECRET: &drone_rpc_secret ${DRONE_RPC_SECRET:-drone_secret}
+      DRONE_SERVER_PROTO: ${DRONE_SERVER_PROTO:-http}
+      DRONE_SERVER_HOST: ${DRONE_SERVER_HOST:-localhost}:3000
+      DRONE_TLS_AUTOCERT: ${DRONE_TLS_AUTOCERT:-false}
+      DRONE_USER_CREATE: ${DRONE_USER_CREATE:-username:admin,machine:false,admin:true,token:drone_secret}
+      DRONE_GITEA_CLIENT_ID: ${DRONE_GITEA_CLIENT_ID:-}
+      DRONE_GITEA_CLIENT_SECRET: ${DRONE_GITEA_CLIENT_SECRET:-}
+    restart: unless-stopped
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'ci_data:/data'
+    networks:
+      - git_cicd_net
+  worker:
+    image: 'drone/drone-runner-docker:1.6.3'
+    environment:
+      DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
+      DRONE_RPC_HOST: ${WORKER_RPC_HOST:-ci}
+      DRONE_RPC_SECRET: *drone_rpc_secret
+      DRONE_RUNNER_NAME: ${WORKER_RUNNER_NAME:-runner}
+      DRONER_RUNNER_CAPACITY: ${WORKER_RUNNER_CAPACTIY:-2}
+      DRONE_RUNNER_NETWORKS: git_cicd_net
+      DRONE_DEBUG: ${WORKER_DEBUG:-false}
+      DRONE_TRACE: ${WORKER_TRACE:-false}
+    restart: unless-stopped
+    depends_on:
+      - ci
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    networks:
+      - git_cicd_net
+
+volumes:
+  git_data: {}
+  ci_data: {}
+
+networks:
+  git_cicd_net:
+    name: git_cicd_net
