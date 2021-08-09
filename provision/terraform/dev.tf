@@ -107,6 +107,13 @@ resource "digitalocean_record" "dev_drone" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_appsmith" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "appsmith"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_emcasa_backend" {
   domain = digitalocean_domain.dev_default.name
   type = "A"

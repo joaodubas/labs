@@ -1,0 +1,54 @@
+version: '3.7'
+
+x-config: &config
+  # https://docs.appsmith.com/v/v1.2.1/setup/docker#enabling-services-for-self-hosting
+  APPSMITH_MAIL_ENABLED: 'false'
+  APPSMITH_REDIS_URL: 'redis://redis:6379'
+  APPSMITH_MONGODB_URI: 'mongodb://emcasa:%23iO020045AS%21@mongo/appsmith?retryWrites=true'
+  APPSMITH_DISABLE_TELEMETRY: 'true'
+  APPSMITH_SIGNUP_DISABLED: 'true'
+  APPSMITH_ADMIN_EMAILS: 'joao.dubas@gmail.com'
+  APPSMITH_ENCRYPTION_PASSWORD: nAlO0toq6oySw
+  APPSMITH_ENCRYPTION_SALT: I4yWEUkgLvyjQ
+
+services:
+  app:
+    image: 'appsmith/appsmith-editor:v1.5.12'
+    init: true
+    hostname: app
+    restart: unless-stopped
+    environment: *config
+    volumes:
+      - './config/nginx/app.conf.template:/nginx.conf.template'
+  server:
+    image: 'appsmith/appsmith-server:v1.5.12'
+    init: true
+    hostname: server
+    restart: unless-stopped
+    environment: *config
+    depends_on:
+      - mongo
+      - redis
+  mongo:
+    image: 'mongo:4.4.7'
+    init: true
+    hostname: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: emcasa
+      MONGO_INITDB_ROOT_PASSWORD: '#iO020045AS!'
+      MONGO_INITDB_DATABASE: appsmith
+    volumes:
+      - 'mongo_data:/data/db'
+      - './config/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
+  redis:
+    image: 'redis:6.2.5-alpine'
+    init: true
+    hostname: redis
+    restart: unless-stopped
+    volumes:
+      - 'redis_data:/data'
+
+volumes:
+  mongo_data: {}
+  redis_data: {}
