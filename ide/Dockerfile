@@ -94,59 +94,24 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${AS
   && echo '\n. ${ASDF_HOME_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
   && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
 
-# fetch/install python
-ENV PYTHON_VERSION 3.9.4
-RUN asdf plugin-add python \
-  && asdf install python ${PYTHON_VERSION} \
-  && asdf global python ${PYTHON_VERSION} \
-  && echo "install pynvim" \
-  && ${ASDF_DATA_DIR}/installs/python/${PYTHON_VERSION}/bin/pip install pynvim
-
-# fetch/install golang
+# configure asdf plugins
 ENV GO_VERSION 1.16.3
+ENV ERLANG_VERSION 23.3.1
+ENV ELIXIR_VERSION 1.11.4-otp-23
+ENV NODE_VERSION 15.14.0
+ENV YARN_VERSION 1.22.10
+RUN asdf plugin-add golang \
+  && asdf plugin-add erlang \
+  && asdf plugin-add elixir \
+  && asdf plugin-add nodejs \
+  && asdf plugin-add yarn \
+  && ${ASDF_DATA_DIR}/plugins/nodejs/bin/import-release-team-keyring
+
+# configure golang
 ENV GOPATH ${HOME}/.config/go
 ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
-RUN asdf plugin-add golang \
-  && asdf install golang ${GO_VERSION} \
-  && asdf global golang ${GO_VERSION} \
-  && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
+RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
-
-# fetch/install java
-ENV JAVA_VERSION openjdk-16
-RUN asdf plugin-add java \
-  && asdf install java ${JAVA_VERSION} \
-  && asdf global java ${JAVA_VERSION} \
-  && echo '\n. ${ASDF_DATA_DIR}/plugins/java/set-java-home.bash' >> ${HOME}/.zshrc.ext
-
-# fetch/install kotlin
-ENV KOTLIN_VERSION 1.4.32
-RUN asdf plugin-add kotlin \
-  && asdf install kotlin ${KOTLIN_VERSION} \
-  && asdf global kotlin ${KOTLIN_VERSION}
-
-# fetch/install erlang
-ENV ERLANG_VERSION 23.3.1
-RUN asdf plugin-add erlang \
-  && asdf install erlang ${ERLANG_VERSION} \
-  && asdf global erlang ${ERLANG_VERSION}
-
-# fetch/install elixir
-ENV ELIXIR_VERSION 1.11.4-otp-23
-RUN asdf plugin-add elixir \
-  && asdf install elixir ${ELIXIR_VERSION} \
-  && asdf global elixir ${ELIXIR_VERSION}
-
-# fetch/install node/yarn
-ENV NODE_VERSION 15.14.0
-RUN asdf plugin-add nodejs \
-  && ${ASDF_DATA_DIR}/plugins/nodejs/bin/import-release-team-keyring \
-  && asdf install nodejs ${NODE_VERSION} \
-  && asdf global nodejs ${NODE_VERSION}
-ENV YARN_VERSION 1.22.10
-RUN asdf plugin-add yarn \
-  && asdf install yarn ${YARN_VERSION} \
-  && asdf global yarn ${YARN_VERSION}
 
 # fetch/install neovim plug
 RUN curl -fLo \
