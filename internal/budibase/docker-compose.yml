@@ -1,0 +1,114 @@
+version: '3.7'
+
+services:
+  minio:
+    restart: unless-stopped
+    image: minio/minio
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      MINIO_ACCESS_KEY: &minio_access_key ${MINIO_ACCESS_KEY:-minio_access_key}
+      MINIO_SECRET_KEY: &minio_secret_key ${MINIO_SECRET_KEY:-minio_secret_key}
+      MINIO_BROWSER: 'off'
+    command: server /data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  couchdb:
+    restart: unless-stopped
+    image: 'ibmcom/couchdb3:3.1.1'
+    environment:
+      COUCHDB_USER: &couchdb_user ${COUCH_DB_USER:-couch_user}
+      COUCHDB_PASSWORD: &couchdb_password ${COUCH_DB_PASSWORD:-couch_pass}
+    volumes:
+      - 'couchdb3_data:/opt/couchdb/data'
+  
+  redis:
+    restart: unless-stopped
+    image: 'redis:6.2.5-alpine'
+    environment:
+      REDIS_PASSWORD: &redis_password ${REDIS_PASSWORD:-redis}
+    command: ['redis-server', '--requirepass', '$$REDIS_PASSWORD']
+    volumes:
+      - 'redis_data:/data'
+
+  app:
+    restart: unless-stopped
+    image: budibase.docker.scarf.sh/budibase/apps
+    environment:
+      SELF_HOSTED: 1
+      PORT: 4002
+      LOG_LEVEL: info
+      ENABLE_ANALYTICS: 'true'
+      INTERNAL_API_KEY: &app_internal_api_key ${INTERNAL_API_KEY:-internal_api_key}
+      BUDIBASE_ENVIRONMENT: &app_budibase_environment ${BUDIBASE_ENVIRONMENT:-dev}
+      JWT_SECRET: &app_jwt_secret ${JWT_SECRET:-jwt_secret}
+      COUCH_DB_USERNAME: *couchdb_user
+      COUCH_DB_PASSWORD: *couchdb_password
+      COUCH_DB_URL: 'http://$$COUCH_DB_USERNAME:$$COUCH_DB_PASSWORD@couchdb:5984'
+      WORKER_URL: 'http://worker:4003'
+      MINIO_URL: 'http://minio:9000'
+      MINIO_ACCESS_KEY: *minio_access_key
+      MINIO_SECRET_KEY: *minio_secret_key
+      REDIS_URL: 'redis:6379'
+      REDIS_PASSWORD: *redis_password
+      SENTRY_DSN: 'https://a34ae347621946bf8acded18e5b7d4b8@o420233.ingest.sentry.io/5338131'
+    volumes:
+      - 'app_log_data:/logs'
+    depends_on:
+      - worker
+      - redis
+
+  worker:
+    restart: unless-stopped
+    image: budibase.docker.scarf.sh/budibase/worker
+    environment:
+      SELF_HOSTED: 1
+      PORT: 4003
+      CLUSTER_PORT: ${MAIN_PORT:-10000}
+      INTERNAL_API_KEY: *app_internal_api_key
+      JWT_SECRET: *app_jwt_secret
+      MINIO_ACCESS_KEY: *minio_access_key
+      MINIO_SECRET_KEY: *minio_secret_key
+      MINIO_URL: 'http://minio:9000'
+      COUCH_DB_USERNAME: *couchdb_user
+      COUCH_DB_PASSWORD: *couchdb_password
+      COUCH_DB_URL: 'http://$$COUCH_DB_USERNAME:$$COUCH_DB_PASSWORD@couchdb:5984'
+      REDIS_URL: 'redis:6379'
+      REDIS_PASSWORD: *redis_password
+    volumes:
+      - 'app_log_data:/logs'
+    depends_on:
+      - redis
+      - minio
+      - couch-init
+
+  proxy:
+    restart: unless-stopped
+    image: 'envoyproxy/envoy:v1.16-latest'
+    volumes:
+      - './envoy.yml:/etc/envoy/envoy.yml:ro'
+    depends_on:
+      - minio
+      - worker
+      - app
+      - couchdb
+
+  couch-init:
+    image: 'curlimages/curl:7.78.0'
+    environment:
+      COUCH_DB_USER: *couchdb_user
+      COUCH_DB_PASSWORD: *couchdb_password
+      PUT_CALL: 'curl -u $${COUCH_DB_USER}:$${COUCH_DB_PASSWORD} -X PUT couchdb:5984'
+    command: ['sh','-c','sleep 10 && $${PUT_CALL}/_users && $${PUT_CALL}/_replicator; fg;']
+    depends_on:
+      - couchdb
+
+volumes:
+  app_log_data: {}
+  couchdb3_data: {}
+  minio_data: {}
+  redis_data: {}
