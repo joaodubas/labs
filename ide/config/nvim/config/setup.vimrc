@@ -17,7 +17,7 @@ Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
 " coloscheme
 Plug 'drewtempelmeyer/palenight.vim'
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
 call plug#end()
 " }}}
 

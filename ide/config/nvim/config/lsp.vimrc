@@ -1,6 +1,6 @@
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
 
-" elixir lsp setup {{{
+" setup lsp {{{
 lua << EOF
 local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config"
 local config_dir = xdg_config_home .. "/nvim/plugged"
@@ -26,6 +26,16 @@ lsp_status.config({
 
 lsp.elixirls.setup{
   cmd = { config_dir .. "/elixir-ls/release/language_server.sh" },
+  on_attach = on_attach,
+  capabilities = lsp_status.capabilities
+}
+
+lsp.terraformls.setup{
+  on_attach = on_attach,
+  capabilities = lsp_status.capabilities
+}
+
+lsp.tsserver.setup{
   on_attach = on_attach,
   capabilities = lsp_status.capabilities
 }
