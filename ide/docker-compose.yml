@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   coder:
-    image: 'joaodubas/code-server:3.10.2'
+    image: 'joaodubas/code-server:3.11.1'
     build:
       context: .
     init: true
