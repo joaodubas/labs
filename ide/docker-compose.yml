@@ -13,22 +13,18 @@ services:
       SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
       ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes:
-      - './config/nvim:/home/coder/.config/nvim'
-      - './config/zsh:/home/coder/.config/zsh'
       - 'src_data:/opt/src'
       - 'gopath_data:/go'
-      - 'exercism_config_data:/home/coder/.config/exercism'
-      - 'zsh_cache_data:/home/coder/.cache/zsh'
-      - 'asdf_cache_data:/home/coder/.cache/asdf'
+      - 'exercism_data:/home/coder/exercism'
+      - 'config_data:/home/coder/.config'
+      - 'cache_data:/home/coder/.cache'
+      - './config/nvim:/home/coder/.config/nvim'
+      - './config/zsh:/home/coder/.config/zsh'
     working_dir: /opt/src
     command: '--user-data-dir /opt/src --bind-addr 0.0.0.0:8443 --auth password'
 volumes:
   src_data: {}
   gopath_data: {}
-  exercism_config_data: {}
-  zsh_cache_data: {}
-  asdf_cache_data: {}
-networks:
-  default:
-    external:
-      name: proxy_upstream
+  exercism_data: {}
+  config_data: {}
+  cache_data: {}
