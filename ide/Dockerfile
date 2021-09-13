@@ -17,6 +17,7 @@ RUN apt-get update \
     g++ \
     gcc \
     git \
+    gosu \
     gpg \
     gpg-agent \
     jq \
@@ -177,9 +178,9 @@ RUN echo "Downloading ${CODE_URL}" \
   && chmod 755 ${PWD}/${CODE_PATH}/bin/code-server
 
 # runtime
-USER coder
-WORKDIR ${HOME}/project
-VOLUME ${HOME}/exercism
+WORKDIR /home/coder/project
+VOLUME /home/coder/exercism
 EXPOSE 8443
-ENTRYPOINT ["code-server"]
-CMD ["-d", "$PWD"]
+COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
