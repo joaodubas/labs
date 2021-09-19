@@ -141,3 +141,40 @@ resource "digitalocean_record" "dev_nlw_wabanex" {
   name = "wabanex"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
+
+resource "digitalocean_record" "simplelogin_mx_1" {
+  domain = digitalocean_domain.dev_default.name
+  type = "MX"
+  name = "@"
+  priority = 10
+  value = "mx1.simplelogin.co."
+}
+
+resource "digitalocean_record" "simplelogin_mx_2" {
+  domain = digitalocean_domain.dev_default.name
+  type = "MX"
+  name = "@"
+  priority = 20
+  value = "mx2.simplelogin.co."
+}
+
+resource "digitalocean_record" "simplelogin_spf" {
+  domain = digitalocean_domain.dev_default.name
+  type = "TXT"
+  name = "@"
+  value = "v=spf1 include:simplelogin.co -all"
+}
+
+resource "digitalocean_record" "simplelogin_dkim" {
+  domain = digitalocean_domain.dev_default.name
+  type = "CNAME"
+  name = "dkim._domainkey"
+  value = "dkim._domainkey.simplelogin.co."
+}
+
+resource "digitalocean_record" "simplelogin_dmarc" {
+  domain = digitalocean_domain.dev_default.name
+  type = "TXT"
+  name = "_dmarc"
+  value = "v=DMARC1; p=quarantine; pct=100; adkim=s; aspf=s"
+}
