@@ -1,0 +1,62 @@
+---
+- hosts: dev
+  vars:
+    base_deps:
+      - curl
+      - git
+      - unzip
+      - zsh
+    tmux_deps:
+      - tmux
+      - gawk
+      - xsel
+    python_deps:
+      - python3-pip
+      - python-pip
+    asdf_deps:
+      - autoconf
+      - automake
+      - binutils
+      - bison
+      - build-essential
+      - g++
+      - gcc
+      - libffi-dev
+      - libncurses-dev
+      - libreadline-dev
+      - libssl-dev
+      - libtool
+      - libxslt-dev
+      - libyaml-dev
+      - make
+      - patch
+      - pkg-config
+    erlang_deps:
+      - fop
+      - gettext
+      - libncurses5-dev
+      - xsltproc
+      - zlib1g-dev
+    node_deps:
+      - dirmngr
+      - gpg
+  tasks:
+    - name: setup packages
+      become: yes
+      apt:
+        name: '{{ item }}'
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+      loop: '{{ vars.base_deps + vars.tmux_deps + vars.python_deps + vars.asdf_deps + vars.asdf_deps + vars.erlang_deps + vars.node_deps }}'
+      tags:
+        - install
+        - system
+    - name: install antibody
+      become: yes
+      apt:
+        deb: https://github.com/getantibody/antibody/releases/download/v6.1.1/antibody_6.1.1_linux_armv7.deb
+      tags:
+        - install
+        - zsh
+        - antibody
