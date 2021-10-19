@@ -1,14 +1,14 @@
 [r0]
-192.168.0.100 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+rasp00 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
 
 [r1]
-192.168.0.101 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+rasp01 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
 
 [r2]
-192.168.0.102 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+rasp02 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
 
 [r3]
-192.168.0.103 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+rasp03 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
 
 [dev:children]
 r0
