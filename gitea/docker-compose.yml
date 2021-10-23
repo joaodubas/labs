@@ -1,10 +1,9 @@
 ---
-# based on: https://blog.ruanbekker.com/blog/2021/03/09/cicd-with-droneci-and-gitea-using-docker-compose/
 version: '3.7'
 
 services:
   git:
-    image: 'gitea/gitea:1.14.4'
+    image: 'gitea/gitea:1.15.0'
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
@@ -26,7 +25,7 @@ services:
     ports:
       - '222:22'
   ci:
-    image: 'drone/drone:2.0.4'
+    image: 'drone/drone:2.1.0'
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
       DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
