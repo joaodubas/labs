@@ -6,7 +6,7 @@ authors = ["Joao P Dubas <joao.dubas@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-redis = "^3.5"
+redis = "^4.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29"
