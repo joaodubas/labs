@@ -90,17 +90,17 @@ ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 
 # fetch/install asdf
 ENV PATH ${XDG_CONFIG_HOME}/asdf/bin:$PATH
-ENV ASDF_VERSION v0.8.0
+ENV ASDF_VERSION v0.9.0
 RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${ASDF_VERSION} \
   && echo '\n. ${ASDF_HOME_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
   && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
 
 # configure asdf plugins
-ENV GO_VERSION 1.16.3
-ENV ERLANG_VERSION 23.3.1
-ENV ELIXIR_VERSION 1.11.4-otp-23
-ENV NODE_VERSION 15.14.0
-ENV YARN_VERSION 1.22.10
+ENV GO_VERSION 1.17.5
+ENV ERLANG_VERSION 24.1.7
+ENV ELIXIR_VERSION 1.12.3-otp-24
+ENV NODE_VERSION 17.2.0
+ENV YARN_VERSION 1.22.17
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
@@ -143,7 +143,7 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && rm -rf ./*
 
 # fetch/install ripgrep
-ENV RIPGREP_VERSION 12.1.1
+ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
 RUN curl -LO ${RIPGREP_URL} \
@@ -153,7 +153,7 @@ ENV FZF_DEFAULT_COMMAND rg --files
 ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
 # fetch/install grpc
-ENV GRPC_VERSION 3.15.8
+ENV GRPC_VERSION 3.19.1
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
@@ -166,7 +166,7 @@ RUN curl -LO ${GRPC_URL} \
   && rm ${GRPC_FILE}
 
 # fetch/install code server
-ENV CODE_VERSION 3.12.0
+ENV CODE_VERSION 4.0.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
