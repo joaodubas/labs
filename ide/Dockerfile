@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 AS base
 
 # install system deps
 ENV DEBIAN_FRONTEND noninteractive
@@ -165,6 +165,8 @@ RUN curl -LO ${GRPC_URL} \
   && chmod --recursive o+r /usr/local/include \
   && rm ${GRPC_FILE}
 
+FROM base AS code-server
+
 # fetch/install code server
 ENV CODE_VERSION 4.0.0
 ENV CODE_RELEASE v${CODE_VERSION}
@@ -184,3 +186,25 @@ EXPOSE 8443
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
+
+FROM base AS openvscode-server
+
+# fetch/install code server
+ENV OPENVSCODE_VERSION 1.63.0
+ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
+ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
+ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
+ENV OPENVSCODE_URL https://github.com/gitpod-io/openvscode-server/releases/download/${OPENVSCODE_RELEASE}/${OPENVSCODE_FILE}
+WORKDIR /usr/local/lib
+RUN echo "Downloading ${OPENVSCODE_URL}" \
+  && curl -L ${OPENVSCODE_URL} | tar xz \
+  && sed -i 's/^ROOT=.*$/ROOT=\/usr\/local\/lib\/\$\{OPENVSCODE_PATH\}/' ${OPENVSCODE_PATH}/server.sh \
+  && ln -s ${PWD}/${OPENVSCODE_PATH}/server.sh /usr/local/bin/openvscode-server
+
+# runtime
+WORKDIR /home/coder/project
+VOLUME /home/coder/exercism
+EXPOSE 3000
+COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["openvscode-server", "--port", "3000", "--host", "0.0.0.0"]
