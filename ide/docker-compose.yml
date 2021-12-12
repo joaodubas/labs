@@ -1,5 +1,16 @@
 ---
 version: '3.7'
+
+x-volumes: &volumes
+  - 'src_data:/opt/src'
+  - 'gopath_data:/go'
+  - 'exercism_data:/home/coder/exercism'
+  - 'config_data:/home/coder/.config'
+  - 'cache_data:/home/coder/.cache'
+  - './config/nvim:/home/coder/.config/nvim'
+  - './config/zsh:/home/coder/.config/zsh'
+  - './config/code-server:/home/coder/.config/code-server'
+
 services:
   coder:
     image: 'joaodubas/code-server:4.0.0'
@@ -14,15 +25,7 @@ services:
       PASSWORD: '${CODER_PASSWORD:-password}'
       SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
       ITEM_URL: 'https://open-vsx.org/vscode/item'
-    volumes:
-      - 'src_data:/opt/src'
-      - 'gopath_data:/go'
-      - 'exercism_data:/home/coder/exercism'
-      - 'config_data:/home/coder/.config'
-      - 'cache_data:/home/coder/.cache'
-      - './config/nvim:/home/coder/.config/nvim'
-      - './config/zsh:/home/coder/.config/zsh'
-      - './config/code-server:/home/coder/.config/code-server'
+    volumes: *volumes
   openvscode:
     image: 'joaodubas/openvscode-server:1.63.0'
     build:
@@ -31,15 +34,8 @@ services:
     init: true
     hostname: openvscode
     restart: unless-stopped
-    volumes:
-      - 'src_data:/opt/src'
-      - 'gopath_data:/go'
-      - 'exercism_data:/home/coder/exercism'
-      - 'config_data:/home/coder/.config'
-      - 'cache_data:/home/coder/.cache'
-      - './config/nvim:/home/coder/.config/nvim'
-      - './config/zsh:/home/coder/.config/zsh'
-      - './config/code-server:/home/coder/.config/code-server'
+    volumes: *volumes
+
 volumes:
   src_data: {}
   gopath_data: {}
