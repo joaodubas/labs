@@ -51,6 +51,13 @@ resource "digitalocean_record" "dev_coder" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_openvscode" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "openvscode"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_pgadmin" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
