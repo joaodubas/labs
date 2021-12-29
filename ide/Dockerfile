@@ -106,7 +106,11 @@ RUN asdf plugin-add golang \
   && asdf plugin-add elixir \
   && asdf plugin-add nodejs \
   && asdf plugin-add yarn \
-  && ${ASDF_DATA_DIR}/plugins/nodejs/bin/import-release-team-keyring
+  && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
+  && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
+  && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
+  && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
+  && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions
 
 # configure golang
 ENV GOPATH ${HOME}/.config/go
