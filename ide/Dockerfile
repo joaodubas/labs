@@ -84,16 +84,17 @@ ENV HOME /home/coder
 ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
-ENV ASDF_HOME_DIR ${XDG_CONFIG_HOME}/asdf
+ENV ASDF_DIR ${XDG_CONFIG_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 
 # fetch/install asdf
-ENV PATH ${XDG_CONFIG_HOME}/asdf/bin:$PATH
+ENV PATH ${ASDF_DIR}/bin:$PATH
 ENV ASDF_VERSION v0.9.0
-RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_HOME_DIR} --branch ${ASDF_VERSION} \
-  && echo '\n. ${ASDF_HOME_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
-  && echo '\n. ${ASDF_HOME_DIR}/completions/asdf.bash' >> ${HOME}/.zshrc.ext
+RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
+  && echo '\n. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
+  && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
+  && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext
 
 # configure asdf plugins
 ENV GO_VERSION 1.17.5
@@ -118,18 +119,6 @@ ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
-# fetch/install neovim plug
-RUN curl -fLo \
-    ${XDG_DATA_HOME}/nvim/site/autoload/plug.vim \
-    --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# fetch/install fzf
-RUN mkdir -p ${ZDOTDIR} \
-  && touch ${ZDOTDIR}/.zshrc \
-  && git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf \
-  && ${HOME}/.fzf/install
-
 USER root
 
 # fetch/install exercism
@@ -153,8 +142,6 @@ ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGRE
 RUN curl -LO ${RIPGREP_URL} \
   && dpkg -i ${RIPGREP_FILE} \
   && rm ${RIPGREP_FILE}
-ENV FZF_DEFAULT_COMMAND rg --files
-ENV FZF_DEFAULT_OPTS -m --height 50% --border
 
 # fetch/install grpc
 ENV GRPC_VERSION 3.19.1
@@ -172,7 +159,7 @@ RUN curl -LO ${GRPC_URL} \
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.0.0
+ENV CODE_VERSION 4.0.1
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
@@ -194,7 +181,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.63.0
+ENV OPENVSCODE_VERSION 1.63.2
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
