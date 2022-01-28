@@ -210,7 +210,7 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "redis"
-version = "4.1.1"
+version = "4.1.2"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
@@ -365,8 +365,8 @@ pyparsing = [
     {file = "pyparsing-3.0.6.tar.gz", hash = "sha256:d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"},
 ]
 redis = [
-    {file = "redis-4.1.1-py3-none-any.whl", hash = "sha256:bc97d18938ca18d66737d0ef88584a2073069589e4026813cfba9ad6df9a9f40"},
-    {file = "redis-4.1.1.tar.gz", hash = "sha256:07420a3fbedd8e012c31d4fadac943fb81568946da202c5a5bc237774e5280a0"},
+    {file = "redis-4.1.2-py3-none-any.whl", hash = "sha256:f13eea4254e302485add677cadedaf1305c1b3a4e07535e23b7b239798ce9301"},
+    {file = "redis-4.1.2.tar.gz", hash = "sha256:bf86397be532fc0a888d5976a5313a3a70d8f912d52bc0c09bffda4b8425a1d4"},
 ]
 six = [
     {file = "six-1.11.0-py2.py3-none-any.whl", hash = "sha256:832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"},
