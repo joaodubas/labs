@@ -156,6 +156,11 @@ RUN curl -LO ${GRPC_URL} \
   && chmod --recursive o+r /usr/local/include \
   && rm ${GRPC_FILE}
 
+# runtime
+VOLUME /home/coder/exercism
+COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 FROM base AS code-server
 
 # fetch/install code server
@@ -172,10 +177,7 @@ RUN echo "Downloading ${CODE_URL}" \
 
 # runtime
 WORKDIR /home/coder/project
-VOLUME /home/coder/exercism
 EXPOSE 8443
-COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 
 FROM base AS openvscode-server
@@ -194,8 +196,5 @@ RUN echo "Downloading ${OPENVSCODE_URL}" \
 
 # runtime
 WORKDIR /home/coder/project
-VOLUME /home/coder/exercism
 EXPOSE 3000
-COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["openvscode-server", "--port", "3000", "--host", "0.0.0.0"]
