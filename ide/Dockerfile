@@ -57,6 +57,11 @@ RUN apt-get update \
     xz-utils \
     zsh \
     zlib1g-dev \
+  && echo 'install gh for neovim lsp installer' \
+  && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && apt-get update \
+  && apt-get -y install gh \
   && rm -rf /var/lib/apt/lists/* \
   && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && locale-gen en_US.UTF-8
