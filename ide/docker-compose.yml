@@ -31,7 +31,7 @@ services:
     entrypoint: sleep
     command: infinity
   coder:
-    image: 'joaodubas/code-server:4.0.1'
+    image: 'joaodubas/code-server:4.0.2'
     build:
       context: .
       target: code-server

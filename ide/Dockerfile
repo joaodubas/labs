@@ -159,7 +159,7 @@ RUN curl -LO ${GRPC_URL} \
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.0.1
+ENV CODE_VERSION 4.0.2
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
