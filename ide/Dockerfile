@@ -124,6 +124,13 @@ ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
+# fetch/install pyenv
+ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
+RUN curl https://pyenv.run | bash \
+  && echo '\nexport PATH=${PYENV_ROOT}/bin:${PATH}' >> ${HOME}/.zshrc.ext \
+  && echo 'eval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
+  && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext
+
 USER root
 
 # fetch/install exercism
