@@ -195,7 +195,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.63.2
+ENV OPENVSCODE_VERSION 1.64.0
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
@@ -203,8 +203,8 @@ ENV OPENVSCODE_URL https://github.com/gitpod-io/openvscode-server/releases/downl
 WORKDIR /usr/local/lib
 RUN echo "Downloading ${OPENVSCODE_URL}" \
   && curl -L ${OPENVSCODE_URL} | tar xz \
-  && sed -i 's/^ROOT=.*$/ROOT=\/usr\/local\/lib\/\$\{OPENVSCODE_PATH\}/' ${OPENVSCODE_PATH}/server.sh \
-  && ln -s ${PWD}/${OPENVSCODE_PATH}/server.sh /usr/local/bin/openvscode-server
+  && sed -i 's/^ROOT=.*$/ROOT=\/usr\/local\/lib\/\$\{OPENVSCODE_PATH\}/' ${OPENVSCODE_PATH}/bin/openvscode-server \
+  && ln -s ${PWD}/${OPENVSCODE_PATH}/bin/openvscode-server /usr/local/bin/openvscode-server
 
 # runtime
 WORKDIR /home/coder/project
