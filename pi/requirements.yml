@@ -1,5 +1,6 @@
 - name: geerlingguy.pip
   version: 2.1.0
 - name: geerlingguy.docker_arm
-  version: 4.1.1
+  version: 5.0.0
 - name: mikolak-net.raspi_config
+  version: 1.2.3
