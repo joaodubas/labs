@@ -12,7 +12,6 @@
       - xsel
     python_deps:
       - python3-pip
-      - python-pip
     asdf_deps:
       - autoconf
       - automake
