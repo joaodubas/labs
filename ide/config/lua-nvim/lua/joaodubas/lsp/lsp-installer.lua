@@ -15,6 +15,8 @@ lsp_installer.on_server_ready(function(server)
     server_opts = require("joaodubas.lsp.settings.jsonls")
   elseif server.name == "sumneko_lua" then
     server_opts = require("joaodubas.lsp.settings.sumneko_lua")
+  elseif server.name == "elixirls" then
+    server_opts = require("joaodubas.lsp.settings.elixirls")
   end
 
   opts = vim.tbl_deep_extend("force", server_opts, opts)
