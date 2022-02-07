@@ -5,8 +5,9 @@ x-volumes: &volumes
   - 'src_data:/opt/src'
   - 'gopath_data:/go'
   - 'exercism_data:/home/coder/exercism'
-  - 'config_data:/home/coder/.config'
-  - 'cache_data:/home/coder/.cache'
+  - 'nvim_config_data:/home/coder/.config'
+  - 'nvim_cache_data:/home/coder/.cache'
+  - 'nvim_share_data:/home/coder/.local/share'
   - './config/nvim:/home/coder/.config/nvim'
   - './config/zsh:/home/coder/.config/zsh'
   - './config/code-server:/home/coder/.config/code-server'
@@ -58,8 +59,6 @@ volumes:
   src_data: {}
   gopath_data: {}
   exercism_data: {}
-  config_data: {}
-  cache_data: {}
   nvim_config_data: {}
   nvim_cache_data: {}
   nvim_share_data: {}
