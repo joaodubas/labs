@@ -5,15 +5,28 @@ x-volumes: &volumes
   - 'src_data:/opt/src'
   - 'gopath_data:/go'
   - 'exercism_data:/home/coder/exercism'
-  - 'config_data:/home/coder/.config'
-  - 'cache_data:/home/coder/.cache'
+  - 'nvim_config_data:/home/coder/.config'
+  - 'nvim_cache_data:/home/coder/.cache'
+  - 'nvim_share_data:/home/coder/.local/share'
   - './config/nvim:/home/coder/.config/nvim'
   - './config/zsh:/home/coder/.config/zsh'
   - './config/code-server:/home/coder/.config/code-server'
 
 services:
+  nvim:
+    image: 'joaodubas/nvim:dev'
+    build:
+      context: .
+      target: base
+    init: true
+    hostname: nvim
+    restart: unless-stopped
+    volumes: *volumes
+    user: coder
+    entrypoint: sleep
+    command: infinity
   coder:
-    image: 'joaodubas/code-server:4.0.0'
+    image: 'joaodubas/code-server:4.0.2'
     build:
       context: .
       target: code-server
@@ -27,7 +40,7 @@ services:
       ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes: *volumes
   openvscode:
-    image: 'joaodubas/openvscode-server:1.63.0'
+    image: 'joaodubas/openvscode-server:1.64.0'
     build:
       context: .
       target: openvscode-server
@@ -40,5 +53,6 @@ volumes:
   src_data: {}
   gopath_data: {}
   exercism_data: {}
-  config_data: {}
-  cache_data: {}
+  nvim_config_data: {}
+  nvim_cache_data: {}
+  nvim_share_data: {}
