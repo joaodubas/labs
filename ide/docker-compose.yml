@@ -21,13 +21,7 @@ services:
     init: true
     hostname: nvim
     restart: unless-stopped
-    volumes:
-      - 'gopath_data:/go'
-      - 'nvim_config_data:/home/coder/.config'
-      - 'nvim_cache_data:/home/coder/.cache'
-      - 'nvim_share_data:/home/coder/.local/share'
-      - './config/lua-nvim:/home/coder/.config/nvim'
-      - './config/zsh:/home/coder/.config/zsh'
+    volumes: *volumes
     user: coder
     entrypoint: sleep
     command: infinity
