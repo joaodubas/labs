@@ -44,6 +44,13 @@ resource "digitalocean_domain" "dev_default" {
   ip_address = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_auth" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "auth"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_coder" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
@@ -55,48 +62,6 @@ resource "digitalocean_record" "dev_openvscode" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "openvscode"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_pgadmin" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "pgadmin"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_voltdb" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "voltdb"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_elastic" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "elastic"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_elasticui" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "elasticui"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_kibana" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "kibana"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_grafana" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "grafana"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -135,17 +100,17 @@ resource "digitalocean_record" "dev_emcasa_octopus" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_emcasa_salesforce" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "salesforce.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
 resource "digitalocean_record" "dev_nlw_wabanex" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "wabanex"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_swagger" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "swagger"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
