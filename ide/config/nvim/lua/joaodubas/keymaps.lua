@@ -45,6 +45,9 @@ keymap("n", "<A-k>", "<Esc>:m .-2<cr>==gi", opts)
 keymap("n", "<leader>f", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown({ previewer = false }))<cr>", opts)
 keymap("n", "<C-t>", "<cmd>Telescope live_grep<cr>", opts)
 
+-- Git
+keymap("n", "<leader>G", ":Git<cr>", opts)
+
 -- Visual --
 -- Stay in indent mode
 keymap("v", "<", "<gv", opts)

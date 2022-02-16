@@ -91,6 +91,7 @@ return packer.startup(function(use)
 
   -- git
   use "lewis6991/gitsigns.nvim" -- Show hints from git in the editor
+  use "tpope/vim-fugitive"
 
   -- Automatically set up your configuration after cloning packer.nvim
   if PACKER_BOOTSTRAP then
