@@ -13,7 +13,7 @@ x-config: &config
 
 services:
   app:
-    image: 'appsmith/appsmith-editor:v1.6.1'
+    image: 'appsmith/appsmith-editor:v1.6.10'
     init: true
     hostname: app
     restart: unless-stopped
@@ -21,7 +21,7 @@ services:
     volumes:
       - './config/nginx/app.conf.template:/nginx.conf.template'
   server:
-    image: 'appsmith/appsmith-server:v1.6.1'
+    image: 'appsmith/appsmith-server:v1.6.10'
     init: true
     hostname: server
     restart: unless-stopped
