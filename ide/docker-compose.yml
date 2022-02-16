@@ -13,18 +13,6 @@ x-volumes: &volumes
   - './config/code-server:/home/coder/.config/code-server'
 
 services:
-  nvim:
-    image: 'joaodubas/nvim:dev'
-    build:
-      context: .
-      target: base
-    init: true
-    hostname: nvim
-    restart: unless-stopped
-    volumes: *volumes
-    user: coder
-    entrypoint: sleep
-    command: infinity
   coder:
     image: 'joaodubas/code-server:4.0.2'
     build:
