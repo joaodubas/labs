@@ -92,15 +92,6 @@ return packer.startup(function(use)
   -- git
   use "lewis6991/gitsigns.nvim" -- Show hints from git in the editor
   use "tpope/vim-fugitive"
-  -- NOTE (jpd): I'm still not sure about this one, probably I could use a
-  -- combination of telescope and gitsigns
-  use {
-    "sindrets/diffview.nvim",
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "kyazdani42/nvim-web-devicons",
-    },
-  }
   use {
     "joaodubas/gitlinker.nvim",
     requires = { "nvim-lua/plenary.nvim" },
