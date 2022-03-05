@@ -1,0 +1,11 @@
+---
+- hosts: dev
+  tasks:
+    - name: set user shell
+      become: yes
+      user:
+        name: '{{ ansible_env.USER }}'
+        shell: /usr/bin/zsh
+      tags:
+        - config
+        - user
