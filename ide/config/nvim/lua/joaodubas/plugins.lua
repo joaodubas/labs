@@ -59,6 +59,8 @@ return packer.startup(function(use)
     requires = { "moll/vim-bbye" },
   } -- Show buffer as tabs
   use "akinsho/toggleterm.nvim" -- Execute terminals inside neovim
+  use "shift-d/scratch.nvim" -- code evaluation
+  use "gpanders/editorconfig.nvim" -- editorconfig
 
   -- colorscheme
   use "folke/tokyonight.nvim"           -- An amazing theme
