@@ -1,3 +1,4 @@
+require "joaodubas.globals"
 require "joaodubas.options"
 require "joaodubas.keymaps"
 require "joaodubas.plugins"
