@@ -56,9 +56,13 @@ return packer.startup(function(use)
   use "nvim-lualine/lualine.nvim" -- Blazing fast status line
   use {
     "akinsho/bufferline.nvim",
+    branch = "main",
     requires = { "moll/vim-bbye" },
   } -- Show buffer as tabs
-  use "akinsho/toggleterm.nvim" -- Execute terminals inside neovim
+  use {
+    "akinsho/toggleterm.nvim",
+    branch = "main"
+  }-- Execute terminals inside neovim
   use "shift-d/scratch.nvim" -- code evaluation
   use "gpanders/editorconfig.nvim" -- editorconfig
 
