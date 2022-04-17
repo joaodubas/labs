@@ -86,14 +86,16 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG ${LANGAGUE}
 ENV LC_ALL ${LANGUAGE}
 ENV HOME /home/coder
+ENV LOCAL_BIN_HOME ${HOME}/.local/bin
+ENV LOCAL_SRC_HOME ${HOME}/.local/src
 ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
-ENV ASDF_DIR ${XDG_CONFIG_HOME}/asdf
-ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 
 # fetch/install asdf
+ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
+ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV PATH ${ASDF_DIR}/bin:$PATH
 ENV ASDF_VERSION v0.9.0
 RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
@@ -119,16 +121,16 @@ RUN asdf plugin-add golang \
   && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions
 
 # configure golang
-ENV GOPATH ${HOME}/.config/go
+ENV GOPATH ${XDG_DATA_HOME}/go
 ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install pyenv
-ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
+ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
+ENV PATH ${PYENV_ROOT}/bin:$PATH
 RUN curl https://pyenv.run | bash \
-  && echo '\nexport PATH=${PYENV_ROOT}/bin:${PATH}' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
+  && echo '\neval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
   && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext
 
 USER root

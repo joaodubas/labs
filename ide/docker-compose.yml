@@ -3,11 +3,12 @@ version: '3.7'
 
 x-volumes: &volumes
   - 'src_data:/opt/src'
-  - 'gopath_data:/go'
   - 'exercism_data:/home/coder/exercism'
   - 'nvim_config_data:/home/coder/.config'
   - 'nvim_cache_data:/home/coder/.cache'
   - 'nvim_share_data:/home/coder/.local/share'
+  - 'gopath_data:/home/coder/.local/share/go'
+  - 'pyenv_versions_data:/home/coder/.local/src/pyenv/versions'
   - './config/nvim:/home/coder/.config/nvim'
   - './config/zsh:/home/coder/.config/zsh'
   - './config/code-server:/home/coder/.config/code-server'
@@ -44,3 +45,4 @@ volumes:
   nvim_config_data: {}
   nvim_cache_data: {}
   nvim_share_data: {}
+  pyenv_versions_data: {}
