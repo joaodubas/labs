@@ -102,11 +102,11 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VE
   && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext
 
 # configure asdf plugins
-ENV GO_VERSION 1.17.5
-ENV ERLANG_VERSION 24.1.7
-ENV ELIXIR_VERSION 1.12.3-otp-24
-ENV NODE_VERSION 17.2.0
-ENV YARN_VERSION 1.22.17
+ENV GO_VERSION 1.18
+ENV ERLANG_VERSION 24.3.2
+ENV ELIXIR_VERSION 1.13.3-otp-24
+ENV NODE_VERSION 17.8.0
+ENV YARN_VERSION 1.22.18
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
@@ -176,11 +176,11 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.0.2
+ENV CODE_VERSION 4.3.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
-ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_RELEASE}/${CODE_FILE}
+ENV CODE_URL https://github.com/coder/code-server/releases/download/${CODE_RELEASE}/${CODE_FILE}
 WORKDIR /usr/local/lib
 RUN echo "Downloading ${CODE_URL}" \
   && curl -L ${CODE_URL} | tar xz \
@@ -195,7 +195,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.64.0
+ENV OPENVSCODE_VERSION 1.66.1
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz

@@ -14,7 +14,7 @@ x-volumes: &volumes
 
 services:
   coder:
-    image: 'joaodubas/code-server:4.0.2'
+    image: 'joaodubas/code-server:4.3.0'
     build:
       context: .
       target: code-server
@@ -28,7 +28,7 @@ services:
       ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes: *volumes
   openvscode:
-    image: 'joaodubas/openvscode-server:1.64.0'
+    image: 'joaodubas/openvscode-server:1.66.1'
     build:
       context: .
       target: openvscode-server
