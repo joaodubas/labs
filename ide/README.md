@@ -7,6 +7,7 @@ Run [`code-server`][code-server] or [`openvscode-server`][openvscode] with suppo
 1. [golang (1.18)][golang]
 1. [erlang/otp (24.3.2)][erlang]
 1. [elixir (1.13.3)][elixir]
+1. [R (4.1.3)][R]
 1. [node (17.8.0)][node]
 
 ## Run the servers
@@ -23,5 +24,6 @@ I'm still deciding which code editor is the best one, that's why I'm keeping bot
 [pyenv]: https://github.com/pyenv/pyenv
 [golang]: https://github.com/kennyp/asdf-golang
 [erlang]: https://github.com/asdf-vm/asdf-erlang
+[R]: https://github.com/asdf-community/asdf-r
 [elixr]: https://github.com/asdf-vm/asdf-elixir
 [node]: https://github.com/asdf-vm/asdf-nodejs

@@ -16,19 +16,24 @@ RUN apt-get update \
     dirmngr \
     g++ \
     gcc \
+    gfortran \
     git \
     gosu \
     gpg \
     gpg-agent \
     jq \
+    libbz2-1.0 \
     libbz2-dev \
     libc6-dev \
+    libcurl3-dev \
     libffi-dev \
     liblzma-dev \
+    liblzma5 \
     libncurses-dev \
     libncurses5-dev \
     libncursesw5-dev \
     libodbc1 \
+    libpcre2-dev \
     libreadline-dev \
     libsctp-dev \
     libsctp1 \
@@ -54,9 +59,10 @@ RUN apt-get update \
     unzip \
     uuid-dev \
     wget \
+    xorg-dev \
     xz-utils \
-    zsh \
     zlib1g-dev \
+    zsh \
   && echo 'install gh for neovim lsp installer' \
   && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
@@ -107,6 +113,7 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VE
 ENV GO_VERSION 1.18
 ENV ERLANG_VERSION 24.3.2
 ENV ELIXIR_VERSION 1.13.3-otp-24
+ENV R_VERSION 4.1.3
 ENV NODE_VERSION 17.8.0
 ENV YARN_VERSION 1.22.18
 RUN asdf plugin-add golang \
@@ -114,9 +121,11 @@ RUN asdf plugin-add golang \
   && asdf plugin-add elixir \
   && asdf plugin-add nodejs \
   && asdf plugin-add yarn \
+  && asdf plugin-add R \
   && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
   && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
   && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
+  && echo "R $R_VERSION" >> /home/coder/.tool-versions \
   && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
   && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions
 
