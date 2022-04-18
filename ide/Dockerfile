@@ -16,19 +16,24 @@ RUN apt-get update \
     dirmngr \
     g++ \
     gcc \
+    gfortran \
     git \
     gosu \
     gpg \
     gpg-agent \
     jq \
+    libbz2-1.0 \
     libbz2-dev \
     libc6-dev \
+    libcurl3-dev \
     libffi-dev \
     liblzma-dev \
+    liblzma5 \
     libncurses-dev \
     libncurses5-dev \
     libncursesw5-dev \
     libodbc1 \
+    libpcre2-dev \
     libreadline-dev \
     libsctp-dev \
     libsctp1 \
@@ -54,9 +59,10 @@ RUN apt-get update \
     unzip \
     uuid-dev \
     wget \
+    xorg-dev \
     xz-utils \
-    zsh \
     zlib1g-dev \
+    zsh \
   && echo 'install gh for neovim lsp installer' \
   && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
@@ -86,14 +92,16 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG ${LANGAGUE}
 ENV LC_ALL ${LANGUAGE}
 ENV HOME /home/coder
+ENV LOCAL_BIN_HOME ${HOME}/.local/bin
+ENV LOCAL_SRC_HOME ${HOME}/.local/src
 ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
-ENV ASDF_DIR ${XDG_CONFIG_HOME}/asdf
-ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 
 # fetch/install asdf
+ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
+ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV PATH ${ASDF_DIR}/bin:$PATH
 ENV ASDF_VERSION v0.9.0
 RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
@@ -102,33 +110,36 @@ RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VE
   && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext
 
 # configure asdf plugins
-ENV GO_VERSION 1.17.5
-ENV ERLANG_VERSION 24.1.7
-ENV ELIXIR_VERSION 1.12.3-otp-24
-ENV NODE_VERSION 17.2.0
-ENV YARN_VERSION 1.22.17
+ENV GO_VERSION 1.18
+ENV ERLANG_VERSION 24.3.2
+ENV ELIXIR_VERSION 1.13.3-otp-24
+ENV R_VERSION 4.1.3
+ENV NODE_VERSION 17.8.0
+ENV YARN_VERSION 1.22.18
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
   && asdf plugin-add nodejs \
   && asdf plugin-add yarn \
+  && asdf plugin-add R \
   && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
   && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
   && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
+  && echo "R $R_VERSION" >> /home/coder/.tool-versions \
   && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
   && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions
 
 # configure golang
-ENV GOPATH ${HOME}/.config/go
+ENV GOPATH ${XDG_DATA_HOME}/go
 ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
 # fetch/install pyenv
-ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
+ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
+ENV PATH ${PYENV_ROOT}/bin:$PATH
 RUN curl https://pyenv.run | bash \
-  && echo '\nexport PATH=${PYENV_ROOT}/bin:${PATH}' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
+  && echo '\neval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
   && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext
 
 USER root
@@ -176,11 +187,11 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.0.2
+ENV CODE_VERSION 4.3.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
-ENV CODE_URL https://github.com/cdr/code-server/releases/download/${CODE_RELEASE}/${CODE_FILE}
+ENV CODE_URL https://github.com/coder/code-server/releases/download/${CODE_RELEASE}/${CODE_FILE}
 WORKDIR /usr/local/lib
 RUN echo "Downloading ${CODE_URL}" \
   && curl -L ${CODE_URL} | tar xz \
@@ -195,7 +206,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.64.0
+ENV OPENVSCODE_VERSION 1.66.1
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
