@@ -17,6 +17,8 @@ lsp_installer.on_server_ready(function(server)
     server_opts = require("joaodubas.lsp.settings.sumneko_lua")
   elseif server.name == "elixirls" then
     server_opts = require("joaodubas.lsp.settings.elixirls")
+  elseif server.name == "pyright" then
+    server_opts = require("joaodubas.lsp.settings.pyright").settings()
   end
 
   opts = vim.tbl_deep_extend("force", server_opts, opts)
