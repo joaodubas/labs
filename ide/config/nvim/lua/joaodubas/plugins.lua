@@ -62,7 +62,7 @@ return packer.startup(function(use)
   use {
     "akinsho/toggleterm.nvim",
     branch = "main"
-  }-- Execute terminals inside neovim
+  } -- Execute terminals inside neovim
   use "shift-d/scratch.nvim" -- code evaluation
   use "gpanders/editorconfig.nvim" -- editorconfig
   use {
@@ -71,7 +71,7 @@ return packer.startup(function(use)
   } -- make http requests
 
   -- colorscheme
-  use "folke/tokyonight.nvim"           -- An amazing theme
+  use "folke/tokyonight.nvim" -- An amazing theme
 
   -- completion (cmp) plugins
   use "hrsh7th/nvim-cmp" -- Completion engine plugin
