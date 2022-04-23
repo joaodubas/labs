@@ -65,6 +65,12 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - git_cicd_net
+  renovate:
+    image: 'renovate/renovate:32.27'
+    init: true
+    restart: unless-stopped
+    networks:
+      - git_cicd_net
 
 volumes:
   git_data: {}
