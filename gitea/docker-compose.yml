@@ -3,7 +3,8 @@ version: '3.7'
 
 services:
   git:
-    image: 'gitea/gitea:1.15.7'
+    image: 'gitea/gitea:1.16.6'
+    init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
@@ -25,7 +26,8 @@ services:
     ports:
       - '222:22'
   ci:
-    image: 'drone/drone:2.6.0'
+    image: 'drone/drone:2.11.1'
+    init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
       DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
@@ -45,7 +47,8 @@ services:
     networks:
       - git_cicd_net
   worker:
-    image: 'drone/drone-runner-docker:1.8.0'
+    image: 'drone/drone-runner-docker:1.8.1'
+    init: true
     environment:
       DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
       DRONE_RPC_HOST: ${WORKER_RPC_HOST:-ci}
