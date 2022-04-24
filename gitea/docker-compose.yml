@@ -66,8 +66,14 @@ services:
     networks:
       - git_cicd_net
   renovate:
-    image: 'renovate/renovate:32.27'
+    image: 'renovate/renovate:32.28.0'
     init: true
+    environment:
+      RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
+      RENOVATE_BASE_DIR: '/opt/renovate_data'
+    volumes:
+      - './config/renovate:/opt/renovate'
+      - 'renovate_data:/opt/renovate_data'
     restart: unless-stopped
     networks:
       - git_cicd_net
@@ -75,6 +81,7 @@ services:
 volumes:
   git_data: {}
   ci_data: {}
+  renovate_data: {}
 
 networks:
   git_cicd_net:
