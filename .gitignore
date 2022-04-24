@@ -8,7 +8,7 @@ ide/config/nvim/undodir/
 ide/config/**/plugin/
 .netrwhist
 .nvimlog
-.zcompdump
+.zcompdump*
 
 ## python
 __pycache__/
@@ -25,6 +25,10 @@ __pycache__/
 *.tfstate*
 **/docker/
 **/ssh/
+*.out
+
+## internal tools
+.lowdefy
 
 ## compose overrides
 **/docker-compose.override.yml
