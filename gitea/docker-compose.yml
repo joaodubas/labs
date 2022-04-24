@@ -77,11 +77,22 @@ services:
     restart: unless-stopped
     networks:
       - git_cicd_net
+  minio:
+    image: 'quay.io/minio/minio:RELEASE.2022-04-16T04-26-02Z'
+    environment:
+      MINIO_ROOT_USER: dubas
+      MINIO_ROOT_PASSWORD: dubas
+    volumes:
+      - 'minio_data:/data'
+    restart: unless-stopped
+    networks:
+      - git_cicd_net
 
 volumes:
   git_data: {}
   ci_data: {}
   renovate_data: {}
+  minio_data: {}
 
 networks:
   git_cicd_net:
