@@ -87,6 +87,7 @@ services:
     restart: unless-stopped
     networks:
       - git_cicd_net
+    command: 'server /data --console-address ":9001"'
 
 volumes:
   git_data: {}
