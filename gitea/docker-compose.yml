@@ -81,12 +81,18 @@ services:
     environment:
       RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
       RENOVATE_BASE_DIR: '/opt/renovate_data'
+    labels:
+      chadburn.enabled: 'true'
+      chadburn.job-exec.renovate.schedule: '@hourly'
+      chadburn.job-exec.renovate.command: '/usr/local/bin/renovate'
     volumes:
       - './config/renovate:/opt/renovate'
       - 'renovate_data:/opt/renovate_data'
     restart: unless-stopped
     networks:
       - git_cicd_net
+    entrypoint: sleep
+    command: infinity
   minio:
     image: 'quay.io/minio/minio:RELEASE.2022-04-16T04-26-02Z'
     environment:
