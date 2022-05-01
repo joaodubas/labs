@@ -76,7 +76,7 @@ services:
     - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
   renovate:
-    image: 'renovate/renovate:32.28.0'
+    image: 'renovate/renovate:32.35.0'
     init: true
     environment:
       RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
