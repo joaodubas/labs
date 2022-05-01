@@ -121,6 +121,20 @@ resource "digitalocean_record" "dev_lowdefy" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_minio" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "minio"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_minio_console" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "console.minio"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "simplelogin_mx_1" {
   domain = digitalocean_domain.dev_default.name
   type = "MX"

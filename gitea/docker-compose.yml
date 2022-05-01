@@ -3,7 +3,8 @@ version: '3.7'
 
 services:
   git:
-    image: 'gitea/gitea:1.15.7'
+    image: 'gitea/gitea:1.16.6'
+    init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
@@ -25,7 +26,8 @@ services:
     ports:
       - '222:22'
   ci:
-    image: 'drone/drone:2.6.0'
+    image: 'drone/drone:2.11.1'
+    init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
       DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
@@ -45,7 +47,8 @@ services:
     networks:
       - git_cicd_net
   worker:
-    image: 'drone/drone-runner-docker:1.8.0'
+    image: 'drone/drone-runner-docker:1.8.1'
+    init: true
     environment:
       DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
       DRONE_RPC_HOST: ${WORKER_RPC_HOST:-ci}
@@ -62,10 +65,51 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - git_cicd_net
+  cron:
+    image: 'premoweb/chadburn:1.0.1'
+    init: true
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - './config/cron:/opt/chadburn'
+    restart: unless-stopped
+    networks:
+    - git_cicd_net
+    command: daemon --config=/opt/chadburn/config.ini
+  renovate:
+    image: 'renovate/renovate:32.35.0'
+    init: true
+    environment:
+      RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
+      RENOVATE_BASE_DIR: '/opt/renovate_data'
+    labels:
+      chadburn.enabled: 'true'
+      chadburn.job-exec.renovate.schedule: '@hourly'
+      chadburn.job-exec.renovate.command: '/usr/local/bin/renovate'
+    volumes:
+      - './config/renovate:/opt/renovate'
+      - 'renovate_data:/opt/renovate_data'
+    restart: unless-stopped
+    networks:
+      - git_cicd_net
+    entrypoint: sleep
+    command: infinity
+  minio:
+    image: 'quay.io/minio/minio:RELEASE.2022-04-16T04-26-02Z'
+    environment:
+      MINIO_ROOT_USER: dubas
+      MINIO_ROOT_PASSWORD: dubas
+    volumes:
+      - 'minio_data:/data'
+    restart: unless-stopped
+    networks:
+      - git_cicd_net
+    command: 'server /data --console-address ":9001"'
 
 volumes:
   git_data: {}
   ci_data: {}
+  renovate_data: {}
+  minio_data: {}
 
 networks:
   git_cicd_net:
