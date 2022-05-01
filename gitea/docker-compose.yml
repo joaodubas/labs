@@ -65,6 +65,16 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - git_cicd_net
+  cron:
+    image: 'premoweb/chadburn:1.0.1'
+    init: true
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - './config/cron:/opt/chadburn'
+    restart: unless-stopped
+    networks:
+    - git_cicd_net
+    command: daemon --config=/opt/chadburn/config.ini
   renovate:
     image: 'renovate/renovate:32.28.0'
     init: true
