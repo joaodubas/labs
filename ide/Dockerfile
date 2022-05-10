@@ -103,18 +103,18 @@ ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
 ENV PATH ${ASDF_DIR}/bin:$PATH
-ENV ASDF_VERSION v0.9.0
+ENV ASDF_VERSION v0.10.0
 RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
   && echo '\n. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
   && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
   && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext
 
 # configure asdf plugins
-ENV GO_VERSION 1.18
-ENV ERLANG_VERSION 24.3.2
-ENV ELIXIR_VERSION 1.13.3-otp-24
-ENV R_VERSION 4.1.3
-ENV NODE_VERSION 17.8.0
+ENV GO_VERSION 1.18.1
+ENV ERLANG_VERSION 24.3.4
+ENV ELIXIR_VERSION 1.13.4-otp-24
+ENV R_VERSION 4.2.0
+ENV NODE_VERSION 18.1.0
 ENV YARN_VERSION 1.22.18
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
@@ -167,7 +167,7 @@ RUN curl -LO ${RIPGREP_URL} \
   && rm ${RIPGREP_FILE}
 
 # fetch/install grpc
-ENV GRPC_VERSION 3.19.1
+ENV GRPC_VERSION 3.20.1
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
