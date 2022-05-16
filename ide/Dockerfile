@@ -159,6 +159,11 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
+# setup starship
+ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
+RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
+  && echo '\neval "$(starship init zsh)"' >> /home/coder/.zshrc.ext
+
 # fetch/install ripgrep
 ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
