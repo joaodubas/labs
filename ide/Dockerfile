@@ -180,6 +180,29 @@ RUN curl -LO ${GRPC_URL} \
   && chmod --recursive o+r /usr/local/include \
   && rm ${GRPC_FILE}
 
+# fetch/install exa
+ENV EXA_VERSION v0.10.0
+ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
+ENV EXA_FILE ${EXA_PATH}.zip
+ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
+RUN curl -LO ${EXA_URL} \
+  && unzip ${EXA_FILE} -d /opt/${EXA_PATH} \
+  && ln -s /opt/${EXA_PATH}/bin/exa /usr/local/bin \
+  && chmod --recursive 755 /opt/${EXA_PATH}/bin \
+  && rm ${EXA_FILE}
+
+# fetch/install bat
+ENV BAT_VERSION 0.21.0
+ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
+ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
+RUN curl -LO ${BAT_URL} \
+  && dpkg -i ${BAT_FILE} \
+  && rm ${BAT_FILE}
+
+# fetch/install zoxide
+RUN curl -sS https://webinstall.dev/zoxide | bash \
+  && echo '\neval "$(zoxide init zsh)"' >> /home/coder/.zshrc.ext
+
 # runtime
 VOLUME /home/coder/exercism
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
