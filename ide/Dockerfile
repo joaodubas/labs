@@ -156,7 +156,6 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && echo ${XDG_CONFIG_HOME} \
   && mkdir -p ${XDG_CONFIG_HOME}/exercism \
   && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
-  && echo '\n. ${XDG_CONFIG_HOME}/exercism/exercism_completion.bash' >> ${HOME}/.zshrc.ext \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
