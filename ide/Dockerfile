@@ -69,9 +69,49 @@ RUN apt-get update \
   && apt-get update \
   && apt-get -y install gh \
   && rm -rf /var/lib/apt/lists/* \
-  && echo 'install antibody' \
-  && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && locale-gen en_US.UTF-8
+
+# fetch/install command line utilities
+ENV RIPGREP_VERSION 13.0.0
+ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
+ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
+ENV GRPC_VERSION 3.20.1
+ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
+ENV GRPC_FILE ${GRPC_PATH}.zip
+ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
+ENV EXA_VERSION v0.10.0
+ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
+ENV EXA_FILE ${EXA_PATH}.zip
+ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
+ENV BAT_VERSION 0.21.0
+ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
+ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
+RUN echo 'install antibody' \
+  && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
+  && echo 'setup starship' \
+  && curl -sS https://starship.rs/install.sh | sh -s -- --yes \
+  && echo 'setup ripgrep' \
+  && curl -LO ${RIPGREP_URL} \
+  && dpkg -i ${RIPGREP_FILE} \
+  && rm ${RIPGREP_FILE} \
+  && echo 'setup grpc' \
+  && curl -LO ${GRPC_URL} \
+  && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
+  && ln -s /opt/${GRPC_PATH}/bin/protoc /usr/local/bin/ \
+  && cp --recursive /opt/${GRPC_PATH}/include/google /usr/local/include \
+  && chmod --recursive 755 /opt/${GRPC_PATH}/bin \
+  && chmod --recursive o+r /usr/local/include \
+  && rm ${GRPC_FILE} \
+  && echo 'setup exa' \
+  && curl -LO ${EXA_URL} \
+  && unzip ${EXA_FILE} -d /opt/${EXA_PATH} \
+  && ln -s /opt/${EXA_PATH}/bin/exa /usr/local/bin \
+  && chmod --recursive 755 /opt/${EXA_PATH}/bin \
+  && rm ${EXA_FILE} \
+  && echo 'setup bat' \
+  && curl -LO ${BAT_URL} \
+  && dpkg -i ${BAT_FILE} \
+  && rm ${BAT_FILE}
 
 # setup unprivileged user
 RUN groupadd --gid 999 docker \
@@ -99,17 +139,21 @@ ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
+ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
 
-# fetch/install asdf
+# fetch/install local command line utilities
 ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
-ENV PATH ${ASDF_DIR}/bin:$PATH
 ENV ASDF_VERSION v0.10.0
-RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
-  && echo '\n. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
-  && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
-  && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext
+ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
+ENV PATH ${PYENV_ROOT}/bin:${ASDF_DIR}/bin:$PATH
+RUN echo 'setup asdf' \
+  && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
+  && echo 'setup pyenv' \
+  && curl https://pyenv.run | bash \
+  && echo 'setup zoxide' \
+  && curl -sS https://webinstall.dev/zoxide | bash
 
 # configure asdf plugins
 ENV GO_VERSION 1.18.1
@@ -137,11 +181,13 @@ ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
-# fetch/install pyenv
-ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
-ENV PATH ${PYENV_ROOT}/bin:$PATH
-RUN curl https://pyenv.run | bash \
-  && echo '\neval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
+# configure zshrc extension
+RUN echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc.ext \
+  && echo 'eval "$(zoxide init zsh)"' >> ${HOME}/.zshrc.ext \
+  && echo '. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
+  && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
+  && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext \
+  && echo 'eval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
   && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext
 
 USER root
@@ -158,51 +204,6 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
-
-# fetch/install command line utilities
-ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
-ENV RIPGREP_VERSION 13.0.0
-ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
-ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-ENV GRPC_VERSION 3.20.1
-ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
-ENV GRPC_FILE ${GRPC_PATH}.zip
-ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
-ENV EXA_VERSION v0.10.0
-ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
-ENV EXA_FILE ${EXA_PATH}.zip
-ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-ENV BAT_VERSION 0.21.0
-ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
-ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-RUN echo 'setup starship' \
-  && curl -sS https://starship.rs/install.sh | sh -s -- --yes \
-  && echo '\neval "$(starship init zsh)"' >> /home/coder/.zshrc.ext \
-  && echo 'setup ripgrep' \
-  && curl -LO ${RIPGREP_URL} \
-  && dpkg -i ${RIPGREP_FILE} \
-  && rm ${RIPGREP_FILE} \
-  && echo 'setup grpc' \
-  && curl -LO ${GRPC_URL} \
-  && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
-  && ln -s /opt/${GRPC_PATH}/bin/protoc /usr/local/bin/ \
-  && cp --recursive /opt/${GRPC_PATH}/include/google /usr/local/include \
-  && chmod --recursive 755 /opt/${GRPC_PATH}/bin \
-  && chmod --recursive o+r /usr/local/include \
-  && rm ${GRPC_FILE} \
-  && echo 'setup exa' \
-  && curl -LO ${EXA_URL} \
-  && unzip ${EXA_FILE} -d /opt/${EXA_PATH} \
-  && ln -s /opt/${EXA_PATH}/bin/exa /usr/local/bin \
-  && chmod --recursive 755 /opt/${EXA_PATH}/bin \
-  && rm ${EXA_FILE} \
-  && echo 'setup bat' \
-  && curl -LO ${BAT_URL} \
-  && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE} \
-  && echo 'setup zoxide' \
-  && curl -sS https://webinstall.dev/zoxide | bash \
-  && echo '\neval "$(zoxide init zsh)"' >> /home/coder/.zshrc.ext
 
 # runtime
 VOLUME /home/coder/exercism
