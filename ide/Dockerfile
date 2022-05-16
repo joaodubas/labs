@@ -69,6 +69,7 @@ RUN apt-get update \
   && apt-get update \
   && apt-get -y install gh \
   && rm -rf /var/lib/apt/lists/* \
+  && echo 'install antibody' \
   && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && locale-gen en_US.UTF-8
 
