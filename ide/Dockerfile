@@ -159,53 +159,49 @@ RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
-# setup starship
+# fetch/install command line utilities
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
-RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
-  && echo '\neval "$(starship init zsh)"' >> /home/coder/.zshrc.ext
-
-# fetch/install ripgrep
 ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-RUN curl -LO ${RIPGREP_URL} \
-  && dpkg -i ${RIPGREP_FILE} \
-  && rm ${RIPGREP_FILE}
-
-# fetch/install grpc
 ENV GRPC_VERSION 3.20.1
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
-RUN curl -LO ${GRPC_URL} \
+ENV EXA_VERSION v0.10.0
+ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
+ENV EXA_FILE ${EXA_PATH}.zip
+ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
+ENV BAT_VERSION 0.21.0
+ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
+ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
+RUN echo 'setup starship' \
+  && curl -sS https://starship.rs/install.sh | sh -s -- --yes \
+  && echo '\neval "$(starship init zsh)"' >> /home/coder/.zshrc.ext \
+  && echo 'setup ripgrep' \
+  && curl -LO ${RIPGREP_URL} \
+  && dpkg -i ${RIPGREP_FILE} \
+  && rm ${RIPGREP_FILE} \
+  && echo 'setup grpc' \
+  && curl -LO ${GRPC_URL} \
   && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
   && ln -s /opt/${GRPC_PATH}/bin/protoc /usr/local/bin/ \
   && cp --recursive /opt/${GRPC_PATH}/include/google /usr/local/include \
   && chmod --recursive 755 /opt/${GRPC_PATH}/bin \
   && chmod --recursive o+r /usr/local/include \
-  && rm ${GRPC_FILE}
-
-# fetch/install exa
-ENV EXA_VERSION v0.10.0
-ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
-ENV EXA_FILE ${EXA_PATH}.zip
-ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-RUN curl -LO ${EXA_URL} \
+  && rm ${GRPC_FILE} \
+  && echo 'setup exa' \
+  && curl -LO ${EXA_URL} \
   && unzip ${EXA_FILE} -d /opt/${EXA_PATH} \
   && ln -s /opt/${EXA_PATH}/bin/exa /usr/local/bin \
   && chmod --recursive 755 /opt/${EXA_PATH}/bin \
-  && rm ${EXA_FILE}
-
-# fetch/install bat
-ENV BAT_VERSION 0.21.0
-ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
-ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-RUN curl -LO ${BAT_URL} \
+  && rm ${EXA_FILE} \
+  && echo 'setup bat' \
+  && curl -LO ${BAT_URL} \
   && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE}
-
-# fetch/install zoxide
-RUN curl -sS https://webinstall.dev/zoxide | bash \
+  && rm ${BAT_FILE} \
+  && echo 'setup zoxide' \
+  && curl -sS https://webinstall.dev/zoxide | bash \
   && echo '\neval "$(zoxide init zsh)"' >> /home/coder/.zshrc.ext
 
 # runtime
