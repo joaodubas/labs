@@ -9,9 +9,10 @@ x-volumes: &volumes
   - 'home_share_data:/home/coder/.local/share'
   - 'gopath_data:/home/coder/.local/share/go'
   - 'pyenv_versions_data:/home/coder/.local/src/pyenv/versions'
-  - './config/nvim:/home/coder/.config/nvim'
-  - './config/zsh:/home/coder/.config/zsh'
   - './config/code-server:/home/coder/.config/code-server'
+  - './config/nvim:/home/coder/.config/nvim'
+  - './config/starship:/home/coder/.config/starship'
+  - './config/zsh:/home/coder/.config/zsh'
 
 services:
   coder:
