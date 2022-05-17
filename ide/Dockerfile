@@ -187,8 +187,12 @@ RUN echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc.ext \
   && echo '. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
   && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
   && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv init --path)"' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext
+  && echo 'eval "$(pyenv init -)"' >> ${HOME}/.zshrc.ext \
+  && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext \
+  && echo 'alias l="exa --time-style long-iso --color=auto -F"' >> ${HOME}/.zshrc.ext \
+  && echo 'alias ll="l -Fahl"' >> ${HOME}/.zshrc.ext \
+  && echo 'alias la="l -a"' >> ${HOME}/.zshrc.ext \
+  && echo 'alias cat="bat"' >> ${HOME}/.zshrc.ext
 
 USER root
 
