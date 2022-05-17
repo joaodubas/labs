@@ -25,5 +25,17 @@ services:
     working_dir: /opt/terraform
     entrypoint: sleep
     command: 365d
+  playground:
+    image: 'joaodubas/ops-playground:dev'
+    build:
+      context: .
+      dockerfile: Dockerfile.playground
+    init: true
+    hostname: sample
+    working_dir: /opt/ansible
+    volumes:
+      - './ansible:/opt/ansible'
+      - 'playground_ansible_root:/home/playground/.ansible'
 volumes:
   ansible_root: {}
+  playground_ansible_root: {}

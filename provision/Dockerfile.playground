@@ -1,0 +1,24 @@
+FROM ubuntu:20.04
+
+RUN apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:ansible/ansible \
+  && apt-get update \
+  && apt-get install -y \
+    ansible \
+    sudo
+
+RUN groupadd --gid 999 docker \
+  && groupadd --gid 1000 playground \
+  && useradd \
+      --uid 1000 \
+      --gid playground \
+      --groups docker,sudo \
+      --home-dir /home/playground \
+      --create-home \
+      playground \
+  && echo 'playground:playground' | chpasswd
+
+USER playground
+ENTRYPOINT ["sleep"]
+CMD ["infinity"]
