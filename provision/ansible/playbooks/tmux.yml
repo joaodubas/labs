@@ -1,4 +1,5 @@
 ---
+# TODO (jpd): geerlingguy.pip requires sudo to be enabled
 - hosts: dev
   vars:
     pip_package: python3-pip
