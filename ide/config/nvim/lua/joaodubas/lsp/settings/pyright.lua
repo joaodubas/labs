@@ -5,10 +5,10 @@ if not status_ok then
   return M
 end
 
-local function poetry(args)
+local function command(cmd, args)
   local output
   local p = job:new({
-    command = "poetry",
+    command = cmd,
     args = args,
   })
   p:after_success(function(j)
@@ -18,11 +18,30 @@ local function poetry(args)
   return output or {}
 end
 
-local function python_path()
+local function poetry(args)
+  return command("poetry", args)
+end
+
+local function pyenv(args)
+  return command("pyenv", args)
+end
+
+local function poetry_path()
   local output = poetry({ "env", "info", "-p" })
   for _, value in pairs(output) do
-    return value ~= nil and vim.fn.trim(value) .. "/bin/python3" or "python"
+    return value ~= nil and vim.fn.trim(value) .. "/bin/python3" or nil
   end
+end
+
+local function pyenv_path()
+  local output = pyenv({ "which", "python" })
+  for _, value in pairs(output) do
+    return value ~= nil and vim.fn.trim(value) or nil
+  end
+end
+
+local function python_path()
+  return poetry_path() or pyenv_path() or "python"
 end
 
 M.settings = function()
