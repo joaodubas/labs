@@ -1,7 +1,0 @@
----
-# TODO (jpd): this role installs to much, use something simpler
-- hosts: dev
-  become: yes
-  roles:
-    - role: viasite-ansible.zsh
-      zsh_user: '{{ ansible_env.USER }}'
