@@ -106,6 +106,7 @@ return packer.startup(function(use)
     "joaodubas/gitlinker.nvim",
     requires = { "nvim-lua/plenary.nvim" },
   }
+  use "hkupty/iron.nvim"
 
   -- Automatically set up your configuration after cloning packer.nvim
   if PACKER_BOOTSTRAP then
