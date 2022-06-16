@@ -1,0 +1,80 @@
+---
+- hosts: dev
+  vars:
+    asdf:
+      version: 'v0.10.0'
+    ripgrep:
+      version: '13.0.0'
+    antibody:
+      version: '6.1.1'
+    version:
+      erlang: '24.3.4'
+      elixir: '1.13.4-otp-24'
+      golang: '1.18.1'
+      nodejs: '18.1.0'
+      yarn: '1.22.18'
+  tasks:
+    - name: check ripgrep deb already installed
+      become: yes
+      command: dpkg-query -W ripgrep
+      register: ripgrep_check_deb
+      failed_when: ripgrep_check_deb.rc > 1
+      changed_when: ripgrep_check_deb.rc == 1
+    - name: download ripgrep deb
+      get_url:
+        url: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep.version }}/ripgrep_{{ ripgrep.version }}_amd64.deb'
+        dest: /tmp/ripgrep.deb
+      when: ripgrep_check_deb.rc == 1
+    - name: install ripgrep deb
+      become: yes
+      apt:
+        deb: /tmp/ripgrep.deb
+      when: ripgrep_check_deb.rc == 1
+    - name: remove ripgrep deb
+      file:
+        path: /tmp/ripgrep.deb
+        state: absent
+    # TODO (jpd): use another zsh package manager.
+    # Probably migrate to [zinit](https://github.com/zdharma-continuum/zinit).
+    - name: check antibody deb already installed
+      become: yes
+      command: dpkg-query -W antibody
+      register: antibody_check_deb
+      failed_when: antibody_check_deb.rc > 1
+      changed_when: antibody_check_deb == 1
+    - name: download antibody deb
+      get_url:
+        url: 'https://github.com/getantibody/antibody/releases/download/v{{ antibody.version }}/antibody_{{ antibody.version }}_linux_amd64.deb'
+        dest: /tmp/antibody.deb
+      when: antibody_check_deb.rc == 1
+    - name: install antibody deb
+      become: yes
+      apt:
+        deb: /tmp/antibody.deb
+      when: antibody_check_deb.rc == 1
+    - name: remove antibody deb
+      file:
+        path: /tmp/antibody.deb
+        state: absent
+  # TODO (jpd): move this to asdf?
+  roles:
+    - role: cimon-io.asdf
+      asdf_version: '{{ asdf.version }}'
+      asdf_user: '{{ ansible_env.USER }}'
+      asdf_user_home: '{{ ansible_env.HOME }}'
+      asdf_plugins:
+        - name: 'erlang'
+          versions: ['{{ version.erlang }}']
+          global: '{{ version.erlang }}'
+        - name: 'elixir'
+          versions: ['{{ version.elixir }}']
+          global: '{{ version.elixir }}'
+        - name: 'golang'
+          versions: ['{{ version.golang }}']
+          global: '{{ version.golang }}'
+        - name: 'nodejs'
+          versions: ['{{ version.nodejs }}']
+          global: '{{ version.nodejs }}'
+        - name: 'yarn'
+          versions: ['{{ version.yarn }}']
+          global: '{{ version.yarn }}'
