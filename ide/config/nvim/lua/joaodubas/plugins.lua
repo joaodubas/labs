@@ -89,6 +89,10 @@ return packer.startup(function(use)
   -- LSP
   use "neovim/nvim-lspconfig" -- Easier LSP configuration
   use "williamboman/nvim-lsp-installer" -- simple to use lsp installer
+  use {
+    "jalvesaq/Nvim-R",
+    branch = "stable",
+  } -- R support
 
   -- Telescope
   use "nvim-telescope/telescope.nvim" -- Smartest fuzzy finder
