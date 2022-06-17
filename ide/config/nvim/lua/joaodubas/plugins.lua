@@ -111,6 +111,14 @@ return packer.startup(function(use)
     requires = { "nvim-lua/plenary.nvim" },
   }
   use "hkupty/iron.nvim"
+  use {
+    "pwntester/octo.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "kyazdani42/nvim-web-devicons",
+    }
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   if PACKER_BOOTSTRAP then
