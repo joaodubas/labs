@@ -89,6 +89,7 @@ ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${B
 ENV LEFTHOOK_VERSION 0.8.0
 ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
 ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
+# NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
 RUN echo 'install antibody' \
   && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && echo 'setup starship' \
