@@ -135,6 +135,13 @@ resource "digitalocean_record" "dev_minio_console" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_uptime" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "uptime"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "simplelogin_mx_1" {
   domain = digitalocean_domain.dev_default.name
   type = "MX"
