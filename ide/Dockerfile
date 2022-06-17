@@ -86,6 +86,9 @@ ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_
 ENV BAT_VERSION 0.21.0
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
+ENV LEFTHOOK_VERSION 0.8.0
+ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
+ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
 RUN echo 'install antibody' \
   && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && echo 'setup starship' \
@@ -111,7 +114,11 @@ RUN echo 'install antibody' \
   && echo 'setup bat' \
   && curl -LO ${BAT_URL} \
   && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE}
+  && rm ${BAT_FILE} \
+  && echo 'setup lefthook' \
+  && curl -LO ${LEFTHOOK_URL} \
+  && chmod 755 ${LEFTHOOK_FILE} \
+  && mv ${LEFTHOOK_FILE} /usr/local/bin/lefthook
 
 # setup unprivileged user
 RUN groupadd --gid 999 docker \
