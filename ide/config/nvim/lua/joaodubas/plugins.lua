@@ -106,12 +106,11 @@ return packer.startup(function(use)
 
   -- git
   use "lewis6991/gitsigns.nvim" -- Show hints from git in the editor
-  use "tpope/vim-fugitive"
+  use "tpope/vim-fugitive" -- Integrate with git commands
   use {
     "joaodubas/gitlinker.nvim",
     requires = { "nvim-lua/plenary.nvim" },
-  }
-  use "hkupty/iron.nvim"
+  } -- Create git links, making easier to reference code
   use {
     "pwntester/octo.nvim",
     requires = {
@@ -119,7 +118,7 @@ return packer.startup(function(use)
       "nvim-telescope/telescope.nvim",
       "kyazdani42/nvim-web-devicons",
     }
-  }
+  } -- [experiment] github native integration
 
   -- test
   -- use {
