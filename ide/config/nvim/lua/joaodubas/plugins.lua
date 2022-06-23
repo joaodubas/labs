@@ -120,6 +120,20 @@ return packer.startup(function(use)
     }
   }
 
+  -- test
+  -- use {
+  --   "nvim-neotest/neotest",
+  --   requires = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "antoinemadec/FixCursorHold.nvim"
+  --   }
+  -- }
+  -- use {
+  --   "andythigpen/nvim-coverage",
+  --   requires = { "nvim-lua/plenary.nvim" },
+  -- }
+
   -- Automatically set up your configuration after cloning packer.nvim
   if PACKER_BOOTSTRAP then
     require("packer").sync()
