@@ -63,6 +63,7 @@ return packer.startup(function(use)
     "akinsho/toggleterm.nvim",
     branch = "main"
   } -- Execute terminals inside neovim
+  use "hkupty/iron.nvim" -- [experiment] with terminals
   use "shift-d/scratch.nvim" -- code evaluation
   use "gpanders/editorconfig.nvim" -- editorconfig
   use {
