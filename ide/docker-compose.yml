@@ -16,7 +16,7 @@ x-volumes: &volumes
 
 services:
   coder:
-    image: 'joaodubas/code-server:4.4.0'
+    image: 'joaodubas/code-server:4.5.0'
     build:
       context: .
       target: code-server
