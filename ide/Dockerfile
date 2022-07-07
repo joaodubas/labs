@@ -86,6 +86,10 @@ ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_
 ENV BAT_VERSION 0.21.0
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
+ENV LEFTHOOK_VERSION 0.8.0
+ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
+ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
+# NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
 RUN echo 'install antibody' \
   && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
   && echo 'setup starship' \
@@ -111,7 +115,11 @@ RUN echo 'install antibody' \
   && echo 'setup bat' \
   && curl -LO ${BAT_URL} \
   && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE}
+  && rm ${BAT_FILE} \
+  && echo 'setup lefthook' \
+  && curl -LO ${LEFTHOOK_URL} \
+  && chmod 755 ${LEFTHOOK_FILE} \
+  && mv ${LEFTHOOK_FILE} /usr/local/bin/lefthook
 
 # setup unprivileged user
 RUN groupadd --gid 999 docker \
@@ -217,7 +225,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.4.0
+ENV CODE_VERSION 4.5.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
@@ -236,7 +244,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.67.0
+ENV OPENVSCODE_VERSION 1.68.1
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
