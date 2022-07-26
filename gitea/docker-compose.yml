@@ -80,6 +80,9 @@ services:
     image: 'renovate/renovate:32.127.1'
     init: true
     environment:
+      GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
+      RENOVATE_TOKEN: ${RENOVATE_TOKEN:-token}
+      RENOVATE_GIT_AUTHOR: ${RENOVATE_GIT_AUTHOR:-'renovate <renovate@example.com>'}
       RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
       RENOVATE_BASE_DIR: '/opt/renovate_data'
     labels:
@@ -98,8 +101,10 @@ services:
   minio:
     image: 'quay.io/minio/minio:RELEASE.2022-07-24T17-09-31Z'
     environment:
-      MINIO_ROOT_USER: dubas
-      MINIO_ROOT_PASSWORD: dubas
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
     volumes:
       - 'minio_data:/data'
     restart: unless-stopped
