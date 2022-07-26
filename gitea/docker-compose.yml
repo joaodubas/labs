@@ -84,7 +84,7 @@ services:
       RENOVATE_BASE_DIR: '/opt/renovate_data'
     labels:
       chadburn.enabled: 'true'
-      chadburn.job-exec.renovate.schedule: '@hourly'
+      chadburn.job-exec.renovate.schedule: '@every 30m'
       chadburn.job-exec.renovate.command: '/usr/local/bin/renovate'
     volumes:
       - './config/renovate:/opt/renovate'
