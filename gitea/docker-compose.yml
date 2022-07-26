@@ -3,7 +3,7 @@ version: '3.7'
 
 services:
   git:
-    image: 'gitea/gitea:1.16.6'
+    image: 'gitea/gitea:1.16.9'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -26,7 +26,7 @@ services:
     ports:
       - '222:22'
   ci:
-    image: 'drone/drone:2.11.1'
+    image: 'drone/drone:2.12.1'
     init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -47,7 +47,7 @@ services:
     networks:
       - git_cicd_net
   worker:
-    image: 'drone/drone-runner-docker:1.8.1'
+    image: 'drone/drone-runner-docker:1.8.2'
     init: true
     environment:
       DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
@@ -66,7 +66,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: 'premoweb/chadburn:1.0.1'
+    image: 'premoweb/chadburn:1.0.2.1'
     init: true
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
@@ -75,8 +75,9 @@ services:
     networks:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
+
   renovate:
-    image: 'renovate/renovate:32.35.0'
+    image: 'renovate/renovate:32.127.1'
     init: true
     environment:
       RENOVATE_CONFIG_FILE: '/opt/renovate/config.js'
@@ -93,8 +94,9 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
+
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2022-04-16T04-26-02Z'
+    image: 'quay.io/minio/minio:RELEASE.2022-07-24T17-09-31Z'
     environment:
       MINIO_ROOT_USER: dubas
       MINIO_ROOT_PASSWORD: dubas
