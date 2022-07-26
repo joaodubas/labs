@@ -76,6 +76,8 @@ services:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
 
+  # TODO (jpd): to start renovate we must change ownership of renovate_data to
+  # ubuntu user
   renovate:
     image: 'renovate/renovate:32.127.1'
     init: true
