@@ -104,6 +104,12 @@ return packer.startup(function(use)
     run = ":TSUpdate",
   }
 
+  -- docker
+  use {
+    "https://codeberg.org/esensar/nvim-dev-container",
+    requires = { "nvim-treesitter/nvim-treesitter" },
+  }
+
   -- git
   use "lewis6991/gitsigns.nvim" -- Show hints from git in the editor
   use "tpope/vim-fugitive" -- Integrate with git commands
