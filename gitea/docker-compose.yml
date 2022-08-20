@@ -73,7 +73,7 @@ services:
       - './config/cron:/opt/chadburn'
     restart: unless-stopped
     networks:
-    - git_cicd_net
+      - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
   renovate:
     image: 'renovate/renovate:32.35.0'
