@@ -21,12 +21,8 @@ litee.setup {
     panel_size = 30,
   },
   state = {},
-  term = {
-    position = "bottom",
-    term_size = 15,
-  },
   tree = {
-    icon_set = "codicons",
+    icon_set = "default",
     indent_guides = true,
   },
 }
@@ -34,7 +30,7 @@ litee.setup {
 gh.setup {
   map_resize_keys = false,
   disable_keymaps = false,
-  icon_set = "codicons",
+  icon_set = "default",
   git_buffer_completion = true,
   keymaps = {
     open = "<cr>",
