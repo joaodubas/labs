@@ -118,8 +118,12 @@ return packer.startup(function(use)
     requires = { "nvim-lua/plenary.nvim" },
   } -- Create git links, making easier to reference code
   use {
-    'ldelossa/gh.nvim',
-    requires = { 'ldelossa/litee.nvim' },
+    "pwntester/octo.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "kyazdani42/nvim-web-devicons",
+    },
   } -- [experiment] github integration
 
   -- test
