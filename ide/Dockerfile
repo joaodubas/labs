@@ -52,7 +52,7 @@ RUN apt-get update \
     openssh-client \
     openssl \
     pkg-config \
-    python-openssl \
+    python3-openssl \
     sudo \
     tk-dev \
     unixodbc-dev \
