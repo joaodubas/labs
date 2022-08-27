@@ -1,8 +1,13 @@
 -- based on tj code available in:
 -- https://github.com/tjdevries/config_manager/blob/5d7d5b98fccd069829606464e65603017822cd72/xdg_config/nvim/lua/tj/globals.lua
-job = require("plenary.job")
+
+local status_ok, job = pcall(require, "plenary.job")
 
 CMD = function(cmd, args)
+  if not status_ok then
+    return
+  end
+
   local output
   local p = job:new({
     command = cmd,
