@@ -47,7 +47,7 @@ return packer.startup(function(use)
   use "windwp/nvim-autopairs" -- Autopair for begin/end of a block
   use {
     "numToStr/Comment.nvim",
-    requires = { "JoosepAlviste/nvim-ts-context-commentstring" }, -- Set commentstring opotion based on treesitter
+    requires = { "JoosepAlviste/nvim-ts-context-commentstring" }, -- Set commentstring option based on treesitter
   } -- Easily comment stuff
   use {
     "kyazdani42/nvim-tree.lua",
@@ -63,12 +63,13 @@ return packer.startup(function(use)
     "akinsho/toggleterm.nvim",
     branch = "main"
   } -- Execute terminals inside neovim
-  use "shift-d/scratch.nvim" -- code evaluation
-  use "gpanders/editorconfig.nvim" -- editorconfig
+  use "hkupty/iron.nvim" -- [experiment] with terminals
+  use "shift-d/scratch.nvim" -- Code evaluation
+  use "gpanders/editorconfig.nvim" -- Editorconfig
   use {
     "NTBBloodbath/rest.nvim",
     requires = { "nvim-lua/plenary.nvim" },
-  } -- make http requests
+  } -- Make http requests
 
   -- colorscheme
   use "folke/tokyonight.nvim" -- An amazing theme
@@ -89,6 +90,10 @@ return packer.startup(function(use)
   -- LSP
   use "neovim/nvim-lspconfig" -- Easier LSP configuration
   use "williamboman/nvim-lsp-installer" -- simple to use lsp installer
+  use {
+    "jalvesaq/Nvim-R",
+    branch = "stable",
+  } -- R support
 
   -- Telescope
   use "nvim-telescope/telescope.nvim" -- Smartest fuzzy finder
@@ -99,13 +104,41 @@ return packer.startup(function(use)
     run = ":TSUpdate",
   }
 
+  -- docker
+  use {
+    "https://codeberg.org/esensar/nvim-dev-container",
+    requires = { "nvim-treesitter/nvim-treesitter" },
+  }
+
   -- git
   use "lewis6991/gitsigns.nvim" -- Show hints from git in the editor
-  use "tpope/vim-fugitive"
+  use "tpope/vim-fugitive" -- Integrate with git commands
   use {
     "joaodubas/gitlinker.nvim",
     requires = { "nvim-lua/plenary.nvim" },
-  }
+  } -- Create git links, making easier to reference code
+  use {
+    "pwntester/octo.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "kyazdani42/nvim-web-devicons",
+    },
+  } -- [experiment] github integration
+
+  -- test
+  -- use {
+  --   "nvim-neotest/neotest",
+  --   requires = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "antoinemadec/FixCursorHold.nvim"
+  --   }
+  -- }
+  -- use {
+  --   "andythigpen/nvim-coverage",
+  --   requires = { "nvim-lua/plenary.nvim" },
+  -- }
 
   -- Automatically set up your configuration after cloning packer.nvim
   if PACKER_BOOTSTRAP then
