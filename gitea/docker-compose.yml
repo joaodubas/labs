@@ -3,7 +3,7 @@ version: '3.7'
 
 services:
   git:
-    image: 'gitea/gitea:1.16.9'
+    image: 'gitea/gitea:1.17.1'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -66,7 +66,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: 'premoweb/chadburn:1.0.2.1'
+    image: 'premoweb/chadburn:1.0.3'
     init: true
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
@@ -79,7 +79,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:32.127.1'
+    image: 'renovate/renovate:32.179.0'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
