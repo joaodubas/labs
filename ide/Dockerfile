@@ -238,7 +238,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.6.0
+ENV CODE_VERSION 4.7.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
@@ -257,7 +257,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.70.1
+ENV OPENVSCODE_VERSION 1.71.0
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz
