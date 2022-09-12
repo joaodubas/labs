@@ -202,6 +202,19 @@ RUN echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc.ext \
   && echo 'alias la="l -a"' >> ${HOME}/.zshrc.ext \
   && echo 'alias cat="bat"' >> ${HOME}/.zshrc.ext
 
+# configure openssl 1.1
+# this is needed to compile older erlang versions
+# example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
+WORKDIR ${HOME}/.local
+RUN cd src \
+  && wget https://www.openssl.org/source/openssl-1.1.1m.tar.gz \
+  && tar -xzf openssl-1.1.1m.tar.gz \
+  && cd openssl-1.1.1m \
+  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
+  && make \
+  # && make test \
+  && make install
+
 USER root
 
 # fetch/install exercism
