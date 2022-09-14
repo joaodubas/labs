@@ -1,6 +1,4 @@
 ---
-version: '3.7'
-
 x-volumes: &volumes
   - 'src_data:/opt/src'
   - 'exercism_data:/home/coder/exercism'
