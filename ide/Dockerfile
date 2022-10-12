@@ -75,18 +75,18 @@ RUN apt-get update \
 ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-ENV GRPC_VERSION 3.20.1
+ENV GRPC_VERSION 3.20.3
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
-ENV EXA_VERSION v0.10.0
+ENV EXA_VERSION v0.10.1
 ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
 ENV EXA_FILE ${EXA_PATH}.zip
 ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-ENV BAT_VERSION 0.21.0
+ENV BAT_VERSION 0.22.1
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV LEFTHOOK_VERSION 0.8.0
+ENV LEFTHOOK_VERSION 1.1.2
 ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
 ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
 # NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
@@ -153,7 +153,7 @@ ENV PATH ${LOCAL_BIN_HOME}:$PATH
 # fetch/install local command line utilities
 ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
-ENV ASDF_VERSION v0.10.0
+ENV ASDF_VERSION v0.10.2
 ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
 ENV PATH ${PYENV_ROOT}/bin:${ASDF_DIR}/bin:$PATH
 RUN echo 'setup asdf' \
