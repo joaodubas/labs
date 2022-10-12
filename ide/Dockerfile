@@ -164,12 +164,12 @@ RUN echo 'setup asdf' \
   && curl -sS https://webinstall.dev/zoxide | bash
 
 # configure asdf plugins
-ENV GO_VERSION 1.18.1
-ENV ERLANG_VERSION 24.3.4
-ENV ELIXIR_VERSION 1.13.4-otp-24
-ENV R_VERSION 4.2.0
-ENV NODE_VERSION 18.1.0
-ENV YARN_VERSION 1.22.18
+ENV GO_VERSION 1.19.2
+ENV ERLANG_VERSION 25.1.1
+ENV ELIXIR_VERSION 1.14.1-otp-25
+ENV R_VERSION 4.2.1
+ENV NODE_VERSION 18.10.0
+ENV YARN_VERSION 1.22.19
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
