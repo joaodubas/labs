@@ -75,18 +75,18 @@ RUN apt-get update \
 ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-ENV GRPC_VERSION 3.20.1
+ENV GRPC_VERSION 3.20.3
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
-ENV EXA_VERSION v0.10.0
+ENV EXA_VERSION v0.10.1
 ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
 ENV EXA_FILE ${EXA_PATH}.zip
 ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-ENV BAT_VERSION 0.21.0
+ENV BAT_VERSION 0.22.1
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV LEFTHOOK_VERSION 0.8.0
+ENV LEFTHOOK_VERSION 1.1.2
 ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
 ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
 # NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
@@ -153,7 +153,7 @@ ENV PATH ${LOCAL_BIN_HOME}:$PATH
 # fetch/install local command line utilities
 ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
-ENV ASDF_VERSION v0.10.0
+ENV ASDF_VERSION v0.10.2
 ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
 ENV PATH ${PYENV_ROOT}/bin:${ASDF_DIR}/bin:$PATH
 RUN echo 'setup asdf' \
@@ -164,12 +164,12 @@ RUN echo 'setup asdf' \
   && curl -sS https://webinstall.dev/zoxide | bash
 
 # configure asdf plugins
-ENV GO_VERSION 1.18.1
-ENV ERLANG_VERSION 24.3.4
-ENV ELIXIR_VERSION 1.13.4-otp-24
-ENV R_VERSION 4.2.0
-ENV NODE_VERSION 18.1.0
-ENV YARN_VERSION 1.22.18
+ENV GO_VERSION 1.19.2
+ENV ERLANG_VERSION 25.1.1
+ENV ELIXIR_VERSION 1.14.1-otp-25
+ENV R_VERSION 4.2.1
+ENV NODE_VERSION 18.10.0
+ENV YARN_VERSION 1.22.19
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
@@ -202,6 +202,19 @@ RUN echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc.ext \
   && echo 'alias la="l -a"' >> ${HOME}/.zshrc.ext \
   && echo 'alias cat="bat"' >> ${HOME}/.zshrc.ext
 
+# configure openssl 1.1
+# this is needed to compile older erlang versions
+# example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
+WORKDIR ${HOME}/.local
+RUN cd src \
+  && wget https://www.openssl.org/source/openssl-1.1.1m.tar.gz \
+  && tar -xzf openssl-1.1.1m.tar.gz \
+  && cd openssl-1.1.1m \
+  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
+  && make \
+  # && make test \
+  && make install
+
 USER root
 
 # fetch/install exercism
@@ -225,7 +238,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.6.0
+ENV CODE_VERSION 4.7.1
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
@@ -244,7 +257,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.70.1
+ENV OPENVSCODE_VERSION 1.72.1
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz

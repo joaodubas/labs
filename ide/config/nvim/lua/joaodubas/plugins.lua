@@ -73,6 +73,7 @@ return packer.startup(function(use)
 
   -- colorscheme
   use "folke/tokyonight.nvim" -- An amazing theme
+  use "cranberry-clockworks/coal.nvim" -- Black-white theme
 
   -- completion (cmp) plugins
   use "hrsh7th/nvim-cmp" -- Completion engine plugin
