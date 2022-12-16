@@ -100,6 +100,13 @@ resource "digitalocean_record" "dev_emcasa_octopus" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_emcasa_renato" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "renato.emcasa"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_nlw_wabanex" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
@@ -153,6 +160,20 @@ resource "digitalocean_record" "dev_c4" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "c4"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_verify_app" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "verify-app"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_verify_api" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "verify-api"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
