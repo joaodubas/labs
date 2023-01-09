@@ -186,7 +186,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "redis"
-version = "4.4.0"
+version = "4.4.1"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
@@ -338,8 +338,8 @@ pygments = [
     {file = "Pygments-2.7.4.tar.gz", hash = "sha256:df49d09b498e83c1a73128295860250b0b7edd4c723a32e9bc0d295c7c2ec337"},
 ]
 redis = [
-    {file = "redis-4.4.0-py3-none-any.whl", hash = "sha256:cae3ee5d1f57d8caf534cd8764edf3163c77e073bdd74b6f54a87ffafdc5e7d9"},
-    {file = "redis-4.4.0.tar.gz", hash = "sha256:7b8c87d19c45d3f1271b124858d2a5c13160c4e74d4835e28273400fa34d5228"},
+    {file = "redis-4.4.1-py3-none-any.whl", hash = "sha256:a721fd4d715fcd947848ed8fa02c2efd8224279979e0b721d9fdac6c4db35e93"},
+    {file = "redis-4.4.1.tar.gz", hash = "sha256:f7a870c44868ab87bbecd6211c6d7c8720b1e9a796b743fbc4725d7ec75651c3"},
 ]
 setuptools = [
     {file = "setuptools-65.6.3-py3-none-any.whl", hash = "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54"},
