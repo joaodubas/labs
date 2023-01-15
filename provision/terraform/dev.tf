@@ -163,17 +163,17 @@ resource "digitalocean_record" "dev_c4" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_verify_app" {
+resource "digitalocean_record" "dev_opensearch" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "verify-app"
+  name = "opensearch"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_verify_api" {
+resource "digitalocean_record" "dev_opendash" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "verify-api"
+  name = "opendash"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
