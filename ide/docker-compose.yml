@@ -27,15 +27,6 @@ services:
       SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
       ITEM_URL: 'https://open-vsx.org/vscode/item'
     volumes: *volumes
-  openvscode:
-    image: 'joaodubas/openvscode-server:1.74.3'
-    build:
-      context: .
-      target: openvscode-server
-    init: true
-    hostname: openvscode
-    restart: unless-stopped
-    volumes: *volumes
 
 volumes:
   src_data: {}
