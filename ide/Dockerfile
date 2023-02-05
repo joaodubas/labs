@@ -167,7 +167,6 @@ RUN echo 'setup asdf' \
 ENV GO_VERSION 1.19.5
 ENV ERLANG_VERSION 25.2.1
 ENV ELIXIR_VERSION 1.14.3-otp-25
-ENV R_VERSION 4.2.2
 ENV NODE_VERSION 19.4.0
 ENV YARN_VERSION 1.22.19
 ENV AWSCLI_VERSION 2.9.16
@@ -178,14 +177,12 @@ RUN asdf plugin-add golang \
   && asdf plugin-add elixir \
   && asdf plugin-add nodejs \
   && asdf plugin-add yarn \
-  && asdf plugin-add R \
   && asdf plugin-add awscli \
   && asdf plugin-add kubectl \
   && asdf plugin-add helm \
   && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
   && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
   && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
-  && echo "R $R_VERSION" >> /home/coder/.tool-versions \
   && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
   && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions \
   && echo "awscli $AWSCLI_VERSION" >> /home/coder/.tool-versions \
