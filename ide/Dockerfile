@@ -75,7 +75,7 @@ RUN apt-get update \
 ENV RIPGREP_VERSION 13.0.0
 ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
 ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
-ENV GRPC_VERSION 3.20.3
+ENV GRPC_VERSION 22.3
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
@@ -83,10 +83,10 @@ ENV EXA_VERSION v0.10.1
 ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
 ENV EXA_FILE ${EXA_PATH}.zip
 ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-ENV BAT_VERSION 0.22.1
+ENV BAT_VERSION 0.23.0
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV LEFTHOOK_VERSION 1.1.2
+ENV LEFTHOOK_VERSION 1.3.10
 ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
 ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
 # NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
@@ -153,7 +153,7 @@ ENV PATH ${LOCAL_BIN_HOME}:$PATH
 # fetch/install local command line utilities
 ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
 ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
-ENV ASDF_VERSION v0.10.2
+ENV ASDF_VERSION v0.11.3
 ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
 ENV PATH ${PYENV_ROOT}/bin:${ASDF_DIR}/bin:$PATH
 RUN echo 'setup asdf' \
@@ -164,24 +164,30 @@ RUN echo 'setup asdf' \
   && curl -sS https://webinstall.dev/zoxide | bash
 
 # configure asdf plugins
-ENV GO_VERSION 1.19.2
-ENV ERLANG_VERSION 25.1.1
-ENV ELIXIR_VERSION 1.14.1-otp-25
-ENV R_VERSION 4.2.1
-ENV NODE_VERSION 18.10.0
+ENV GO_VERSION 1.20.3
+ENV ERLANG_VERSION 25.3
+ENV ELIXIR_VERSION 1.14.4-otp-25
+ENV NODE_VERSION 19.4.0
 ENV YARN_VERSION 1.22.19
+ENV AWSCLI_VERSION 2.11.3
+ENV KUBECTL_VERSION 1.27.1
+ENV HELM_VERSION 3.11.3
 RUN asdf plugin-add golang \
   && asdf plugin-add erlang \
   && asdf plugin-add elixir \
   && asdf plugin-add nodejs \
   && asdf plugin-add yarn \
-  && asdf plugin-add R \
+  && asdf plugin-add awscli \
+  && asdf plugin-add kubectl \
+  && asdf plugin-add helm \
   && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
   && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
   && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
-  && echo "R $R_VERSION" >> /home/coder/.tool-versions \
   && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
-  && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions
+  && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions \
+  && echo "awscli $AWSCLI_VERSION" >> /home/coder/.tool-versions \
+  && echo "kubectl $KUBECTL_VERSION" >> /home/coder/.tool-versions \
+  && echo "helm $HELM_VERSION" >> /home/coder/.tool-versions
 
 # configure golang
 ENV GOPATH ${XDG_DATA_HOME}/go
@@ -218,16 +224,12 @@ RUN cd src \
 USER root
 
 # fetch/install exercism
-ENV EXERCISM_VERSION v3.0.13
-ENV EXERCISM_FILE exercism-linux-64bit.tgz
-ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/${EXERCISM_VERSION}/${EXERCISM_FILE}
+ENV EXERCISM_VERSION 3.1.0
+ENV EXERCISM_FILE  exercism-${EXERCISM_VERSION}-linux-x86_64.tar.gz
+ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/v${EXERCISM_VERSION}/${EXERCISM_FILE}
 WORKDIR /tmp
 RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
   && mv exercism /usr/local/bin \
-  && echo ${XDG_CONFIG_HOME} \
-  && mkdir -p ${XDG_CONFIG_HOME}/exercism \
-  && mv shell/exercism_completion.bash ${XDG_CONFIG_HOME}/exercism \
-  && chown --recursive coder:coder ${XDG_CONFIG_HOME}/exercism \
   && rm -rf ./*
 
 # runtime
@@ -238,7 +240,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 FROM base AS code-server
 
 # fetch/install code server
-ENV CODE_VERSION 4.7.1
+ENV CODE_VERSION 4.11.0
 ENV CODE_RELEASE v${CODE_VERSION}
 ENV CODE_PATH code-server-${CODE_VERSION}-linux-amd64
 ENV CODE_FILE ${CODE_PATH}.tar.gz
@@ -257,7 +259,7 @@ CMD ["code-server", "--config", "/home/coder/.config/code-server/config.yml"]
 FROM base AS openvscode-server
 
 # fetch/install code server
-ENV OPENVSCODE_VERSION 1.72.1
+ENV OPENVSCODE_VERSION 1.77.3
 ENV OPENVSCODE_RELEASE openvscode-server-v${OPENVSCODE_VERSION}
 ENV OPENVSCODE_PATH openvscode-server-v${OPENVSCODE_VERSION}-linux-x64
 ENV OPENVSCODE_FILE ${OPENVSCODE_PATH}.tar.gz

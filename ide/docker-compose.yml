@@ -14,7 +14,7 @@ x-volumes: &volumes
 
 services:
   coder:
-    image: 'joaodubas/code-server:4.7.1'
+    image: 'joaodubas/code-server:4.11.0'
     build:
       context: .
       target: code-server
@@ -26,15 +26,6 @@ services:
       PASSWORD: '${CODER_PASSWORD:-password}'
       SERVICE_URL: 'https://open-vsx.org/vscode/gallery'
       ITEM_URL: 'https://open-vsx.org/vscode/item'
-    volumes: *volumes
-  openvscode:
-    image: 'joaodubas/openvscode-server:1.72.1'
-    build:
-      context: .
-      target: openvscode-server
-    init: true
-    hostname: openvscode
-    restart: unless-stopped
     volumes: *volumes
 
 volumes:
