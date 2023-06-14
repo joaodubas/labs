@@ -1,9 +1,7 @@
 ---
-version: '3.7'
-
 services:
   git:
-    image: 'gitea/gitea:1.17.1'
+    image: 'gitea/gitea:1.19.1'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -25,8 +23,14 @@ services:
       - git_cicd_net
     ports:
       - '222:22'
+  # TODO: configure test report based on post:
+  # https://medium.com/@boomimagestudio-techblog/goodbye-jenkins-how-drone-simplifies-ci-cd-for-engineering-teams-everywhere-73a7db435a86
+  report_test:
+    image: 'frankescobar/allure-docker-service:2.21.0'
+  dependency_bot:
+    image: 'renovate/renovate:35.48.2-slim'
   ci:
-    image: 'drone/drone:2.12.1'
+    image: 'drone/drone:2.16.0'
     init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -47,7 +51,7 @@ services:
     networks:
       - git_cicd_net
   worker:
-    image: 'drone/drone-runner-docker:1.8.2'
+    image: 'drone/drone-runner-docker:1.8.3'
     init: true
     environment:
       DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
@@ -66,7 +70,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: 'premoweb/chadburn:1.0.3'
+    image: 'premoweb/chadburn:1.0.6'
     init: true
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
@@ -79,7 +83,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:32.179.0'
+    image: 'renovate/renovate:34.112.0'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
@@ -101,24 +105,30 @@ services:
     command: infinity
 
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2022-07-24T17-09-31Z'
+    image: 'quay.io/minio/minio:RELEASE.2023-01-20T02-05-44Z'
     environment:
-      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost}
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost}
+      MINIO_VOLUMES: /snsd_data
     volumes:
       - 'minio_data:/data'
+      - 'minio_snsd_data:/snsd_data'
     restart: unless-stopped
     networks:
       - git_cicd_net
-    command: 'server /data --console-address ":9001"'
+    command: 'server --console-address ":9001"'
+
+  mc:
+    image: 'quay.io/minio/mc:RELEASE.2023-01-11T03-14-16Z'
 
 volumes:
   git_data: {}
   ci_data: {}
   renovate_data: {}
   minio_data: {}
+  minio_snsd_data: {}
 
 networks:
   git_cicd_net:
