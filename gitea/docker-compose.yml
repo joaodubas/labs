@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.19.1'
+    image: 'gitea/gitea:1.19.4'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -30,7 +30,7 @@ services:
   dependency_bot:
     image: 'renovate/renovate:35.48.2-slim'
   ci:
-    image: 'drone/drone:2.16.0'
+    image: 'drone/drone:2.17.0'
     init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -70,7 +70,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: 'premoweb/chadburn:1.0.6'
+    image: 'premoweb/chadburn:1.0.7'
     init: true
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
@@ -79,11 +79,10 @@ services:
     networks:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
-
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:34.112.0'
+    image: 'renovate/renovate:35.117.3'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
@@ -103,9 +102,8 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
-
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2023-01-20T02-05-44Z'
+    image: 'quay.io/minio/minio:RELEASE.2023-06-09T07-32-12Z'
     environment:
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
@@ -119,9 +117,8 @@ services:
     networks:
       - git_cicd_net
     command: 'server --console-address ":9001"'
-
   mc:
-    image: 'quay.io/minio/mc:RELEASE.2023-01-11T03-14-16Z'
+    image: 'quay.io/minio/mc:RELEASE.2023-06-06T13-48-56Z'
 
 volumes:
   git_data: {}
