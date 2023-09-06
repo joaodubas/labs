@@ -19,6 +19,7 @@ RUN groupadd --gid ${DOCKER_GID} docker \
       --gid playground \
       --groups docker,sudo \
       --home-dir /home/playground \
+      --shell /usr/bin/bash \
       --create-home \
       playground \
   && echo 'playground:playground' | chpasswd
