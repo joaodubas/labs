@@ -23,11 +23,15 @@ RUN echo "install system deps " \
     && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
     && chmod 755 /usr/local/lib/docker/cli-plugins/docker-compose \
     && echo "install ansible ..." \
-    && apk --update add sudo \
-    && apk --update add python3 py3-pip openssl ca-certificates \
+    && apk --update add sudo openssl ca-certificates \
+    && apk --update add \
+        --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/main \
+        --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/community \
+        python3=3.10.12-r0 \
+        python3-dev=3.10.12-r0 \
+        py3-pip=22.3.1-r1 \
     && apk --update add --virtual \
         build-dependencies \
-        python3-dev \
         libffi-dev \
         openssl-dev \
         build-base \
