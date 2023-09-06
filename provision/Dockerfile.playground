@@ -1,5 +1,9 @@
 FROM ubuntu:22.04
 
+ARG DOCKER_GID=999
+ARG UID=1000
+ARG GID=1000
+
 RUN apt-get update \
   && apt-get install -y software-properties-common \
   && add-apt-repository ppa:ansible/ansible \
@@ -8,10 +12,10 @@ RUN apt-get update \
     ansible \
     sudo
 
-RUN groupadd --gid 999 docker \
-  && groupadd --gid 1000 playground \
+RUN groupadd --gid ${DOCKER_GID} docker \
+  && groupadd --gid ${GID} playground \
   && useradd \
-      --uid 1000 \
+      --uid ${UID} \
       --gid playground \
       --groups docker,sudo \
       --home-dir /home/playground \
