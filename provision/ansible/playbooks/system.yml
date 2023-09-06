@@ -20,18 +20,16 @@
       loop:
         - git
         - tmux
-        - zsh
+        - fish
         # NOTE (jpd): needed by asdf to list java plugins
         - jq
         # NOTE (jpd): needed by tmux plugins
         - gawk
         - xsel
-    - name: install tmux
-      become: yes
-      apt:
-        name: tmux
-        state: present
-        update_cache: yes
+    - name: set shell for user
+      user:
+        name: '{{ ansible_user }}'
+        shell: /usr/bin/fish
   roles:
     - geerlingguy.docker
     # NOTE (jpd): not sure if this role is needed here
