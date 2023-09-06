@@ -1,14 +1,15 @@
-FROM hashicorp/terraform:1.1.9
+FROM hashicorp/terraform:1.5.3
 
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
 
-ENV DO_VERSION 20.10.16
+ENV DO_VERSION 24.0.4
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.5.0
+ENV DC_VERSION v2.20.2
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
-ENV ANSIBLE_VERSION 5.7.1
-ENV ANSIBLE_LINT_VERSION 6.1.0
+ENV ANSIBLE_CORE_VERSION 2.15.2
+ENV ANSIBLE_VERSION 8.2.0
+ENV ANSIBLE_LINT_VERSION 6.17.2
 
 RUN echo "install system deps " \
     && apk --update add curl \
@@ -32,8 +33,9 @@ RUN echo "install system deps " \
         build-base \
         cargo \
     && pip3 install --upgrade pip cffi \
+    && pip3 install --upgrade ansible-core==${ANSIBLE_CORE_VERSION} \
     && pip3 install --upgrade ansible==${ANSIBLE_VERSION} \
-    && pip3 install --upgrade ansible-lint==${ANSIBLE_LINT_VERSION} \
+    # && pip3 install --upgrade ansible-lint==${ANSIBLE_LINT_VERSION} \
     && pip3 install --upgrade pycrypt pywinrm \
     && apk --update add sshpass openssh-client rsync \
     && mkdir -p /etc/ansible \
