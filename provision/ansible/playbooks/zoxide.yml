@@ -1,0 +1,27 @@
+---
+- hosts: dev
+  vars:
+    zoxide:
+      version: '0.9.1'
+      destination: '/tmp/zoxide.deb'
+  tasks:
+    - name: check zoxide deb already installed
+      become: yes
+      command: dpkg-query -W zoxide
+      register: zoxide_check_deb
+      failed_when: zoxide_check_deb.rc > 1
+      changed_when: zoxide_check_deb.rc == 1
+    - name: download zoxide deb
+      get_url:
+        url: 'https://github.com/ajeetdsouza/zoxide/releases/download/v{{ zoxide.version }}/zoxide_{{ zoxide.version }}_amd64.deb'
+        dest: '{{ zoxide.destination }}'
+      when: zoxide_check_deb.rc == 1
+    - name: install zoxide deb
+      become: yes
+      apt:
+        deb: '{{ zoxide.destination }}'
+      when: zoxide_check_deb.rc == 1
+    - name: remove zoxide deb
+      file:
+        path: '{{ zoxide.destination }}'
+        state: absent
