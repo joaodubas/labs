@@ -22,7 +22,8 @@ RUN groupadd --gid ${DOCKER_GID} docker \
       --shell /usr/bin/bash \
       --create-home \
       playground \
-  && echo 'playground:playground' | chpasswd
+  && echo 'playground:playground' | chpasswd \
+  && echo 'playground ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10-playground
 
 USER playground
 ENTRYPOINT ["sleep"]
