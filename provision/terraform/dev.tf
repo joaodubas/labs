@@ -39,6 +39,46 @@ resource "digitalocean_droplet" "dev_server" {
   }
 }
 
+resource "digitalocean_firewall" "dev_firewall" {
+  name = "dev-ssh-http-https"
+  droplet_ids = [
+    digitalocean_droplet.dev_server.id
+  ]
+  tags = [
+    digitalocean_tag.dev_tag.name
+  ]
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "222"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "80"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "443"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol = "udp"
+    port_range = "all"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol = "tcp"
+    port_range = "all"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+
 resource "digitalocean_domain" "dev_default" {
   name = "dubas.dev"
   ip_address = digitalocean_droplet.dev_server.ipv4_address
@@ -51,6 +91,20 @@ resource "digitalocean_record" "dev_auth" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_affine" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "affine"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_bitwarden" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "bitwarden"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_coder" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
@@ -58,10 +112,17 @@ resource "digitalocean_record" "dev_coder" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_openvscode" {
+resource "digitalocean_record" "dev_ec_api" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "openvscode"
+  name = "api.ec"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_ec_bot" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "bot"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -79,52 +140,10 @@ resource "digitalocean_record" "dev_drone" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_appsmith" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "appsmith"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_emcasa_backend" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "api.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_emcasa_octopus" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "octopus.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_emcasa_renato" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "renato.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
 resource "digitalocean_record" "dev_nlw_wabanex" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "wabanex"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_swagger" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "swagger"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_lowdefy" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "lowdefy"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -153,27 +172,6 @@ resource "digitalocean_record" "dev_uptime" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "uptime"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_c4" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "c4"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_opensearch" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "opensearch"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_opendash" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "opendash"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
