@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   ops:
-    image: 'joaodubas/ops-tools:2.1.0'
+    image: 'joaodubas/ops-tools:2.1.1'
     build:
       context: .
     init: true
