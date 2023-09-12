@@ -4,8 +4,8 @@
 - src: geerlingguy.pip
   version: 2.0.0
 - src: dotstrap.neovim
-- src: avanov.pyenv
-  version: 1.1.0
+- src: staticdev.pyenv
+  version: 2.10.1
 - src: viasite-ansible.zsh
   version: v3.2.7
 - src: laggyluke.direnv

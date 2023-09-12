@@ -1,15 +1,17 @@
 ---
 - hosts: dev
   vars:
-    python_2: '2.7.16'
-    python_3: '3.9.4'
+    python_2: '2.7.18'
+    python_3: '3.10.13'
   roles:
     - role: avanov.pyenv
+      pyenv_env: 'user'
       pyenv_path: '{{ ansible_env.HOME }}/.pyenv'
       pyenv_enable_autocompletion: true
       pyenv_python_versions:
         - '{{ python_2 }}'
         - '{{ python_3 }}'
+      pyenv_global: '{{ python_3 }}'
       pyenv_virtualenvs:
         - venv_name: neovim-2
           py_version: '{{ python_2 }}'
