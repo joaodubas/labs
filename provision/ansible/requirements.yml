@@ -10,5 +10,5 @@
   version: v3.2.7
 - src: laggyluke.direnv
   version: v2.6.0
-- src: cimon-io.asdf
-  version: v1.0.0
+- src: dfang.rtx
+  version: v0.4.0
