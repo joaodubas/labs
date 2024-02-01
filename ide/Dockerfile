@@ -145,10 +145,44 @@ ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
 
+# NOTE (jpd): the section below exists mainly to handle a project running elixir 1.11.
+# It allows the usage of openssl 1.1 and a compatible elixir-ls.
+
+# configure openssl 1.1
+# this is needed to compile older erlang versions
+# example: KERL_CONFIGURE_OPTIONS="-with-ssl=$HOME/.local/lib/ssl" mise install
+RUN mkdir -p ${HOME}/.local/src \
+  && cd ${HOME}/.local/src \
+  && curl -L https://www.openssl.org/source/openssl-1.1.1m.tar.gz | tar -xz \
+  && cd openssl-1.1.1m \
+  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
+  && make \
+  # && make test \
+  && make install
+
+# fetch elixir-ls to install custom releases
+RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls
+
 # command line utilities
 RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
   && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
+
+# configure golang
+ENV GOPATH ${XDG_DATA_HOME}/go
+ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
+RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
+  && chmod -R 777 "${GOPATH}"
+
+# configure fish and bash
+RUN fish -c true \
+  && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo '{$LOCAL_BIN_HOME}/mise activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias l="eza --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # git configuration
 COPY ./scripts/patch/kickstart.nvim/updates.patch /tmp
@@ -184,35 +218,6 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     yarn \
     zoxide
 
-# configure golang
-ENV GOPATH ${XDG_DATA_HOME}/go
-ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
-RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
-  && chmod -R 777 "${GOPATH}"
-
-# configure fish and bash
-RUN fish -c true \
-  && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo '{$LOCAL_BIN_HOME}/mise activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias l="eza --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
-
-# configure openssl 1.1
-# this is needed to compile older erlang versions
-# example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
-WORKDIR ${HOME}/.local
-RUN cd src \
-  && wget https://www.openssl.org/source/openssl-1.1.1m.tar.gz \
-  && tar -xzf openssl-1.1.1m.tar.gz \
-  && cd openssl-1.1.1m \
-  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
-  && make \
-  # && make test \
-  && make install
-
 # configure git
 ARG GIT_USER_EMAIL
 ARG GIT_USER_NAME
@@ -221,15 +226,6 @@ RUN git config --global user.email "${GIT_USER_EMAIL}" \
   && git config --global core.editor nvim
 
 USER root
-
-# fetch/install exercism
-ENV EXERCISM_VERSION 3.1.0
-ENV EXERCISM_FILE  exercism-${EXERCISM_VERSION}-linux-x86_64.tar.gz
-ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/v${EXERCISM_VERSION}/${EXERCISM_FILE}
-WORKDIR /tmp
-RUN curl -L -XGET ${EXERCISM_URL} | tar xz \
-  && mv exercism /usr/local/bin \
-  && rm -rf ./*
 
 # runtime
 VOLUME /home/coder/exercism
