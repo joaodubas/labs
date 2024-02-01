@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.21.4'
+    image: 'gitea/gitea:1.21.5'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -24,7 +24,7 @@ services:
     ports:
       - '222:22'
   forgejo:
-    image: 'codeberg.org/forgejo/forgejo:1.21.4-0'
+    image: 'codeberg.org/forgejo/forgejo:1.21.5-0'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-forgejo}
