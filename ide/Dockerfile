@@ -19,6 +19,7 @@ RUN apt-get update \
     ca-certificates \
     curl \
     dirmngr \
+    doas \
     fish \
     g++ \
     gcc \
@@ -27,7 +28,9 @@ RUN apt-get update \
     gosu \
     gpg \
     gpg-agent \
+    groff \
     jq \
+    less \
     libbz2-1.0 \
     libbz2-dev \
     libc6-dev \
@@ -57,10 +60,13 @@ RUN apt-get update \
     net-tools \
     openssh-client \
     openssl \
+    parallel \
     pkg-config \
     python3-openssl \
     sudo \
     tk-dev \
+    tmux \
+    tmuxp \
     unixodbc-dev \
     unzip \
     uuid-dev \
@@ -68,11 +74,6 @@ RUN apt-get update \
     xorg-dev \
     xz-utils \
     zlib1g-dev \
-  && echo 'install gh for neovim lsp installer' \
-  && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-  && apt-get update \
-  && apt-get -y install gh \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && echo 'setup unprivileged user' \
@@ -90,33 +91,20 @@ RUN apt-get update \
   && echo 'coder:coder' | chpasswd \
   && echo 'permit persist :wheel as root' > /etc/doas.conf
 
-# fetch/install command line utilities
-ENV RIPGREP_VERSION 13.0.0
-ENV RIPGREP_FILE ripgrep_${RIPGREP_VERSION}_amd64.deb
-ENV RIPGREP_URL https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${RIPGREP_FILE}
+# global command line utilities
+ENV DO_VERSION 24.0.7
+ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
+ENV DC_VERSION v2.23.3
+ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 ENV GRPC_VERSION 22.3
 ENV GRPC_PATH protoc-${GRPC_VERSION}-linux-x86_64
 ENV GRPC_FILE ${GRPC_PATH}.zip
 ENV GRPC_URL https://github.com/protocolbuffers/protobuf/releases/download/v${GRPC_VERSION}/${GRPC_FILE}
-ENV EXA_VERSION v0.10.1
-ENV EXA_PATH exa-linux-x86_64-${EXA_VERSION}
-ENV EXA_FILE ${EXA_PATH}.zip
-ENV EXA_URL https://github.com/ogham/exa/releases/download/${EXA_VERSION}/${EXA_FILE}
-ENV BAT_VERSION 0.23.0
-ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
-ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV LEFTHOOK_VERSION 1.3.10
-ENV LEFTHOOK_FILE lefthook_${LEFTHOOK_VERSION}_Linux_x86_64
-ENV LEFTHOOK_URL https://github.com/evilmartians/lefthook/releases/download/v${LEFTHOOK_VERSION}/${LEFTHOOK_FILE}
-# NOTE (jpd): update from antibody to zinit (https://github.com/zdharma-continuum/zinit)
-RUN echo 'install antibody' \
-  && curl -sfL git.io/antibody | sh -s - -b /usr/local/bin \
-  && echo 'setup starship' \
+ENV EXERCISM_VERSION 3.1.0
+ENV EXERCISM_FILE  exercism-${EXERCISM_VERSION}-linux-x86_64.tar.gz
+ENV EXERCISM_URL https://github.com/exercism/cli/releases/download/v${EXERCISM_VERSION}/${EXERCISM_FILE}
+RUN echo 'setup starship' \
   && curl -sS https://starship.rs/install.sh | sh -s -- --yes \
-  && echo 'setup ripgrep' \
-  && curl -LO ${RIPGREP_URL} \
-  && dpkg -i ${RIPGREP_FILE} \
-  && rm ${RIPGREP_FILE} \
   && echo 'setup grpc' \
   && curl -LO ${GRPC_URL} \
   && unzip ${GRPC_FILE} -d /opt/${GRPC_PATH} \
@@ -125,33 +113,22 @@ RUN echo 'install antibody' \
   && chmod --recursive 755 /opt/${GRPC_PATH}/bin \
   && chmod --recursive o+r /usr/local/include \
   && rm ${GRPC_FILE} \
-  && echo 'setup exa' \
-  && curl -LO ${EXA_URL} \
-  && unzip ${EXA_FILE} -d /opt/${EXA_PATH} \
-  && ln -s /opt/${EXA_PATH}/bin/exa /usr/local/bin \
-  && chmod --recursive 755 /opt/${EXA_PATH}/bin \
-  && rm ${EXA_FILE} \
-  && echo 'setup bat' \
-  && curl -LO ${BAT_URL} \
-  && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE} \
-  && echo 'setup lefthook' \
-  && curl -LO ${LEFTHOOK_URL} \
-  && chmod 755 ${LEFTHOOK_FILE} \
-  && mv ${LEFTHOOK_FILE} /usr/local/bin/lefthook
-
-# setup unprivileged user
-RUN groupadd --gid 999 docker \
-  && groupadd --gid 1000 coder \
-  && useradd \
-      --uid 1000 \
-      --gid coder \
-      --groups docker,sudo \
-      --shell $(which zsh) \
-      --home-dir /home/coder \
-      --create-home \
-      coder \
-  && echo 'coder:coder' | chpasswd
+  && echo 'setup docker' \
+  && mkdir /tmp/download \
+  && curl -L ${DO_URL} | tar -zx -C /tmp/download \
+  && chgrp --recursive docker /tmp/download \
+  && mv /tmp/download/docker/* /usr/local/bin \
+  && rm -rf /tmp/download \
+  && echo 'setup docker compose' \
+  && mkdir -p /usr/local/lib/docker/cli-plugins \
+  && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
+  && chmod 750 /usr/local/lib/docker/cli-plugins/docker-compose \
+  && chgrp --recursive docker /usr/local/lib/docker \
+  && echo 'setup exercism' \
+  && mkdir /tmp/download \
+  && curl -L -XGET ${EXERCISM_URL} | tar -xz -C /tmp/download \
+  && mv /tmp/download/exercism /usr/local/bin \
+  && rm -rf /tmp/download
 
 USER coder
 WORKDIR /home/coder
@@ -165,48 +142,37 @@ ENV LOCAL_SRC_HOME ${HOME}/.local/src
 ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
-ENV ZDOTDIR ${XDG_CONFIG_HOME}/zsh
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
 
-# fetch/install local command line utilities
-ENV ASDF_DIR ${LOCAL_SRC_HOME}/asdf
-ENV ASDF_DATA_DIR ${XDG_CACHE_HOME}/asdf
-ENV ASDF_VERSION v0.11.3
-ENV PYENV_ROOT ${LOCAL_SRC_HOME}/pyenv
-ENV PATH ${PYENV_ROOT}/bin:${ASDF_DIR}/bin:$PATH
-RUN echo 'setup asdf' \
-  && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DIR} --branch ${ASDF_VERSION} \
-  && echo 'setup pyenv' \
-  && curl https://pyenv.run | bash \
-  && echo 'setup zoxide' \
-  && curl -sS https://webinstall.dev/zoxide | bash
+# command line utilities
+RUN curl https://mise.jdx.dev/install.sh | sh \
+  && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
+  && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
 
-# configure asdf plugins
-ENV GO_VERSION 1.20.3
-ENV ERLANG_VERSION 25.3
-ENV ELIXIR_VERSION 1.14.4-otp-25
-ENV NODE_VERSION 19.4.0
-ENV YARN_VERSION 1.22.19
-ENV AWSCLI_VERSION 2.11.3
-ENV KUBECTL_VERSION 1.27.1
-ENV HELM_VERSION 3.11.3
-RUN asdf plugin-add golang \
-  && asdf plugin-add erlang \
-  && asdf plugin-add elixir \
-  && asdf plugin-add nodejs \
-  && asdf plugin-add yarn \
-  && asdf plugin-add awscli \
-  && asdf plugin-add kubectl \
-  && asdf plugin-add helm \
-  && echo "golang $GO_VERSION" > /home/coder/.tool-versions \
-  && echo "erlang $ERLANG_VERSION" >> /home/coder/.tool-versions \
-  && echo "elixir $ELIXIR_VERSION" >> /home/coder/.tool-versions \
-  && echo "nodejs $NODE_VERSION" >> /home/coder/.tool-versions \
-  && echo "yarn $YARN_VERSION" >> /home/coder/.tool-versions \
-  && echo "awscli $AWSCLI_VERSION" >> /home/coder/.tool-versions \
-  && echo "kubectl $KUBECTL_VERSION" >> /home/coder/.tool-versions \
-  && echo "helm $HELM_VERSION" >> /home/coder/.tool-versions
+# install rtx plugins
+RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
+    awscli \
+    bat \
+    dagger \
+    elixir \
+    erlang \
+    eza \
+    fzf \
+    helm \
+    k3d \
+    kubectl \
+    kubie \
+    lefthook \
+    poetry \
+    ripgrep \
+    starship \
+    terraform \
+    tilt \
+    tmux \
+    usql \
+    yarn \
+    zoxide
 
 # configure golang
 ENV GOPATH ${XDG_DATA_HOME}/go
