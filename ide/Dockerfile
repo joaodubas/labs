@@ -4,6 +4,7 @@ FROM ubuntu:22.04 AS base
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:fish-shell/release-3 \
   && add-apt-repository ppa:neovim-ppa/unstable \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -14,6 +15,7 @@ RUN apt-get update \
     ca-certificates \
     curl \
     dirmngr \
+    fish \
     g++ \
     gcc \
     gfortran \
@@ -62,7 +64,6 @@ RUN apt-get update \
     xorg-dev \
     xz-utils \
     zlib1g-dev \
-    zsh \
   && echo 'install gh for neovim lsp installer' \
   && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
@@ -195,18 +196,15 @@ ENV PATH ${GOPATH}/bin:/usr/local/bin:${PATH}
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
   && chmod -R 777 "${GOPATH}"
 
-# configure zshrc extension
-RUN echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(zoxide init zsh)"' >> ${HOME}/.zshrc.ext \
-  && echo '. ${ASDF_DIR}/asdf.sh' >> ${HOME}/.zshrc.ext \
-  && echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ${HOME}/.zshrc.ext \
-  && echo 'autoload -Uz compinit && compinit' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv init -)"' >> ${HOME}/.zshrc.ext \
-  && echo 'eval "$(pyenv virtualenv-init -)"' >> ${HOME}/.zshrc.ext \
-  && echo 'alias l="exa --time-style long-iso --color=auto -F"' >> ${HOME}/.zshrc.ext \
-  && echo 'alias ll="l -Fahl"' >> ${HOME}/.zshrc.ext \
-  && echo 'alias la="l -a"' >> ${HOME}/.zshrc.ext \
-  && echo 'alias cat="bat"' >> ${HOME}/.zshrc.ext
+# configure fish and bash
+RUN fish -c true \
+  && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo '{$LOCAL_BIN_HOME}/mise activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias l="eza --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # configure openssl 1.1
 # this is needed to compile older erlang versions
