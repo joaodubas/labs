@@ -5,7 +5,7 @@ set -e
 # git config --global user.name 'Joao P Dubas'
 # git config --global user.email joao.dubas@gmail.com
 # git config --global core.editor nvim
-# pyenv global 3.10.4
+# pyenv global 3.10.6
 # ln -s ${HOME}/.local/share/pypoetry/venv/bin/poetry ${HOME}/.local/bin/poetry
 
 if [ "$1" = 'code-server' ] || [ "$1" = 'openvscode-server' ]; then

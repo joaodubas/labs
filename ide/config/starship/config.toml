@@ -7,6 +7,8 @@ $git_state\
 $git_status\
 $cmd_duration\
 $line_break\
+$kubernetes\
+$line_break\
 $python\
 $character"""
 
@@ -40,3 +42,7 @@ style = "bright-black"
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+
+[kubernetes]
+format = 'on [⛵ $context \($namespace\)](dimmed green) '
+disabled = false
