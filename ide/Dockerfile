@@ -1,6 +1,10 @@
 FROM ubuntu:22.04 AS base
 
 # install system deps
+ARG USER_UID=1000
+ARG USER_GID=1000
+ARG DOCKER_GID=999
+ARG WHEEL_GID=980
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y software-properties-common \
@@ -70,7 +74,21 @@ RUN apt-get update \
   && apt-get update \
   && apt-get -y install gh \
   && rm -rf /var/lib/apt/lists/* \
-  && locale-gen en_US.UTF-8
+  && locale-gen en_US.UTF-8 \
+  && echo 'setup unprivileged user' \
+  && groupadd --gid ${WHEEL_GID} wheel \
+  && groupadd --gid ${DOCKER_GID} docker \
+  && groupadd --gid ${USER_GID} coder \
+  && useradd \
+    --uid ${USER_UID} \
+    --gid coder \
+    --groups docker,wheel \
+    --shell $(which fish) \
+    --home-dir /home/coder \
+    --create-home \
+    coder \
+  && echo 'coder:coder' | chpasswd \
+  && echo 'permit persist :wheel as root' > /etc/doas.conf
 
 # fetch/install command line utilities
 ENV RIPGREP_VERSION 13.0.0
@@ -218,6 +236,13 @@ RUN cd src \
   && make \
   # && make test \
   && make install
+
+# configure git
+ARG GIT_USER_EMAIL
+ARG GIT_USER_NAME
+RUN git config --global user.email "${GIT_USER_EMAIL}" \
+  && git config --global user.name "${GIT_USER_NAME}" \
+  && git config --global core.editor nvim
 
 USER root
 
