@@ -23,6 +23,29 @@ services:
       - git_cicd_net
     ports:
       - '222:22'
+  forgejo:
+    image: 'codeberg.org/forgejo/forgejo:1.21.4-0'
+    init: true
+    environment:
+      APP_NAME: ${GIT_APP_NAME:-forgejo}
+      USER_UID: ${UID:-1000}
+      USER_GID: ${GID:-1000}
+      RUN_MODE: ${FORGEJO_RUN_MODE:-prod}
+      DOMAIN: ${FORGEJO_DOMAIN:-localhost}
+      SSH_DOMAIN: ${FORGEJO_SSH_DOMAIN:-localhost}
+      HTTP_PORT: ${FORGEJO_HTTP_PORT:-3000}
+      ROOT_URL: http://${FORGEJO_DOMAIN:-localhost}:3000
+      SSH_PORT: ${FORGEJO_SSH_PORT:-224}
+      SSH_LISTEN_PORT: ${FORGEJO_SSH_LISTEN_PORT:-22}
+      DB_TYPE: ${FORGEJO_DB_TYPE:-sqlite3}
+      DISABLE_REGISTRATION: ${FORGEJO_DISABLE_REGISTRATION:-true}
+    restart: unless-stopped
+    volumes:
+      - 'forgejo_data:/data'
+    networks:
+      - git_cicd_net
+    ports:
+      - '224:22'
   # TODO: configure test report based on post:
   # https://medium.com/@boomimagestudio-techblog/goodbye-jenkins-how-drone-simplifies-ci-cd-for-engineering-teams-everywhere-73a7db435a86
   report_test:
@@ -122,6 +145,7 @@ services:
 
 volumes:
   git_data: {}
+  forgejo_data: {}
   ci_data: {}
   renovate_data: {}
   minio_data: {}
