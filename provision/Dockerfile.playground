@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+ARG DOCKER_GID=999
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:ansible/ansible \
+  && apt-get update \
+  && apt-get install -y \
+    ansible \
+    sudo
+
+RUN groupadd --gid ${DOCKER_GID} docker \
+  && groupadd --gid ${GID} playground \
+  && useradd \
+      --uid ${UID} \
+      --gid playground \
+      --groups docker,sudo \
+      --home-dir /home/playground \
+      --shell /usr/bin/bash \
+      --create-home \
+      playground \
+  && echo 'playground:playground' | chpasswd \
+  && echo 'playground ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10-playground
+
+USER playground
+ENTRYPOINT ["sleep"]
+CMD ["infinity"]
