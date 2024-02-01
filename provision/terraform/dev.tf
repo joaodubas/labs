@@ -91,24 +91,24 @@ resource "digitalocean_record" "dev_auth" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_affine" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "affine"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_bitwarden" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "bitwarden"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_coder" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "coder"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_openvscode" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "openvscode"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_gitea" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "gitea"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -119,45 +119,17 @@ resource "digitalocean_record" "dev_drone" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_appsmith" {
+resource "digitalocean_record" "dev_gitea" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "appsmith"
+  name = "gitea"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_emcasa_backend" {
+resource "digitalocean_record" "dev_grafana" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "api.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_emcasa_octopus" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "octopus.emcasa"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_nlw_wabanex" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "wabanex"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_swagger" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "swagger"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_lowdefy" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "lowdefy"
+  name = "grafana"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -172,6 +144,34 @@ resource "digitalocean_record" "dev_minio_console" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "console.minio"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_nlw_wabanex" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "wabanex"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_opensign_client" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "opensign"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_opensign_server" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "api.opensign"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_uptime" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "uptime"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
