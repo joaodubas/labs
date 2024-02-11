@@ -8,12 +8,15 @@ x-volumes: &volumes
   - 'home_state_data:/home/coder/.local/state'
   - 'gopath_data:/home/coder/.local/share/go'
   - './config/code-server:/home/coder/.config/code-server'
-  - './config/nvim:/home/coder/.config/nvim'
+  - './config/mise:/home/coder/.config/mise'
+  - './config/nvim/lua/custom:/home/coder/.config/nvim/lua/custom'
   - './config/starship:/home/coder/.config/starship'
+  - './config/tmux:/home/coder/.config/tmux'
+  - './config/tmuxp:/home/coder/.config/tmuxp'
 
 services:
   coder:
-    image: 'joaodubas/code-server:4.20.1'
+    image: 'joaodubas/code-server:4.21.1'
     build:
       context: .
       target: code-server
