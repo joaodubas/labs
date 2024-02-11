@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS base
+FROM ubuntu:23.04 AS base
 
 # install system deps
 ARG USER_UID=1000
