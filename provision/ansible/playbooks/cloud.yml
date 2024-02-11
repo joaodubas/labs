@@ -1,5 +1,0 @@
----
-- hosts: dev
-  become: yes
-  roles:
-    - role: ivansible.lin_hosters

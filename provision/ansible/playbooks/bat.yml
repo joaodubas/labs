@@ -1,0 +1,27 @@
+---
+- hosts: dev
+  vars:
+    bat:
+      version: '0.23.0'
+      destination: '/tmp/bat.deb'
+  tasks:
+    - name: check bat deb already installed
+      become: yes
+      command: dpkg-query -W bat
+      register: bat_check_deb
+      failed_when: bat_check_deb.rc > 1
+      changed_when: bat_check_deb.rc == 1
+    - name: download bat deb
+      get_url:
+        url: 'https://github.com/sharkdp/bat/releases/download/v{{ bat.version }}/bat_{{ bat.version }}_amd64.deb'
+        dest: '{{ bat.destination }}'
+      when: bat_check_deb.rc == 1
+    - name: install bat deb
+      become: yes
+      apt:
+        deb: '{{ bat.destination }}'
+      when: bat_check_deb.rc == 1
+    - name: remove ripgrep deb
+      file:
+        path: '{{ bat.destination }}'
+        state: absent

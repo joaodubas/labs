@@ -1,11 +1,6 @@
 ---
 - hosts: dev
-  become: yes
   tasks:
-    - name: install git
-      apt:
-        name: git
-        state: present
     - name: configure git
       git_config:
         name: "{{ item.name }}"

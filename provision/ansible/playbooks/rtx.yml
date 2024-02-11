@@ -1,0 +1,31 @@
+---
+- hosts: dev
+  roles:
+    - role: dfang.rtx
+  vars:
+    system_wide: false
+    rtx_plugins:      
+      - name: awscli
+        versions: [ '2.11.3' ]
+        global: '2.11.3'
+      - name: erlang
+        versions: [ '26.0.2' ]
+        global: '26.0.2'
+      - name: elixir
+        versions: [ '1.15.5' ]
+        global: '1.15.5'
+      - name: golang
+        versions: [ '1.21.1' ]
+        global: '1.21.1'
+      - name: kubectl
+        versions: [ '1.27.1' ]
+        global: '1.27.1'
+      - name: helm
+        versions: [ '3.11.3' ]
+        global: '3.11.3'
+      - name: nodejs
+        versions: [ '20.6.1' ]
+        global: '20.6.1'
+      - name: yarn
+        versions: [ '1.22.19' ]
+        global: '1.22.19'

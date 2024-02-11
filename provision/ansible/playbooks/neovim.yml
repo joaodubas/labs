@@ -2,37 +2,8 @@
 - hosts: dev
   become: yes
   vars:
-    ripgrep:
-      version: '0.10.0'
     neovim_config_repo:
       url: 'https://github.com/joaodubas/webfaction-dotfiles'
       version: 'nvim'
   roles:
     - dotstrap.neovim
-  tasks:
-    - name: check ripgrep deb already installed
-      become: yes
-      command: dpkg-query -W ripgrep
-      register: ripgrep_check_deb
-      failed_when: ripgrep_check_deb.rc > 1
-      changed_when: ripgrep_check_deb.rc == 1
-    - name: download ripgrep deb
-      get_url:
-        url: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep.version }}/ripgrep_{{ ripgrep.version }}_amd64.deb'
-        dest: /tmp/ripgrep.deb
-      when: ripgrep_check_deb.rc == 1
-    - name: install ripgrep deb
-      become: yes
-      apt:
-        deb: /tmp/ripgrep.deb
-      when: ripgrep_check_deb.rc == 1
-    - name: remove ripgrep deb
-      file:
-        path: /tmp/ripgrep.deb
-        state: absent
-    - name: install fzy
-      become: yes
-      apt:
-        name: fzy
-        state: present
-        update_cache: yes
