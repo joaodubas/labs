@@ -1,0 +1,8 @@
+---
+# TODO (jpd): get a way to install piped scripts
+- command.run:
+  command: curl
+  args:
+    - s
+    - S
+    - https://starship.rs/install.sh
