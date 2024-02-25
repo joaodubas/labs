@@ -84,6 +84,13 @@ resource "digitalocean_domain" "dev_default" {
   ip_address = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_atuin" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "atuin"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_auth" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
