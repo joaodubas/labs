@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:23.10
 
 ARG DOCKER_GID=999
 ARG UID=1000
@@ -10,18 +10,19 @@ RUN apt-get update \
   && apt-get update \
   && apt-get install -y \
     ansible \
-    sudo
+    sudo \
+  && curl -fsSL https://get.comtrya.dev | sh
 
 RUN groupadd --gid ${DOCKER_GID} docker \
   && groupadd --gid ${GID} playground \
   && useradd \
-      --uid ${UID} \
-      --gid playground \
-      --groups docker,sudo \
-      --home-dir /home/playground \
-      --shell /usr/bin/bash \
-      --create-home \
-      playground \
+    --uid ${UID} \
+    --gid playground \
+    --groups docker,sudo \
+    --home-dir /home/playground \
+    --shell /usr/bin/bash \
+    --create-home \
+    playground \
   && echo 'playground:playground' | chpasswd \
   && echo 'playground ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10-playground
 
