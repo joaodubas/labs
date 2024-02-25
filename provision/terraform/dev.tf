@@ -7,8 +7,8 @@ resource "digitalocean_droplet" "dev_server" {
   region = "nyc3"
   # image = "ubuntu-18-04-x64"
   image = "42892184"
-  size = "s-4vcpu-8gb"
-  # size = "s-2vcpu-4gb"
+  ipv6 = true
+  size = "s-2vcpu-4gb"
   private_networking = true
   tags = [
     digitalocean_tag.dev_tag.name
