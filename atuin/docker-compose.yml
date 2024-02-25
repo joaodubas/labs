@@ -1,0 +1,44 @@
+---
+services:
+  db:
+    image: 'postgres:16.2-alpine3.19'
+    hostname: ${ATUIN_POSTGRES_HOSTNAME:-db}
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${ATUIN_POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${ATUIN_POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${ATUIN_POSTGRES_DATABASE:-atuin}
+    volumes:
+      - 'db_data:/var/lib/postgresql/data'
+  atuin:
+    image: &atuin_image 'ghcr.io/atuinsh/atuin:v18.0.1'
+    hostname: atuin
+    restart: unless-stopped
+    ports:
+      - '8888:8888'
+    environment:
+      ATUIN_HOST: ${ATUIN_HOST:-0.0.0.0}
+      ATUIN_PORT: ${ATUIN_PORT:-8888}
+      ATUIN_OPEN_REGISTRATION: 'false'
+      ATUIN_DB_URI: 'postgres://${ATUIN_POSTGRES_USERNAME:-postgres}:${ATUIN_POSTGRES_PASSWORD:-postgres}@${ATUIN_POSTGRES_HOSTNAME:-db}/${ATUIN_POSTGRES_DATABASE:-atuin}'
+      RUST_LOG: 'info,atuin_server=debug'
+    volumes:
+      - 'atuin_config:/home/atuin/.config'
+      - 'atuin_local:/home/atuin/.local'
+    entrypoint: atuin
+    command: server start
+  atuin_setup:
+    image: *atuin_image
+    restart: 'no'
+    user: root
+    profiles:
+      - setup
+    volumes_from:
+      - atuin
+    entrypoint: chown
+    command: --recursive atuin:atuin /home/atuin
+
+volumes:
+  db_data: {}
+  atuin_config: {}
+  atuin_local: {}
