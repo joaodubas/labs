@@ -40,7 +40,7 @@
     - libncurses-dev
     - libncurses5-dev
     - libncursesw5-dev
-    - libodbc2
+    - libodbc1
     - libpcre2-dev
     - libreadline-dev
     - libsctp-dev
@@ -48,7 +48,8 @@
     - libsqlite3-dev
     - libssl-dev
     - libtool
-    - libwxgtk3.2-dev
+    - libwxgtk3.0-gtk3-0v5
+    - libwxgtk3.0-gtk3-dev
     - libxslt-dev
     - libyaml-dev
     - llvm
