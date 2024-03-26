@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/mediocregopher/radix.v3"
+	"github.com/mediocregopher/radix/v3"
 )
 
 // StreamName represents the series name used to store stream in redis.
