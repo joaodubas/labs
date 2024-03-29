@@ -12,8 +12,7 @@ def consume():
     cli = conn(log)
     group(log, cli)
     while True:
-        # message_id = recv(log, cli, message_id)
-        recv(log, cli, message_id)
+        _ = recv(log, cli, message_id)
         time.sleep(1)
 
 
@@ -63,9 +62,7 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
         log.info('recv: log key {}'.format(key.decode('utf-8')))
         for mid, items in messages:
             log.info('recv: message id {}'.format(mid.decode('utf-8')))
-            d = {}
-            while items:
-                d[items.pop().decode('utf-8')] = items.pop().decode('utf-8')
+            d = {k.decode('utf-8'): v.decode('utf-8') for k, v in items.items()}
             log.info('recv: log {}'.format(d))
             ack(log, cli, mid.decode('utf-8'))
             message_id = mid
@@ -102,4 +99,3 @@ def logger() -> logging.Logger:
 
 if __name__ == '__main__':
     consume()
-
