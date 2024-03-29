@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 import sys
 import time
 
@@ -38,7 +39,9 @@ def conn(log: logging.Logger) -> redis.Redis:
         Redis connection.
 
     """
-    cli = redis.Redis(host='streams', port=6379)
+    stream_host = os.environ.get('STREAM_HOST', 'stream')
+    stream_port = os.environ.get('STREAM_PORT', '6379')
+    cli = redis.Redis(host=stream_host, port=int(stream_port))
     try:
         cli.ping()
     except redis.ConnectionError as e:

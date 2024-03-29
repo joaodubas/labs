@@ -31,6 +31,9 @@ services:
       - streams
       - dragonfly-streams
       - key-streams
+    environment: &stream_configuration
+      STREAM_HOST: *redis_hostname
+      STREAM_PORT: 6379
     volumes:
       - './producer:/go/src/app'
     working_dir: /go/src/app
@@ -44,6 +47,8 @@ services:
     init: true
     restart: unless-stopped
     depends_on: *producer_service_dependencies
+    environment:
+      <<: *stream_configuration
     volumes:
       - './producer-py:/usr/local/src/app'
     command: python producer.py
@@ -54,6 +59,8 @@ services:
     depends_on: &consumer_service_dependencies
       - producer
       - producer-py
+    environment:
+      <<: *stream_configuration
     volumes:
       - './consumer:/go/src/app'
     working_dir: /go/src/app
@@ -66,7 +73,8 @@ services:
     init: true
     restart: unless-stopped
     depends_on: *consumer_service_dependencies
-      - producer-py
+    environment:
+      <<: *stream_configuration
     volumes:
       - './consumer-py:/usr/local/src/app'
     command: python consumer.py

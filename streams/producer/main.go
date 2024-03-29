@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/mediocregopher/radix/v3"
@@ -12,7 +13,7 @@ import (
 const StreamName = "log"
 
 func main() {
-	fmt.Println("will do something amazing")
+	log.Println("will do something amazing")
 	c := conn()
 	// TODO: (jpd) this loop should be inside a goroutine.
 	for {
@@ -22,7 +23,9 @@ func main() {
 }
 
 func conn() radix.Client {
-	c, err := radix.NewPool("tcp", "streams:6379", 20)
+	stream_host := os.Getenv("STREAM_HOST")
+	stream_port := os.Getenv("STREAM_PORT")
+	c, err := radix.NewPool("tcp", fmt.Sprintf("%s:%s", stream_host, stream_port), 20)
 	if err != nil {
 		log.Fatalf("conn: failure to connect %v", err)
 	}
