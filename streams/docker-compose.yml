@@ -1,13 +1,12 @@
 ---
-version: '3'
 services:
   streams:
-    image: redis:5.0.2
+    image: 'redis:7.2.4'
     environment:
       TERM: xterm-color
     command: redis-server --protected-mode no
   producer:
-    image: golang:1.11
+    image: &golang_image 'golang:1.22.1'
     init: true
     depends_on:
       - streams
@@ -16,17 +15,19 @@ services:
     working_dir: /go/src/app
     command: go run main.go
   producer-py:
-    image: joaodubas/producer-py:3.6
+    image: 'joaodubas/producer-py:3.12'
     build:
+      args: &python_args
+        POETRY_VERSION: 1.8.2
       context: ./producer-py
     init: true
     depends_on:
       - streams
     volumes:
-        - './producer-py:/usr/local/src/app'
+      - './producer-py:/usr/local/src/app'
     command: python producer.py
   consumer:
-    image: golang:1.11
+    image: *golang_image
     init: true
     depends_on:
       - producer
@@ -36,13 +37,14 @@ services:
     working_dir: /go/src/app
     command: go run main.go
   consumer-py:
-    image: joaodubas/consumer-py:3.6
+    image: 'joaodubas/consumer-py:3.12'
     build:
+      args: *python_args
       context: ./consumer-py
     init: true
     depends_on:
       - producer
       - producer-py
     volumes:
-        - './consumer-py:/usr/local/src/app'
+      - './consumer-py:/usr/local/src/app'
     command: python consumer.py

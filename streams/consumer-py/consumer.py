@@ -12,20 +12,16 @@ def consume():
     cli = conn(log)
     group(log, cli)
     while True:
-        # message_id = recv(log, cli, message_id)
-        recv(log, cli, message_id)
+        _ = recv(log, cli, message_id)
         time.sleep(1)
 
 
 def conn(log: logging.Logger) -> redis.Redis:
-    cli = redis.Redis(host='streams', port='6379')
+    cli = redis.Redis(host='streams', port=6379)
     try:
         cli.ping()
     except redis.ConnectionError as e:
         log.exception('conn: error connecting {}'.format(e))
-        sys.exit(1)
-    except redis.ConnectionError as e:
-        log.exception('conn: redis error {}'.format(e))
         sys.exit(1)
     except Exception as e:
         log.exception('conn: sys error {}'.format(e))
@@ -66,9 +62,7 @@ def recv(log: logging.Logger, cli: redis.Redis, message_id: str):
         log.info('recv: log key {}'.format(key.decode('utf-8')))
         for mid, items in messages:
             log.info('recv: message id {}'.format(mid.decode('utf-8')))
-            d = {}
-            while items:
-                d[items.pop().decode('utf-8')] = items.pop().decode('utf-8')
+            d = {k.decode('utf-8'): v.decode('utf-8') for k, v in items.items()}
             log.info('recv: log {}'.format(d))
             ack(log, cli, mid.decode('utf-8'))
             message_id = mid
