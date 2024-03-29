@@ -1,16 +1,17 @@
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "producer-py"
 version = "0.1.0"
 description = "Redis stream producer"
 authors = ["Joao P Dubas <joao.dubas@gmail.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.12"
 redis = "^5.0"
 
-[tool.poetry.dev-dependencies]
-ipython = "^7.34"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.22"
