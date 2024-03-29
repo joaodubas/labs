@@ -18,14 +18,11 @@ def consume():
 
 
 def conn(log: logging.Logger) -> redis.Redis:
-    cli = redis.Redis(host='streams', port='6379')
+    cli = redis.Redis(host='streams', port=6379)
     try:
         cli.ping()
     except redis.ConnectionError as e:
         log.exception('conn: error connecting {}'.format(e))
-        sys.exit(1)
-    except redis.ConnectionError as e:
-        log.exception('conn: redis error {}'.format(e))
         sys.exit(1)
     except Exception as e:
         log.exception('conn: sys error {}'.format(e))
@@ -105,3 +102,4 @@ def logger() -> logging.Logger:
 
 if __name__ == '__main__':
     consume()
+

@@ -38,7 +38,7 @@ def conn(log: logging.Logger) -> redis.Redis:
         Redis connection.
 
     """
-    cli = redis.Redis(host='streams', port='6379')
+    cli = redis.Redis(host='streams', port=6379)
     try:
         cli.ping()
     except redis.ConnectionError as e:
