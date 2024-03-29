@@ -17,6 +17,8 @@ services:
   producer-py:
     image: 'joaodubas/producer-py:3.12'
     build:
+      args: &python_args
+        POETRY_VERSION: 1.8.2
       context: ./producer-py
     init: true
     depends_on:
@@ -37,6 +39,7 @@ services:
   consumer-py:
     image: 'joaodubas/consumer-py:3.12'
     build:
+      args: *python_args
       context: ./consumer-py
     init: true
     depends_on:
