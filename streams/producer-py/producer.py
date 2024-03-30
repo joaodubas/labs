@@ -26,7 +26,7 @@ def produce():
             'system',
             os.environ.get('STREAM_HOST', 'stream'),
             'time',
-            datetime.datetime.utcnow().astimezone(tz).strftime(rfc3339)
+            datetime.datetime.now(datetime.UTC).astimezone(tz).strftime(rfc3339)
         )
         time.sleep(1.0)
 
