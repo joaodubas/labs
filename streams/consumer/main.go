@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -19,7 +20,7 @@ const (
 )
 
 func main() {
-	fmt.Println("consumer")
+	log.Println("consumer")
 	c := conn()
 	group(c)
 	mID := ">"
@@ -32,7 +33,9 @@ func main() {
 
 // conn stablish a connection with redis and return it.
 func conn() redis.Conn {
-	c, err := redis.Dial("tcp", "streams:6379")
+	stream_host := os.Getenv("STREAM_HOST")
+	stream_port := os.Getenv("STREAM_PORT")
+	c, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", stream_host, stream_port))
 	if err != nil {
 		log.Fatalf("conn: failure to connect with redis instance %v", err)
 	}
