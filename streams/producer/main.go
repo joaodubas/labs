@@ -17,7 +17,7 @@ func main() {
 	c := conn()
 	// TODO: (jpd) this loop should be inside a goroutine.
 	for {
-		send(c, "host", "host a", "time", time.Now().Format(time.RFC3339Nano))
+		send(c, "host", "host a", "system", os.Getenv("STREAM_HOST"), "time", time.Now().Format(time.RFC3339Nano))
 		time.Sleep(1 * time.Second)
 	}
 }

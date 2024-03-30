@@ -23,6 +23,8 @@ def produce():
             cli,
             'host',
             'host b',
+            'system',
+            os.environ.get('STREAM_HOST', 'stream'),
             'time',
             datetime.datetime.utcnow().astimezone(tz).strftime(rfc3339)
         )
