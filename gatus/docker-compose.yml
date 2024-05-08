@@ -1,0 +1,9 @@
+---
+services:
+  gatus:
+    image: 'twinproduction/gatus:v5.7.0'
+    init: true
+    restart: unless-stopped
+    hostname: gatus
+    volumes:
+      - './config/gatus:/etc/config/gatus'
