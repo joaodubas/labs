@@ -23,6 +23,21 @@ services:
     restart: unless-stopped
     volumes:
       - 'key_data:/data'
+  kvrocks-streams:
+    image: 'apache/kvrocks:2.8.0'
+    init: true
+    hostname: &kvrocks_hostname kvrocks-streams
+    restart: unless-stopped
+    volumes:
+      - 'kvrocks_data:/data'
+    command: --bind 0.0.0.0 --dir /data
+  valkey-streams:
+    image: 'valkey/valkey:7.2.5-bookworm'
+    init: true
+    hostname: &valkey_hostname valkey-streams
+    restart: unless-stopped
+    volumes:
+      - 'valkey_data:/data'
   producer:
     image: &golang_image 'golang:1.22.1'
     init: true
@@ -31,6 +46,8 @@ services:
       - streams
       - dragonfly-streams
       - key-streams
+      - kvrocks-streams
+      - valkey-streams
     environment: &stream_configuration
       STREAM_HOST: *redis_hostname
       STREAM_PORT: 6379
@@ -81,4 +98,6 @@ services:
 volumes:
   dragonfly_data: {}
   key_data: {}
+  kvrocks_data: {}
   redis_data: {}
+  valkey_data: {}
