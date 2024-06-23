@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.21.4'
+    image: 'gitea/gitea:1.21.11'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -28,9 +28,9 @@ services:
   report_test:
     image: 'frankescobar/allure-docker-service:2.21.0'
   dependency_bot:
-    image: 'renovate/renovate:35.48.2-slim'
+    image: 'renovate/renovate:37.414.1-slim'
   ci:
-    image: 'drone/drone:2.22.0'
+    image: 'drone/drone:2.24.0'
     init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -82,7 +82,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:37.162.1'
+    image: 'renovate/renovate:37.414.1'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
