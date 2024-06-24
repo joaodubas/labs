@@ -11,7 +11,7 @@ services:
     volumes:
       - 'db_data:/var/lib/postgresql/data'
   atuin:
-    image: &atuin_image 'ghcr.io/atuinsh/atuin:v18.0.1'
+    image: &atuin_image 'ghcr.io/atuinsh/atuin:v18.3.0'
     hostname: atuin
     restart: unless-stopped
     environment:
