@@ -14,8 +14,6 @@ services:
     image: &atuin_image 'ghcr.io/atuinsh/atuin:v18.0.1'
     hostname: atuin
     restart: unless-stopped
-    ports:
-      - '8888:8888'
     environment:
       ATUIN_HOST: ${ATUIN_HOST:-0.0.0.0}
       ATUIN_PORT: ${ATUIN_PORT:-8888}
