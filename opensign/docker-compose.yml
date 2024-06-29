@@ -10,12 +10,12 @@ services:
     depends_on:
       - db
     environment:
-      APP_ID: arandomnames
+      APP_ID: &app_id ${OS_APP_ID:-arandomnames}
       appName: dubas_signer
       MASTER_KEY: arandommaink
       MONGODB_URI: 'mongodb://db:27017'
       PARSE_MOUNT: /app
-      SERVER_URL: 'https://api.opensign.dubas.dev/api/app'
+      SERVER_URL: &server_url '${OS_SERVER_URL:-https://api.opensign.dubas.dev/app}'
     entrypoint: /usr/src/app/node_modules/.bin/nodemon
     command: server.js
   client:
@@ -29,10 +29,10 @@ services:
       - server
     environment:
       CI: 'false'
-      PUBLIC_URL: 'https://opensign.dubas.dev'
+      PUBLIC_URL: '${OS_CLIENT_URL:-https://opensign.dubas.dev}'
       GENERATE_SOURCEMAP: 'false'
-      REACT_APP_SERVERURL: 'https://api.opensign.dubas.dev/api/app'
-      REACT_APP_ID: arandomnames
+      REACT_APP_SERVERURL: *server_url
+      REACT_APP_ID: *app_id
       REACT_APP_GTM: 
     entrypoint: npm
     command: start
