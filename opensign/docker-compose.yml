@@ -6,6 +6,7 @@ services:
     image: 'joaodubas/opensignserver:${OS_GIT_REF:-v1.8.1}'
     init: true
     restart: unless-stopped
+    hostname: opensign_server
     depends_on:
       - db
     environment:
@@ -23,6 +24,7 @@ services:
     image: 'joaodubas/opensignclient:${OS_GIT_REF:-v1.8.1}'
     init: true
     restart: unless-stopped
+    hostname: opensign_client
     depends_on:
       - server
     environment:
@@ -38,6 +40,7 @@ services:
     image: 'mongo:7.0.2-jammy'
     init: true
     restart: unless-stopped
+    hostname: mongodb
     volumes:
       - 'db-data:/data/db'
 volumes:
