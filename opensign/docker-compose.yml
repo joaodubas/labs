@@ -2,8 +2,8 @@
 services:
   server:
     build:
-      context: 'https://github.com/OpenSignLabs/OpenSign.git#main:apps/OpenSignServer'
-    image: 'joaodubas/opensignserver:main'
+      context: 'https://github.com/OpenSignLabs/OpenSign.git#${OS_GIT_REF:-v1.8.1}:apps/OpenSignServer'
+    image: 'joaodubas/opensignserver:${OS_GIT_REF:-v1.8.1}'
     init: true
     restart: unless-stopped
     depends_on:
@@ -19,8 +19,8 @@ services:
     command: server.js
   client:
     build:
-      context: 'https://github.com/OpenSignLabs/OpenSign.git#main:apps/OpenSign'
-    image: 'joaodubas/opensignclient:main'
+      context: 'https://github.com/OpenSignLabs/OpenSign.git#${OS_GIT_REF:-v1.8.1}:apps/OpenSign'
+    image: 'joaodubas/opensignclient:${OS_GIT_REF:-v1.8.1}'
     init: true
     restart: unless-stopped
     depends_on:
