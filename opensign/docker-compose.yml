@@ -42,6 +42,6 @@ services:
     restart: unless-stopped
     hostname: mongodb
     volumes:
-      - 'db-data:/data/db'
+      - 'db_data:/data/db'
 volumes:
-  db-data: {}
+  db_data: {}
