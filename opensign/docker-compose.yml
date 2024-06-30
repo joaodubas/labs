@@ -16,6 +16,12 @@ services:
       MONGODB_URI: 'mongodb://db:27017'
       PARSE_MOUNT: /app
       SERVER_URL: &server_url '${OS_SERVER_URL:-https://api.opensign.dubas.dev/app}'
+      DO_SPACE: 'opensign'
+      DO_BASEURL: 'http://s3:9090/opensign'
+      DO_ENDPOINT: 's3:9090'
+      DO_ACCESS_KEY_ID: 'eE4Bq5h75QsAb2tzoXPd'
+      DO_SECRET_ACCESS_KEY: 'gBaIvqmvPyqoNgw2RBIy6FQOQBoO4QT99h329IZR'
+      DO_REGION: us-east-1
     entrypoint: /usr/src/app/node_modules/.bin/nodemon
     command: server.js
   client:
@@ -43,5 +49,18 @@ services:
     hostname: mongodb
     volumes:
       - 'db_data:/data/db'
+  s3:
+    image: 'quay.io/minio/minio:RELEASE.2024-06-29T01-20-47Z'
+    environment:
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost:9001}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-3atbJUTYTWHBeY5qQA2iw3KJaqVsTQBK}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost:9000}
+      MINIO_VOLUMES: /snsd_data
+    volumes:
+      - 'minio_snsd_data:/snsd_data'
+    restart: unless-stopped
+    command: 'server --console-address ":9001"'
 volumes:
   db_data: {}
+  minio_snsd_data: {}
