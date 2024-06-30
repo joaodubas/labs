@@ -103,7 +103,7 @@ services:
     entrypoint: sleep
     command: infinity
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2023-06-09T07-32-12Z'
+    image: 'quay.io/minio/minio:RELEASE.2024-06-29T01-20-47Z'
     environment:
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
@@ -118,7 +118,7 @@ services:
       - git_cicd_net
     command: 'server --console-address ":9001"'
   mc:
-    image: 'quay.io/minio/mc:RELEASE.2023-06-06T13-48-56Z'
+    image: 'quay.io/minio/mc:RELEASE.2024-06-24T19-40-33Z'
 
 volumes:
   git_data: {}
