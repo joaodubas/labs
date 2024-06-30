@@ -28,7 +28,7 @@ services:
   report_test:
     image: 'frankescobar/allure-docker-service:2.21.0'
   dependency_bot:
-    image: 'renovate/renovate:37.414.1-slim'
+    image: 'renovate/renovate:37.421.2-slim'
   ci:
     image: 'drone/drone:2.24.0'
     init: true
@@ -82,7 +82,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:37.414.1'
+    image: 'renovate/renovate:37.421.2'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
