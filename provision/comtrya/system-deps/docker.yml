@@ -1,0 +1,28 @@
+---
+labels:
+  - system
+  - docker
+actions:
+  - action: package.install
+    provider: apt
+    list:
+      - ca-certificates
+      - curl
+  - action: command.run
+    command: sudo
+    args:
+      - install
+      - -m
+      - '0755'
+      - /etc/apt/keyrings
+  - action: command.run
+    command: sudo
+    args:
+      - curl
+      - -f
+      - -s
+      - -S
+      - -L
+      - -o
+      - /etc/apt/keyrings/docker.asc
+      - https://download.docker.com/linux/ubuntu/gpg

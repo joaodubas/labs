@@ -1,0 +1,23 @@
+---
+labels:
+  - cli
+  - atuin
+actions:
+  - action: command.run
+    dir: /tmp
+    command: curl
+    args:
+      - -s
+      - -S
+      - -o
+      - /tmp/atuin.sh
+      - https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh
+  - action: command.run
+    dir: /tmp
+    command: chmod
+    args:
+      - '750'
+      - atuin.sh
+  - action: command.run
+    dir: /tmp
+    command: ./atuin.sh

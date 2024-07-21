@@ -1,0 +1,17 @@
+---
+labels:
+  - fish
+  - user
+depends:
+  - system-deps
+actions:
+  - action: command.run
+    command: sudo
+    args:
+      - usermod
+      - --shell 
+      - /usr/bin/fish
+      - '{{ user.username }}'
+  - action: file.copy
+    from: fish/config.fish
+    to: '{{ user.config_dir }}/fish/config.fish'

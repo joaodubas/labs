@@ -1,0 +1,27 @@
+---
+labels:
+  - cli
+  - starship
+actions:
+  - action: command.run
+    dir: /tmp
+    command: curl
+    args:
+      - -s
+      - -S
+      - -o
+      - /tmp/starship.sh
+      - https://starship.rs/install.sh
+  - action: command.run
+    dir: /tmp
+    command: chmod
+    args:
+      - '750'
+      - starship.sh
+  - action: command.run
+    dir: /tmp
+    command: ./starship.sh
+    args:
+      - --yes
+      - --bin-dir
+      - '{{ user.home_dir }}/.local/bin'

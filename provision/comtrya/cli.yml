@@ -1,0 +1,16 @@
+---
+labels:
+  - cli
+depends:
+  - cli.atuin
+  - cli.mise
+  - cli.starship
+  - cli.zoxide
+actions:
+  - action: command.run
+    dir: /tmp
+    command: rm
+    args:
+      - -r
+      - -f
+      - '/tmp/*'

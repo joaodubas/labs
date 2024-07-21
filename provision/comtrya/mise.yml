@@ -1,0 +1,49 @@
+---
+labels:
+  - mise
+depends:
+  - cli.mise
+actions:
+  - action: command.run
+    command: '{{ user.home_dir }}/.local/bin/mise'
+    args:
+      - plugins
+      - install
+      - --force
+      - --yes
+      - awscli
+      - bat
+      - bitwarden
+      - circleci-cli
+      - ctlptl
+      - dagger
+      - eksctl
+      - elixir
+      - erlang
+      - eza
+      - fzf
+      - helm
+      - k3d
+      - k3sup
+      - k9s
+      - kind
+      - kubectl
+      - kubie
+      - lefthook
+      - lua
+      - luajit
+      - poetry
+      - r
+      - ripgrep
+      - rust
+      - starship
+      - task
+      - terraform
+      - tilt
+      - tmux
+      - usage
+      - usql
+      - yarn
+  - action: file.copy
+    from: mise/config.toml
+    to: '{{ user.config_dir }}/mise/config.toml'
