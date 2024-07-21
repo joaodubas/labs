@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.21.4'
+    image: 'gitea/gitea:1.21.11'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -28,9 +28,9 @@ services:
   report_test:
     image: 'frankescobar/allure-docker-service:2.21.0'
   dependency_bot:
-    image: 'renovate/renovate:35.48.2-slim'
+    image: 'renovate/renovate:37.421.2-slim'
   ci:
-    image: 'drone/drone:2.22.0'
+    image: 'drone/drone:2.24.0'
     init: true
     environment:
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -82,7 +82,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:37.162.1'
+    image: 'renovate/renovate:37.421.2'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
@@ -103,7 +103,7 @@ services:
     entrypoint: sleep
     command: infinity
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2023-06-09T07-32-12Z'
+    image: 'quay.io/minio/minio:RELEASE.2024-06-29T01-20-47Z'
     environment:
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
@@ -118,7 +118,7 @@ services:
       - git_cicd_net
     command: 'server --console-address ":9001"'
   mc:
-    image: 'quay.io/minio/mc:RELEASE.2023-06-06T13-48-56Z'
+    image: 'quay.io/minio/mc:RELEASE.2024-06-24T19-40-33Z'
 
 volumes:
   git_data: {}
