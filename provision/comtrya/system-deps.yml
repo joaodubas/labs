@@ -1,6 +1,6 @@
 ---
 labels:
-  - system
+  - system-deps
 actions:
   - action: package.install
     provider: apt
