@@ -19,3 +19,7 @@ actions:
       - --yes
       - --bin-dir
       - '{{ user.home_dir }}/.local/bin'
+  - action: command.run
+    command: rm
+    args:
+      - /tmp/starship.sh

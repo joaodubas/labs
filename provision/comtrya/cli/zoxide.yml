@@ -15,3 +15,7 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./zoxide.sh
+  - action: command.run
+    command: rm
+    args:
+      - /tmp/zoxide.sh

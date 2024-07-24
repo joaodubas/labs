@@ -15,3 +15,7 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./atuin.sh
+  - action: command.run
+    command: rm
+    args:
+      - /tmp/atuin.sh

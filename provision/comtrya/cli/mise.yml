@@ -15,3 +15,7 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./mise.sh
+  - action: command.run
+    command: rm
+    args:
+      - /tmp/mise.sh
