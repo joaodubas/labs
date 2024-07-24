@@ -5,11 +5,11 @@ a series of ansible playbooks, to do the hard work.
 
 Besides that, I have a docker image, and compose file, that already have installed:
 
-1. terraform 1.5.7
-2. docker 24.06
-3. docker-compose 2.21.0
-4. ansible-core 2.15.3
-5. ansible 8.3.0
+1. terraform 1.8.3
+2. docker 27.0.3
+3. docker-compose 2.29.0
+4. ansible-core 2.17.2
+5. ansible 10.2.0
 
 ## Running the project
 
