@@ -1,9 +1,11 @@
-# terraform/ansible provisioner
+# terraform/ansible/comtrya provisioner
 
-To make easier the task of provisioning my remote development machine, on DigitalOcean, I created a terraform script and
-a series of ansible playbooks, to do the hard work.
+To make easier the task of provisioning my remove server machine, on
+DigitalOcean, I created a terraform script and a series of ansible playbooks, to
+do the hard work.
 
-Besides that, I have a docker image, and compose file, that already have installed:
+Besides that, I have a docker image, and compose file, that already have
+installed:
 
 1. terraform 1.8.3
 2. docker 27.0.3
@@ -11,7 +13,7 @@ Besides that, I have a docker image, and compose file, that already have install
 4. ansible-core 2.17.2
 5. ansible 10.2.0
 
-## Running the project
+## Running the project for remote machines
 
 Using `docker` and `docker-compose` you can do the following steps:
 
