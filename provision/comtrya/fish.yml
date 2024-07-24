@@ -15,3 +15,53 @@ actions:
   - action: file.copy
     from: fish/config.fish
     to: '{{ user.config_dir }}/fish/config.fish'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux ATUIN_BIN $HOME/.atuin/bin'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux LOCAL_BIN_HOME $HOME/.local/bin'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux LOCAL_SRC_HOME $HOME/.local/src'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux XDG_CONFIG_HOME $HOME/.config'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux XDG_DATA_HOME $HOME/.local/share'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux XDG_CACHE_HOME $HOME/.cache'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux MISE_ENV_FILE .env'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'fish_add_path -p -u $ATUIN_BIN'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'fish_add_path -p -u $HOME/.local/bin'
