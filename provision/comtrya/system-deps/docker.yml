@@ -3,16 +3,9 @@ labels:
   - system-deps
   - docker
 actions:
-  - action: command.run
-    dir: /tmp
-    command: curl
-    args:
-      - -f
-      - -s
-      - -S
-      - -o
-      - /tmp/get-docker.sh
-      - https://get.docker.com
+  - action: file.download
+    from: https://get.docker.com
+    to: /tmp/get-docker.sh
   - action: command.run
     dir: /tmp
     privileged: true
@@ -23,3 +16,7 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./get-docker.sh
+  - action: command.run
+    command: rm
+    args:
+      - /tmp/get-docker.sh
