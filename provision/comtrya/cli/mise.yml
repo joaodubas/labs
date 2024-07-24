@@ -19,3 +19,6 @@ actions:
     command: rm
     args:
       - /tmp/mise.sh
+  - action: file.download
+    from: '{{ variables.mise_config_path }}'
+    to: '{{ user.config_dir }}/mise/config.toml'
