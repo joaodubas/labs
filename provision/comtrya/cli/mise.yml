@@ -3,15 +3,9 @@ labels:
   - cli
   - mise
 actions:
-  - action: command.run
-    dir: /tmp
-    command: curl
-    args:
-      - -s
-      - -S
-      - -o
-      - /tmp/mise.sh
-      - https://mise.jdx.dev/install.sh
+  - action: file.download
+    from: https://mise.jdx.dev/install.sh
+    to: /tmp/mise.sh
   - action: command.run
     dir: /tmp
     command: chmod

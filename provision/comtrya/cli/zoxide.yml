@@ -3,15 +3,9 @@ labels:
   - cli
   - zoxide
 actions:
-  - action: command.run
-    dir: /tmp
-    command: curl
-    args:
-      - -s
-      - -S
-      - -o
-      - /tmp/zoxide.sh
-      - https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
+  - action: file.download
+    from: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
+    to: /tmp/zoxide.sh
   - action: command.run
     dir: /tmp
     command: chmod
