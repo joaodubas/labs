@@ -33,3 +33,32 @@ ansible-playbook -i inventory/digital_ocean.py <path-to-playbook>
 2. tmux
 3. pyenv
 4. rtx
+
+## Running the project for local machine
+
+To provision a local development machine we use [`comtrya`][0] to execute a
+series of manifests that install:
+
+1. system dependencies
+2. command line utilities
+   1. mise
+   2. atuin
+   3. starship
+   4. zoxide
+3. user
+    1. fish
+
+To execute it:
+
+```bash
+cd /opt/comtrya
+comtrya apply
+```
+
+To test the manifests we can use the playground service:
+
+```bash
+docker compose run --entrypoint bash playground -c bash
+```
+
+[0]: https://www.comtrya.dev/
