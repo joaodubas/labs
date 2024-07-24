@@ -10,16 +10,9 @@ actions:
     args:
       - -p
       - '{{ user.home_dir }}/.local/src'
-  - action: command.run
-    command: curl
-    args:
-      - -s
-      - -S
-      - -f
-      - -L
-      - -o
-      - '{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz'
-      - https://www.openssl.org/source/openssl-1.1.1m.tar.gz
+  - action: file.download
+    from: https://www.openssl.org/source/openssl-1.1.1m.tar.gz
+    to: '{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz'
   - action: command.run
     dir: '{{ user.home_dir }}/.local/src'
     command: tar
