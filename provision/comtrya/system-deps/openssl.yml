@@ -33,3 +33,5 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./openssl.sh
+  - action: file.remove
+    target: /tmp/openssl.sh

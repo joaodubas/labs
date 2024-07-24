@@ -15,10 +15,8 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./atuin.sh
-  - action: command.run
-    command: rm
-    args:
-      - /tmp/atuin.sh
+  - action: file.remove
+    target: /tmp/atuin.sh
   - action: file.download
     from: '{{ variables.atuin_config_path }}'
     to: '{{ user.config_dir }}/atuin/config.toml'

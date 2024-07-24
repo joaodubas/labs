@@ -16,7 +16,5 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./get-docker.sh
-  - action: command.run
-    command: rm
-    args:
-      - /tmp/get-docker.sh
+  - action: file.remove
+    target: /tmp/get-docker.sh

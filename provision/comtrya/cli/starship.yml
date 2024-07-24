@@ -19,10 +19,8 @@ actions:
       - --yes
       - --bin-dir
       - '{{ user.home_dir }}/.local/bin'
-  - action: command.run
-    command: rm
-    args:
-      - /tmp/starship.sh
+  - action: file.remove
+    target: /tmp/starship.sh
   - action: file.download
     from: '{{ variables.starship_config_path }}'
     to: '{{ user.config_dir }}/starship/config.toml'

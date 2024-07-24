@@ -15,7 +15,5 @@ actions:
   - action: command.run
     dir: /tmp
     command: ./zoxide.sh
-  - action: command.run
-    command: rm
-    args:
-      - /tmp/zoxide.sh
+  - action: file.remove
+    target: /tmp/zoxide.sh
