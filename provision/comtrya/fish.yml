@@ -6,9 +6,9 @@ depends:
   - system-deps
 actions:
   - action: command.run
-    command: sudo
+    privileged: true
+    command: usermod
     args:
-      - usermod
       - --shell 
       - /usr/bin/fish
       - '{{ user.username }}'
