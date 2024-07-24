@@ -1,7 +1,7 @@
 ---
 labels:
-  - system-deps
   - openssl
+  - erlang
 depends:
   - system-deps
 actions:
@@ -28,19 +28,15 @@ actions:
       - -z
       - -f
       - '{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz'
+  - action: file.copy
+    from: openssl/install.sh
+    to: /tmp/openssl.sh
   - action: command.run
-    dir: '{{ user.home_dir }}/.local/src/openssl-1.1.1m'
-    command: ./config
+    dir: /tmp
+    command: chmod
     args:
-      - --prefix='{{ user.home_dir }}/.local/lib/ssl'
-      - --openssldir='{{ user.home_dir }}/.local/lib/ssl'
-      - shared
-      - zlib
+      - '750'
+      - openssl.sh
   - action: command.run
-    dir: '{{ user.home_dir }}/.local/src/openssl-1.1.1m'
-    command: make
-  - action: command.run
-    dir: '{{ user.home_dir }}/.local/src/openssl-1.1.1m'
-    command: make
-    args:
-      - install
+    dir: /tmp
+    command: ./openssl.sh
