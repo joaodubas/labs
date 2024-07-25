@@ -1,25 +1,11 @@
 ---
+# TODO (jpd): geerlingguy.pip requires sudo to be enabled
 - hosts: dev
   vars:
     pip_package: python3-pip
     pip_install_packages:
       - name: tmuxp
   tasks:
-    - name: install tmux
-      become: yes
-      apt:
-        name: tmux
-        state: present
-        update_cache: yes
-    - name: install tmux deps
-      become: yes
-      apt:
-        name: "{{ item }}"
-        state: present
-        update_cache: yes
-      loop:
-        - gawk
-        - xsel
     - name: install tmux plugins
       git:
         repo: 'https://github.com/tmux-plugins/tpm.git'

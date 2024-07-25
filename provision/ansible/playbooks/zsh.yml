@@ -1,6 +1,0 @@
----
-- hosts: dev
-  become: yes
-  roles:
-    - role: viasite-ansible.zsh
-      zsh_user: '{{ ansible_env.USER }}'

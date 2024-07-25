@@ -1,0 +1,17 @@
+---
+labels:
+  - system-deps
+  - docker
+depends:
+  - system-deps
+actions:
+  - action: file.download
+    from: https://get.docker.com
+    to: /tmp/get-docker.sh
+    chmod: '0750'
+  - action: command.run
+    sudo: true
+    dir: /tmp
+    command: ./get-docker.sh
+  - action: file.remove
+    target: /tmp/get-docker.sh
