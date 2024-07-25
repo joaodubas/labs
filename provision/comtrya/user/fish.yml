@@ -6,7 +6,7 @@ depends:
   - system-deps
 actions:
   - action: command.run
-    privileged: true
+    sudo: true
     command: usermod
     args:
       - --shell 
