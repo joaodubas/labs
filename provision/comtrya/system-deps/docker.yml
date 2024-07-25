@@ -2,18 +2,20 @@
 labels:
   - system-deps
   - docker
+depends:
+  - system-deps
 actions:
   - action: file.download
     from: https://get.docker.com
     to: /tmp/get-docker.sh
   - action: command.run
     dir: /tmp
-    privileged: true
     command: chmod
     args:
       - '750'
       - get-docker.sh
   - action: command.run
+    privileged: true
     dir: /tmp
     command: ./get-docker.sh
   - action: file.remove
