@@ -6,12 +6,7 @@ actions:
   - action: file.download
     from: https://mise.jdx.dev/install.sh
     to: /tmp/mise.sh
-  - action: command.run
-    dir: /tmp
-    command: chmod
-    args:
-      - '750'
-      - mise.sh
+    chmod: '0750'
   - action: command.run
     dir: /tmp
     command: ./mise.sh

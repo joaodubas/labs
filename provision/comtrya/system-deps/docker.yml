@@ -8,12 +8,7 @@ actions:
   - action: file.download
     from: https://get.docker.com
     to: /tmp/get-docker.sh
-  - action: command.run
-    dir: /tmp
-    command: chmod
-    args:
-      - '750'
-      - get-docker.sh
+    chmod: '0750'
   - action: command.run
     privileged: true
     dir: /tmp

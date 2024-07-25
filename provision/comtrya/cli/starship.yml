@@ -6,12 +6,7 @@ actions:
   - action: file.download
     from: https://starship.rs/install.sh
     to: /tmp/starship.sh
-  - action: command.run
-    dir: /tmp
-    command: chmod
-    args:
-      - '750'
-      - starship.sh
+    chmod: '0750'
   - action: command.run
     dir: /tmp
     command: ./starship.sh

@@ -24,12 +24,7 @@ actions:
   - action: file.copy
     from: openssl/install.sh
     to: /tmp/openssl.sh
-  - action: command.run
-    dir: /tmp
-    command: chmod
-    args:
-      - '750'
-      - openssl.sh
+    chmod: '0750'
   - action: command.run
     dir: /tmp
     command: ./openssl.sh
