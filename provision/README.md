@@ -49,9 +49,10 @@ series of manifests that install:
    4. zoxide
 3. user
    1. fish
-   2. neovim
-   3. tmux
-   4. tmuxp
+   2. git
+   3. neovim
+   4. tmux
+   5. tmuxp
 
 To execute it:
 
