@@ -3,9 +3,9 @@ FROM hashicorp/terraform:1.8.3
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
 
-ENV DO_VERSION 27.0.3
+ENV DO_VERSION 27.1.1
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.29.0
+ENV DC_VERSION v2.29.1
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 ENV ANSIBLE_CORE_VERSION 2.17.2
 ENV ANSIBLE_VERSION 10.2.0
