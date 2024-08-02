@@ -5,7 +5,7 @@ labels:
 actions:
   - action: command.run
     command: git
-    args: [ config, --global, user.email, 'joao.dubas@gmail.com' ]
+    args: [ config, --global, user.email, joao.dubas@gmail.com ]
   - action: command.run
     command: git
     args: [ config, --global, user.name, Joao P Dubas ]
@@ -42,12 +42,12 @@ actions:
     command: bash
     args:
       - -c
-      - 'echo joao.dubas+gitea@gmail.com namespaces="git" $(cat {{ user.home_dir }}/.ssh/gitea.pub) > {{ user.config_dir }}/git/allowed_signers'
+      - 'echo joao.dubas+gitea@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/gitea.pub) > {{ user.config_dir }}/git/allowed_signers'
   - action: command.run
     command: bash
     args:
       - -c
-      - 'echo joao.dubas@gmail.com namespaces="git" $(cat {{ user.home_dir }}/.ssh/github.pub) > {{ user.config_dir }}/git/allowed_signers'
+      - 'echo joao.dubas@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
   - action: file.copy
     from: git/personal_gitea
     to: '{{ user.config_dir }}/git/personal_gitea'
