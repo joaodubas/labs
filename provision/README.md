@@ -48,7 +48,10 @@ series of manifests that install:
    3. starship
    4. zoxide
 3. user
-    1. fish
+   1. fish
+   2. neovim
+   3. tmux
+   4. tmuxp
 
 To execute it:
 

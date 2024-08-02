@@ -1,0 +1,13 @@
+---
+labels:
+  - user
+  - tmux
+depends:
+  - system-deps
+actions:
+  - action: file.download
+    from: '{{ variables.tmux_config_path }}'
+    to: '{{ user.config_dir }}/tmux/tmux.conf'
+  - action: git.clone
+    repository: https://github.com/tmux-plugins/tpm.git
+    directory: '{{ user.config_dir }}/tmux/plugins/tpm'
