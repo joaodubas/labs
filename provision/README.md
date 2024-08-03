@@ -8,8 +8,8 @@ Besides that, I have a docker image, and compose file, that already have
 installed:
 
 1. terraform 1.8.3
-2. docker 27.0.3
-3. docker-compose 2.29.0
+2. docker 27.1.1
+3. docker-compose 2.29.1
 4. ansible-core 2.17.2
 5. ansible 10.2.0
 
@@ -48,7 +48,11 @@ series of manifests that install:
    3. starship
    4. zoxide
 3. user
-    1. fish
+   1. fish
+   2. git
+   3. neovim
+   4. tmux
+   5. tmuxp
 
 To execute it:
 

@@ -36,5 +36,5 @@ actions:
   - action: file.remove
     target: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'
   - action: file.download
-    from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/nvim/lua/custom/plugins/init.lua
+    from: '{{ variables.neovim_custom_plugin_path }}'
     to: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'
