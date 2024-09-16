@@ -12,6 +12,8 @@ actions:
     command: ./mise.sh
   - action: file.remove
     target: /tmp/mise.sh
+  - action: file.remove
+    target: '{{ user.config_dir }}/mise/config.toml'
   - action: file.download
     from: '{{ variables.mise_config_path }}'
     to: '{{ user.config_dir }}/mise/config.toml'
