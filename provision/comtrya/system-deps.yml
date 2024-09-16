@@ -84,6 +84,7 @@ actions:
       - uuid-dev
       - wget
       - xorg-dev
+      - xsel
       - xsltproc
       - xz-utils
       - zlib1g-dev
