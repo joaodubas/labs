@@ -1,9 +1,11 @@
 ---
 services:
   ops:
-    image: 'joaodubas/ops-tools:2.2.0'
+    image: 'joaodubas/ops-tools:2.2.1'
     build:
       context: .
+      target: provision
+    pull_policy: never
     init: true
     volumes:
       - './terraform:/opt/terraform'
