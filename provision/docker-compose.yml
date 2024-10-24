@@ -1,9 +1,11 @@
 ---
 services:
   ops:
-    image: 'joaodubas/ops-tools:2.2.0'
+    image: 'joaodubas/ops-tools:2.2.1'
     build:
       context: .
+      target: provision
+    pull_policy: never
     init: true
     volumes:
       - './terraform:/opt/terraform'
@@ -28,7 +30,8 @@ services:
     image: 'joaodubas/ops-playground:dev'
     build:
       context: .
-      dockerfile: Dockerfile.playground
+      target: playground
+    pull_policy: never
     init: true
     hostname: sample
     working_dir: /opt/ansible
@@ -36,6 +39,13 @@ services:
       - './ansible:/opt/ansible'
       - './comtrya:/opt/comtrya'
       - 'playground_ansible_root:/home/playground/.ansible'
+  devbox:
+    image: 'joaodubas/devbox:dev'
+    build:
+      context: .
+      target: devbox
+    pull_policy: never
+    hostname: dev
 volumes:
   ansible_root: {}
   playground_ansible_root: {}
