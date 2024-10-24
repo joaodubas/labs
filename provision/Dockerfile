@@ -7,12 +7,19 @@ ENV DO_VERSION 27.3.1
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
 ENV DC_VERSION v2.29.7
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
-ENV ANSIBLE_CORE_VERSION 2.17.5
-ENV ANSIBLE_VERSION 10.5.0
 
-RUN echo "install system deps " \
-    && apk --update add curl sudo openssl ca-certificates sshpass openssh-client rsync \
-    && echo "install docker ..." \
+RUN echo "install system deps..." \
+    && apk --update add \
+      ansible-core \
+      ansible \
+      curl \
+      sudo \
+      openssl \
+      ca-certificates \
+      sshpass \
+      openssh-client \
+      rsync \
+    && echo "install docker..." \
     && mkdir -p /tmp/download \
     && curl -L ${DO_URL} | tar -xz -C /tmp/download \
     && mv /tmp/download/docker/* /usr/local/bin \
@@ -21,28 +28,11 @@ RUN echo "install system deps " \
     && mkdir -p /usr/local/lib/docker/cli-plugins \
     && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
     && chmod 755 /usr/local/lib/docker/cli-plugins/docker-compose \
-    && echo "install ansible ..." \
-    && apk --update add \
-        --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/main \
-        --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/community \
-        python3=3.10.13-r0 \
-        python3-dev=3.10.13-r0 \
-        py3-pip=22.3.1-r1 \
-    && apk --update add --virtual \
-        build-dependencies \
-        libffi-dev \
-        openssl-dev \
-        build-base \
-        cargo \
-    && pip3 install --upgrade pip cffi \
-    && pip3 install --upgrade ansible-core==${ANSIBLE_CORE_VERSION} \
-    && pip3 install --upgrade ansible==${ANSIBLE_VERSION} \
-    && pip3 install --upgrade pycrypt pywinrm \
+    && echo "configure ansible..." \
     && mkdir -p /etc/ansible \
     && echo "localhost" > /etc/ansible/hosts \
-    && apk del build-dependencies \
+    && echo "clean-up..." \
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/*
 
-VOLUME [ "/root/.ansible" ]
-VOLUME [ "/root/.docker" ]
+VOLUME [ "/root/.ansible", "/root/.docker" ]
