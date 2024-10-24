@@ -30,7 +30,8 @@ services:
     image: 'joaodubas/ops-playground:dev'
     build:
       context: .
-      dockerfile: Dockerfile.playground
+      target: playground
+    pull_policy: never
     init: true
     hostname: sample
     working_dir: /opt/ansible
