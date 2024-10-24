@@ -71,3 +71,8 @@ RUN groupadd --gid ${GID} playground \
 USER playground
 ENTRYPOINT ["sleep"]
 CMD ["infinity"]
+
+FROM nixos/nix:2.24.9 AS devbox
+
+ENV DEVBOX_USE_VERSION 0.13.3
+RUN nix-env -iA nixpkgs.devbox
