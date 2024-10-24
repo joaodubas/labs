@@ -1,7 +1,7 @@
 ---
 services:
   ops:
-    image: 'joaodubas/ops-tools:2.1.2'
+    image: 'joaodubas/ops-tools:2.2.0'
     build:
       context: .
     init: true
@@ -14,7 +14,7 @@ services:
     hostname: ops
     environment:
       DIGITALOCEAN_TOKEN: &do_token ${DIGITALOCEAN_TOKEN:-no-token}
-      SSH_PUB_KEY: &ssh_pub_key '/opt/ssh/do_rsa.pub'
+      SSH_PUB_KEY: '/opt/ssh/do_rsa.pub'
       SSH_PVT_KEY: &ssh_pvt_key '/opt/ssh/do_rsa'
       SSH_FINGERPRINT: &ssh_fingerprint  ${SSH_FINGERPRINT:-no-ssh-fingerprint}
       DO_API_TOKEN: *do_token
@@ -34,6 +34,7 @@ services:
     working_dir: /opt/ansible
     volumes:
       - './ansible:/opt/ansible'
+      - './comtrya:/opt/comtrya'
       - 'playground_ansible_root:/home/playground/.ansible'
 volumes:
   ansible_root: {}

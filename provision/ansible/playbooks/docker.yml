@@ -1,6 +1,0 @@
----
-- name: docker install
-  hosts: dev
-  become: yes
-  roles:
-    - geerlingguy.docker

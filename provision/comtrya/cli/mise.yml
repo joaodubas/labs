@@ -1,0 +1,17 @@
+---
+labels:
+  - cli
+  - mise
+actions:
+  - action: file.download
+    from: https://mise.jdx.dev/install.sh
+    to: /tmp/mise.sh
+    chmod: '0750'
+  - action: command.run
+    dir: /tmp
+    command: ./mise.sh
+  - action: file.remove
+    target: /tmp/mise.sh
+  - action: file.download
+    from: '{{ variables.mise_config_path }}'
+    to: '{{ user.config_dir }}/mise/config.toml'

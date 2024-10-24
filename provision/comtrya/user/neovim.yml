@@ -1,0 +1,40 @@
+---
+labels:
+  - user
+  - neovim
+depends:
+  - system-deps
+actions:
+  - action: git.clone
+    repository: https://github.com/nvim-lua/kickstart.nvim.git
+    directory: '{{ user.config_dir }}/nvim'
+  - action: command.run
+    dir: '{{ user.config_dir }}/nvim'
+    command: git
+    args:
+      - fetch
+      - --prune
+      - origin
+  - action: command.run
+    dir: '{{ user.config_dir }}/nvim'
+    command: git
+    args:
+      - reset
+      - --hard
+      - 186018483039b20dc39d7991e4fb28090dd4750e
+  - action: file.download
+    from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/patch/kickstart.nvim/updates.patch
+    to: /tmp/nvim.patch
+  - action: command.run
+    dir: '{{ user.config_dir }}/nvim'
+    command: git
+    args:
+      - apply
+      - /tmp/nvim.patch
+  - action: file.remove
+    target: /tmp/nvim.patch
+  - action: file.remove
+    target: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'
+  - action: file.download
+    from: '{{ variables.neovim_custom_plugin_path }}'
+    to: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'

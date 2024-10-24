@@ -1,0 +1,8 @@
+[user]
+    email = joao.dubas+gitea@gmail.com
+    name = Joao P Dubas
+    signingKey = ~/.ssh/gitea.pub
+[gpg]
+    format = ssh
+[commit]
+    gpgSign = true

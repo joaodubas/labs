@@ -1,0 +1,21 @@
+---
+labels:
+  - cli
+  - starship
+actions:
+  - action: file.download
+    from: https://starship.rs/install.sh
+    to: /tmp/starship.sh
+    chmod: '0750'
+  - action: command.run
+    dir: /tmp
+    command: ./starship.sh
+    args:
+      - --yes
+      - --bin-dir
+      - '{{ user.home_dir }}/.local/bin'
+  - action: file.remove
+    target: /tmp/starship.sh
+  - action: file.download
+    from: '{{ variables.starship_config_path }}'
+    to: '{{ user.config_dir }}/starship/config.toml'

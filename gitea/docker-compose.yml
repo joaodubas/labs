@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.21.11'
+    image: 'gitea/gitea:1.22.1'
     init: true
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
@@ -84,7 +84,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:37.421.2'
+    image: 'renovate/renovate:38.39.6-full'
     init: true
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
