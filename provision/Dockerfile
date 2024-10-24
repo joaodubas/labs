@@ -3,10 +3,10 @@ FROM hashicorp/terraform:1.9.8 AS provision
 # NOTE (jpd): ansible install based in willian yeh install
 # https://github.com/William-Yeh/docker-ansible/blob/e1cb5d4aec1da7286717bdbe08ce891f53154a47/alpine3/Dockerfile
 
-ENV DO_VERSION 27.3.1
-ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.29.7
-ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
+ENV DO_VERSION=27.3.1
+ENV DO_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
+ENV DC_VERSION=v2.29.7
+ENV DC_URL=https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 
 RUN echo "install system deps..." \
     && apk --update add \
@@ -36,3 +36,4 @@ RUN echo "install system deps..." \
     && rm -rf /tmp/*
 
 VOLUME [ "/root/.ansible", "/root/.docker" ]
+
