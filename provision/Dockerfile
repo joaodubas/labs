@@ -33,3 +33,41 @@ RUN echo "install system deps..." \
     && rm -rf /tmp/*
 
 VOLUME [ "/root/.ansible", "/root/.docker" ]
+
+FROM ubuntu:24.04 AS playground
+
+ARG DOCKER_GID=999
+ARG UID=1000
+ARG GID=1000
+
+RUN echo 'remove existing ubuntu user' \
+  && groupdel --force ubuntu \
+  && userdel --force ubuntu \
+  && echo 'setup extra groups' \
+  && groupadd --gid ${DOCKER_GID} docker
+
+RUN apt-get update \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:ansible/ansible \
+  && apt-get update \
+  && apt-get install -y \
+    ansible \
+    curl \
+    sudo \
+  && curl -fsSL https://get.comtrya.dev | sh
+
+RUN groupadd --gid ${GID} playground \
+  && useradd \
+    --uid ${UID} \
+    --gid playground \
+    --groups docker,sudo \
+    --home-dir /home/playground \
+    --shell /usr/bin/bash \
+    --create-home \
+    playground \
+  && echo 'playground:playground' | chpasswd \
+  && echo 'playground ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10-playground
+
+USER playground
+ENTRYPOINT ["sleep"]
+CMD ["infinity"]
