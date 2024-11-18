@@ -5,9 +5,13 @@ labels:
 depends:
   - system-deps
 actions:
-  - action: git.clone
-    repository: https://github.com/nvim-lua/kickstart.nvim.git
-    directory: '{{ user.config_dir }}/nvim'
+  - action: command.run
+    dir: '{{ user.config_dir }}'
+    command: git
+    args:
+      - clone
+      - https://github.com/nvim-lua/kickstart.nvim.git
+      - ./nvim
   - action: command.run
     dir: '{{ user.config_dir }}/nvim'
     command: git
