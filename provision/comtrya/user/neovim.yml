@@ -25,7 +25,7 @@ actions:
     args:
       - reset
       - --hard
-      - 186018483039b20dc39d7991e4fb28090dd4750e
+      - 8d1ef972bc32faa86fee21a57f9033b41f612ebb
   - action: file.download
     from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/patch/kickstart.nvim/updates.patch
     to: /tmp/nvim.patch
