@@ -56,13 +56,13 @@ tests = ["asttokens (>=2.1.0)", "coverage", "coverage-enable-subprocess", "ipyth
 
 [[package]]
 name = "ipython"
-version = "8.28.0"
+version = "8.30.0"
 description = "IPython: Productive Interactive Computing"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "ipython-8.28.0-py3-none-any.whl", hash = "sha256:530ef1e7bb693724d3cdc37287c80b07ad9b25986c007a53aa1857272dac3f35"},
-    {file = "ipython-8.28.0.tar.gz", hash = "sha256:0d0d15ca1e01faeb868ef56bc7ee5a0de5bd66885735682e8a322ae289a13d1a"},
+    {file = "ipython-8.30.0-py3-none-any.whl", hash = "sha256:85ec56a7e20f6c38fce7727dcca699ae4ffc85985aa7b23635a8008f918ae321"},
+    {file = "ipython-8.30.0.tar.gz", hash = "sha256:cb0a405a306d2995a5cbb9901894d240784a9f341394c6ba3f4fe8c6eb89ff6e"},
 ]
 
 [package.dependencies]
@@ -71,15 +71,15 @@ decorator = "*"
 jedi = ">=0.16"
 matplotlib-inline = "*"
 pexpect = {version = ">4.3", markers = "sys_platform != \"win32\" and sys_platform != \"emscripten\""}
-prompt-toolkit = ">=3.0.41,<3.1.0"
+prompt_toolkit = ">=3.0.41,<3.1.0"
 pygments = ">=2.4.0"
-stack-data = "*"
+stack_data = "*"
 traitlets = ">=5.13.0"
 
 [package.extras]
 all = ["ipython[black,doc,kernel,matplotlib,nbconvert,nbformat,notebook,parallel,qtconsole]", "ipython[test,test-extra]"]
 black = ["black"]
-doc = ["docrepr", "exceptiongroup", "intersphinx-registry", "ipykernel", "ipython[test]", "matplotlib", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "sphinxcontrib-jquery", "tomli", "typing-extensions"]
+doc = ["docrepr", "exceptiongroup", "intersphinx_registry", "ipykernel", "ipython[test]", "matplotlib", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "sphinxcontrib-jquery", "tomli", "typing_extensions"]
 kernel = ["ipykernel"]
 matplotlib = ["matplotlib"]
 nbconvert = ["nbconvert"]
@@ -208,13 +208,13 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "redis"
-version = "5.1.1"
+version = "5.2.1"
 description = "Python client for Redis database and key-value store"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "redis-5.1.1-py3-none-any.whl", hash = "sha256:f8ea06b7482a668c6475ae202ed8d9bcaa409f6e87fb77ed1043d912afd62e24"},
-    {file = "redis-5.1.1.tar.gz", hash = "sha256:f6c997521fedbae53387307c5d0bf784d9acc28d9f1d058abeac566ec4dbed72"},
+    {file = "redis-5.2.1-py3-none-any.whl", hash = "sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4"},
+    {file = "redis-5.2.1.tar.gz", hash = "sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f"},
 ]
 
 [package.extras]
@@ -280,4 +280,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "617c9b16e140e8f96eade909dafa59bf8eef32760a452571ea31b15982f1fc9e"
+content-hash = "19c45b4bcd69fdadb967ae7df3bbcddd33a41fe9b7d1ee2b2406f5903136344c"

@@ -1,8 +1,9 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.22.1'
+    image: 'gitea/gitea:1.22.6'
     init: true
+    hostname: git
     environment:
       APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
@@ -30,8 +31,9 @@ services:
   dependency_bot:
     image: 'renovate/renovate:37.421.2-slim'
   ci:
-    image: 'drone/drone:2.24.0'
+    image: 'drone/drone:2.25.0'
     init: true
+    hostname: ci
     environment:
       DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
       DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
@@ -51,9 +53,16 @@ services:
       - 'ci_data:/data'
     networks:
       - git_cicd_net
+  ci_cli:
+    image: 'drone/cli:1.8.0'
+    init: true
+    restart: unless-stopped
+    entrypoint: sleep
+    command: 3600d
   worker:
     image: 'drone/drone-runner-docker:1.8.3'
     init: true
+    hostname: ci_worker
     environment:
       DRONER_RUNNER_CAPACITY: ${WORKER_RUNNER_CAPACTIY:-2}
       DRONE_DEBUG: ${WORKER_DEBUG:-false}
@@ -74,6 +83,7 @@ services:
   cron:
     image: 'premoweb/chadburn:1.0.7'
     init: true
+    hostname: cron
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - './config/cron:/opt/chadburn'
@@ -84,8 +94,9 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:38.39.6-full'
+    image: 'renovate/renovate:39.74-full'
     init: true
+    hostname: renovate
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
       RENOVATE_TOKEN: ${RENOVATE_TOKEN:-token}
@@ -95,7 +106,7 @@ services:
     labels:
       chadburn.enabled: 'true'
       chadburn.job-exec.renovate.schedule: '@every 30m'
-      chadburn.job-exec.renovate.command: '/usr/local/bin/renovate'
+      chadburn.job-exec.renovate.command: '/usr/local/sbin/renovate'
     volumes:
       - './config/renovate:/opt/renovate'
       - 'renovate_data:/opt/renovate_data'
@@ -105,7 +116,8 @@ services:
     entrypoint: sleep
     command: infinity
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2024-06-29T01-20-47Z'
+    image: 'quay.io/minio/minio:RELEASE.2024-12-13T22-19-12Z'
+    hostname: minio
     environment:
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
@@ -120,7 +132,7 @@ services:
       - git_cicd_net
     command: 'server --console-address ":9001"'
   mc:
-    image: 'quay.io/minio/mc:RELEASE.2024-06-24T19-40-33Z'
+    image: 'quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z'
 
 volumes:
   git_data: {}
