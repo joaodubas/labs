@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.22.6'
+    image: 'gitea/gitea:1.23.0'
     init: true
     hostname: git
     environment:
@@ -94,7 +94,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:39.74-full'
+    image: 'renovate/renovate:39.98-full'
     init: true
     hostname: renovate
     environment:
@@ -116,7 +116,7 @@ services:
     entrypoint: sleep
     command: infinity
   minio:
-    image: 'quay.io/minio/minio:RELEASE.2024-12-13T22-19-12Z'
+    image: 'quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z'
     hostname: minio
     environment:
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
