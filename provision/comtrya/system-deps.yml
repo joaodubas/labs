@@ -67,6 +67,7 @@ actions:
       - locales
       - m4
       - make
+      - ncal
       - neovim
       - net-tools
       - openjdk-17-jdk
@@ -84,6 +85,7 @@ actions:
       - uuid-dev
       - wget
       - xorg-dev
+      - xsel
       - xsltproc
       - xz-utils
       - zlib1g-dev
