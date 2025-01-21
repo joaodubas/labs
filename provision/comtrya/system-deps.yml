@@ -48,6 +48,7 @@ actions:
       - libncurses-dev
       - libncurses5-dev
       - libncursesw5-dev
+      - libnss-myhostname
       - libodbc2
       - libpcre2-dev
       - libpng-dev
@@ -67,6 +68,7 @@ actions:
       - locales
       - m4
       - make
+      - ncal
       - neovim
       - net-tools
       - openjdk-17-jdk
@@ -84,6 +86,7 @@ actions:
       - uuid-dev
       - wget
       - xorg-dev
+      - xsel
       - xsltproc
       - xz-utils
       - zlib1g-dev
