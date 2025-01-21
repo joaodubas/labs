@@ -48,6 +48,7 @@ actions:
       - libncurses-dev
       - libncurses5-dev
       - libncursesw5-dev
+      - libnss-myhostname
       - libodbc2
       - libpcre2-dev
       - libpng-dev
