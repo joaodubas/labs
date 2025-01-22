@@ -1,0 +1,31 @@
+{
+	"$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.4/.schema/devbox.schema.json",
+	"packages": [
+		"bat@0.24.0",
+		"bitwarden-cli@2024.9.0",
+		"ctlptl@0.8.34",
+		"direnv@2.35.0",
+		"eksctl@0.193.0",
+		"eza@0.20.5",
+		"fish@3.7.1",
+		"fzf@0.55.0",
+		"go-task@3.39.2",
+		"kubectl@1.31.2",
+		"kubernetes-helm@3.16.2",
+		"kubie@0.24.0",
+		"lefthook@1.7.17",
+		"neovim@0.10.2",
+		"ripgrep@14.1.1",
+		"starship@1.20.1"
+	],
+	"shell": {
+		"init_hook": [
+			"echo 'Welcome to devbox!' > /dev/null"
+		],
+		"scripts": {
+			"test": [
+				"echo \"Error: no test specified\" && exit 1"
+			]
+		}
+	}
+}

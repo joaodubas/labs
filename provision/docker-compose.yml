@@ -46,6 +46,9 @@ services:
       target: devbox
     pull_policy: never
     hostname: dev
+    volumes:
+      - './devbox:/root/.local/share/devbox/global/default'
+
 volumes:
   ansible_root: {}
   playground_ansible_root: {}
