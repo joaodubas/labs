@@ -4,31 +4,31 @@ ENV DO_URL=https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VE
 ENV DC_VERSION=v2.29.7
 ENV DC_URL=https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 RUN echo 'install system deps...' \
-    && apk --update add \
-      ansible-core \
-      ansible \
-      curl \
-      sudo \
-      openssl \
-      ca-certificates \
-      sshpass \
-      openssh-client \
-      rsync \
-    && echo 'install docker...' \
-    && mkdir -p /tmp/download \
-    && curl -L ${DO_URL} | tar -xz -C /tmp/download \
-    && mv /tmp/download/docker/* /usr/local/bin \
-    && rm -rf /tmp/download \
-    && echo 'install docker-compose...' \
-    && mkdir -p /usr/local/lib/docker/cli-plugins \
-    && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
-    && chmod 755 /usr/local/lib/docker/cli-plugins/docker-compose \
-    && echo 'configure ansible...' \
-    && mkdir -p /etc/ansible \
-    && echo "localhost" > /etc/ansible/hosts \
-    && echo 'clean-up...' \
-    && rm -rf /var/cache/apk/* \
-    && rm -rf /tmp/*
+  && apk --update add \
+    ansible-core \
+    ansible \
+    curl \
+    sudo \
+    openssl \
+    ca-certificates \
+    sshpass \
+    openssh-client \
+    rsync \
+  && echo 'install docker...' \
+  && mkdir -p /tmp/download \
+  && curl -L ${DO_URL} | tar -xz -C /tmp/download \
+  && mv /tmp/download/docker/* /usr/local/bin \
+  && rm -rf /tmp/download \
+  && echo 'install docker-compose...' \
+  && mkdir -p /usr/local/lib/docker/cli-plugins \
+  && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
+  && chmod 755 /usr/local/lib/docker/cli-plugins/docker-compose \
+  && echo 'configure ansible...' \
+  && mkdir -p /etc/ansible \
+  && echo "localhost" > /etc/ansible/hosts \
+  && echo 'clean-up...' \
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /tmp/*
 VOLUME [ "/root/.ansible", "/root/.docker" ]
 
 FROM ubuntu:24.04 AS playground
@@ -68,5 +68,18 @@ ENTRYPOINT ["sleep"]
 CMD ["infinity"]
 
 FROM nixos/nix:2.24.9 AS devbox
-ENV DEVBOX_USE_VERSION 0.13.3
-RUN nix-env -iA nixpkgs.devbox
+# ARG UID=1000
+# ARG GID=1000
+# RUN groupadd --gid ${GID} devbox \
+#   && useradd \
+#     --uid ${UID} \
+#     --gid devbox \
+#     --home-dir /home/devbox \
+#     --shell /usr/bin/bash \
+#     --create-home \
+#     devbox
+# USER devbox
+ARG DEVBOX_VERSION=0.13.5
+ENV DEVBOX_USE_VERSION=${DEVBOX_VERSION}
+RUN nix-channel --update \
+  && nix-env -iA nixpkgs.devbox
