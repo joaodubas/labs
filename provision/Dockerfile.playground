@@ -18,7 +18,7 @@ RUN apt-get update \
     ansible \
     curl \
     sudo \
-  && curl -fsSL https://get.comtrya.dev | sh
+  && curl -fsSL https://get.comtrya.dev | bash
 
 RUN groupadd --gid ${GID} playground \
   && useradd \
