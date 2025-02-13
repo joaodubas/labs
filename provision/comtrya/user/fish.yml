@@ -3,7 +3,9 @@ labels:
   - user
   - fish
 depends:
-  - system-deps
+  - cli.atuin
+  - cli.mise
+  - cli.starship
 actions:
   - action: command.run
     sudo: true
