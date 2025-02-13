@@ -27,6 +27,9 @@ actions:
     chmod: '0750'
   - action: command.run
     dir: /tmp
-    command: ./openssl.sh
+    command: bash
+    args:
+      - -c
+      - ./openssl.sh
   - action: file.remove
     target: /tmp/openssl.sh
