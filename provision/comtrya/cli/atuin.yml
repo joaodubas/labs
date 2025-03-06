@@ -9,7 +9,10 @@ actions:
     chmod: '0750'
   - action: command.run
     dir: /tmp
-    command: ./atuin.sh
+    command: bash
+    args:
+      - -c
+      - ./atuin.sh
   - action: file.remove
     target: /tmp/atuin.sh
   - action: file.download

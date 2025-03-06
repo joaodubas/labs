@@ -5,13 +5,15 @@ services:
     build:
       context: .
     init: true
+    hostname: ops
+    restart: never
+    pull_policy: never
     volumes:
       - './terraform:/opt/terraform'
       - './ansible:/opt/ansible'
       - './ssh:/opt/ssh'
       - './docker:/root/.docker'
       - 'ansible_root:/root/.ansible'
-    hostname: ops
     environment:
       DIGITALOCEAN_TOKEN: &do_token ${DIGITALOCEAN_TOKEN:-no-token}
       SSH_PUB_KEY: '/opt/ssh/do_rsa.pub'
@@ -31,6 +33,8 @@ services:
       dockerfile: Dockerfile.playground
     init: true
     hostname: sample
+    restart: unless-stopped
+    pull_policy: never
     working_dir: /opt/ansible
     volumes:
       - './ansible:/opt/ansible'
