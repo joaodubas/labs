@@ -15,3 +15,8 @@ actions:
     command: ./get-docker.sh
   - action: file.remove
     target: /tmp/get-docker.sh
+  - action: user.group
+    sudo: true
+    username: '{{user.username}}'
+    group:
+      - docker
