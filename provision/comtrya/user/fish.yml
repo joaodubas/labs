@@ -61,6 +61,11 @@ actions:
     command: fish
     args:
       - -c
+      - 'set -Ux COMPOSE_BAKE true'
+  - action: command.run
+    command: fish
+    args:
+      - -c
       - 'fish_add_path -p -u $ATUIN_BIN'
   - action: command.run
     command: fish
