@@ -5,13 +5,9 @@ labels:
 depends:
   - system-deps
 actions:
-  - action: command.run
-    dir: '{{ user.config_dir }}'
-    command: git
-    args:
-      - clone
-      - https://github.com/nvim-lua/kickstart.nvim.git
-      - ./nvim
+  - action: git.clone
+    repo_url: https://github.com/nvim-lua/kickstart.nvim.git
+    directory: '{{ user.config_dir }}/nvim'
   - action: command.run
     dir: '{{ user.config_dir }}/nvim'
     command: git
@@ -23,9 +19,15 @@ actions:
     dir: '{{ user.config_dir }}/nvim'
     command: git
     args:
+      - restore
+      - '*'
+  - action: command.run
+    dir: '{{ user.config_dir }}/nvim'
+    command: git
+    args:
       - reset
       - --hard
-      - 5bdde24dfb353d365d908c5dd700f412ed2ffb17
+      - 34e7d29aa7b6e95cf09d62baf4c9082db5b129c0
   - action: file.download
     from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/patch/kickstart.nvim/updates.patch
     to: /tmp/nvim.patch

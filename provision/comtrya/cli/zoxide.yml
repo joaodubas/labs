@@ -9,6 +9,9 @@ actions:
     chmod: '0750'
   - action: command.run
     dir: /tmp
-    command: ./zoxide.sh
+    command: bash
+    args:
+      - -c
+      - ./zoxide.sh
   - action: file.remove
     target: /tmp/zoxide.sh

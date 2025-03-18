@@ -6,12 +6,12 @@ actions:
     provider: apt
     name: software-properties-common
   - action: command.run
-    sudo: true
+    privileged: true
     command: add-apt-repository
     args:
-      - ppa:fish-shell/release-3 
+      - ppa:fish-shell/release-4
   - action: command.run
-    sudo: true
+    privileged: true
     command: add-apt-repository
     args:
       - ppa:neovim-ppa/unstable

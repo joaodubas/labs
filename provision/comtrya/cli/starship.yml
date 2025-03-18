@@ -8,12 +8,15 @@ actions:
     to: /tmp/starship.sh
     chmod: '0750'
   - action: command.run
-    dir: /tmp
-    command: ./starship.sh
+    command: mkdir
     args:
-      - --yes
-      - --bin-dir
+      - '-p'
       - '{{ user.home_dir }}/.local/bin'
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - /tmp/starship.sh --yes --bin-dir '{{ user.home_dir }}/.local/bin'
   - action: file.remove
     target: /tmp/starship.sh
   - action: file.remove

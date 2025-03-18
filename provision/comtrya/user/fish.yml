@@ -3,10 +3,12 @@ labels:
   - user
   - fish
 depends:
-  - system-deps
+  - cli.atuin
+  - cli.mise
+  - cli.starship
 actions:
   - action: command.run
-    sudo: true
+    privileged: true
     command: usermod
     args:
       - --shell 
@@ -55,6 +57,11 @@ actions:
     args:
       - -c
       - 'set -Ux MISE_ENV_FILE .env'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'set -Ux COMPOSE_BAKE true'
   - action: command.run
     command: fish
     args:

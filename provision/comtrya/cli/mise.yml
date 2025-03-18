@@ -9,7 +9,10 @@ actions:
     chmod: '0750'
   - action: command.run
     dir: /tmp
-    command: ./mise.sh
+    command: bash
+    args:
+      - -c
+      - ./mise.sh
   - action: file.remove
     target: /tmp/mise.sh
   - action: file.remove
