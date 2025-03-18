@@ -8,7 +8,7 @@ depends:
   - cli.starship
 actions:
   - action: command.run
-    sudo: true
+    privileged: true
     command: usermod
     args:
       - --shell 
