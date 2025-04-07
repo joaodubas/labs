@@ -1,0 +1,16 @@
+---
+labels:
+  - system-deps
+  - flatpack
+  - zenbrowser
+depends:
+  - system-deps.flatpack
+actions:
+  - action: command.run
+    command: flatpak
+    args:
+      - install
+      - -y
+      - --or-update
+      - flathub
+      - app.zen_browser.zen

@@ -6,6 +6,7 @@ depends:
   - cli.atuin
   - cli.mise
   - cli.starship
+  - system-deps.wezterm
 actions:
   - action: command.run
     privileged: true
@@ -72,3 +73,8 @@ actions:
     args:
       - -c
       - 'fish_add_path -p -u $HOME/.local/bin'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'abbr --add wezterm flatpak run org.wezfurlong.wezterm'
