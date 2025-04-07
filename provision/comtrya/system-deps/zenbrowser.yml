@@ -1,16 +1,16 @@
 ---
 labels:
   - system-deps
+  - flatpack
   - zenbrowser
 depends:
-  - system-deps
+  - system-deps.flatpack
 actions:
-  - action: package.install
-    provider: apt
-    name: flatpak
-  - action: package.install
-    provider: apt
-    name: gnome-software-plugin-flatpak
   - action: command.run
-    privileged: true
-    command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    command: flatpak
+    args:
+      - install
+      - -y
+      - --or-update
+      - flathub
+      - app.zen_browser.zen
