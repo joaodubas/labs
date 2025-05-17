@@ -1,149 +1,140 @@
 {
-	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2025-04-30T10:30:41.885-00:00",
-	"Sources" : 
-	[
+	"$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+	"CreationDate": "2025-04-30T10:30:41.885-00:00",
+	"Sources": [
 		{
-			"Packages" : 
-			[
+			"Packages": [
 				{
-					"PackageIdentifier" : "7zip.7zip"
+					"PackageIdentifier": "7zip.7zip"
 				},
 				{
-					"PackageIdentifier" : "Mozilla.Firefox.DeveloperEdition.en-GB"
+					"PackageIdentifier": "Amazon.Kindle"
 				},
 				{
-					"PackageIdentifier" : "Git.Git"
+					"PackageIdentifier": "Amazon.SendToKindle"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.OneDrive"
+					"PackageIdentifier": "Anysphere.Cursor"
 				},
 				{
-					"PackageIdentifier" : "Prusa3D.PrusaSlicer"
+					"PackageIdentifier": "Balena.Etcher"
 				},
 				{
-					"PackageIdentifier" : "Zen-Team.Zen-Browser"
+					"PackageIdentifier": "BurntSushi.ripgrep.GNU"
 				},
 				{
-					"PackageIdentifier" : "glzr-io.zebar"
+					"PackageIdentifier": "Canonical.Ubuntu"
 				},
 				{
-					"PackageIdentifier" : "LGUG2Z.komorebi"
+					"PackageIdentifier": "Chocolatey.Chocolatey"
 				},
 				{
-					"PackageIdentifier" : "Neovim.Neovim"
+					"PackageIdentifier": "CloudStack.Msty"
 				},
 				{
-					"PackageIdentifier" : "glzr-io.glazewm"
+					"PackageIdentifier": "Git.Git"
 				},
 				{
-					"PackageIdentifier" : "GitButler.GitButler"
+					"PackageIdentifier": "GitButler.GitButler"
 				},
 				{
-					"PackageIdentifier" : "wez.wezterm"
+					"PackageIdentifier": "Livebook.Livebook"
 				},
 				{
-					"PackageIdentifier" : "Starship.Starship"
+					"PackageIdentifier": "Microsoft.AppInstaller"
 				},
 				{
-					"PackageIdentifier" : "LGUG2Z.whkd"
+					"PackageIdentifier": "Microsoft.BuildTools2015"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VisualStudio.2022.BuildTools"
+					"PackageIdentifier": "Microsoft.OneDrive"
 				},
 				{
-					"PackageIdentifier" : "Amazon.Kindle"
+					"PackageIdentifier": "Microsoft.PowerShell"
 				},
 				{
-					"PackageIdentifier" : "SoftFever.OrcaSlicer"
+					"PackageIdentifier": "Microsoft.PowerToys"
 				},
 				{
-					"PackageIdentifier" : "Amazon.SendToKindle"
+					"PackageIdentifier": "Microsoft.UI.Xaml.2.7"
 				},
 				{
-					"PackageIdentifier" : "Vial.Vial"
+					"PackageIdentifier": "Microsoft.UI.Xaml.2.8"
 				},
 				{
-					"PackageIdentifier" : "Chocolatey.Chocolatey"
+					"PackageIdentifier": "Microsoft.VCLibs.Desktop.14"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x64"
+					"PackageIdentifier": "Microsoft.VCRedist.2015+.x64"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x86"
+					"PackageIdentifier": "Microsoft.VCRedist.2015+.x86"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.BuildTools2015"
+					"PackageIdentifier": "Microsoft.VisualStudio.2022.BuildTools"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.PowerShell"
+					"PackageIdentifier": "Microsoft.VisualStudioCode"
 				},
 				{
-					"PackageIdentifier" : "Anysphere.Cursor"
+					"PackageIdentifier": "Microsoft.WSL"
 				},
 				{
-					"PackageIdentifier" : "BurntSushi.ripgrep.GNU"
+					"PackageIdentifier": "Microsoft.WindowsTerminal"
 				},
 				{
-					"PackageIdentifier" : "Livebook.Livebook"
+					"PackageIdentifier": "Mozilla.Firefox.DeveloperEdition.en-GB"
 				},
 				{
-					"PackageIdentifier" : "RaspberryPiFoundation.RaspberryPiImager"
+					"PackageIdentifier": "Neovim.Neovim"
 				},
 				{
-					"PackageIdentifier" : "Rufus.Rufus"
+					"PackageIdentifier": "Prusa3D.PrusaSlicer"
 				},
 				{
-					"PackageIdentifier" : "Task.Task"
+					"PackageIdentifier": "Python.Python.3.12"
 				},
 				{
-					"PackageIdentifier" : "Balena.Etcher"
+					"PackageIdentifier": "RaspberryPiFoundation.RaspberryPiImager"
 				},
 				{
-					"PackageIdentifier" : "CloudStack.Msty"
+					"PackageIdentifier": "Rufus.Rufus"
 				},
 				{
-					"PackageIdentifier" : "jdx.mise"
+					"PackageIdentifier": "SoftFever.OrcaSlicer"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VisualStudioCode"
+					"PackageIdentifier": "Starship.Starship"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.PowerToys"
+					"PackageIdentifier": "Task.Task"
 				},
 				{
-					"PackageIdentifier" : "Python.Python.3.12"
+					"PackageIdentifier": "Vial.Vial"
 				},
 				{
-					"PackageIdentifier" : "Canonical.Ubuntu"
+					"PackageIdentifier": "Zen-Team.Zen-Browser"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.AppInstaller"
+					"PackageIdentifier": "glzr-io.glazewm"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.UI.Xaml.2.7"
+					"PackageIdentifier": "glzr-io.zebar"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.UI.Xaml.2.8"
+					"PackageIdentifier": "jdx.mise"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VCLibs.Desktop.14"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.WindowsTerminal"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.WSL"
+					"PackageIdentifier": "wez.wezterm"
 				}
 			],
-			"SourceDetails" : 
-			{
-				"Argument" : "https://cdn.winget.microsoft.com/cache",
-				"Identifier" : "Microsoft.Winget.Source_8wekyb3d8bbwe",
-				"Name" : "winget",
-				"Type" : "Microsoft.PreIndexed.Package"
+			"SourceDetails": {
+				"Argument": "https://cdn.winget.microsoft.com/cache",
+				"Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+				"Name": "winget",
+				"Type": "Microsoft.PreIndexed.Package"
 			}
 		}
 	],
-	"WinGetVersion" : "1.10.390"
+	"WinGetVersion": "1.10.390"
 }
