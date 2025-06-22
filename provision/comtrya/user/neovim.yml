@@ -5,6 +5,7 @@ labels:
 depends:
   - system-deps
 actions:
+  # Clone kickstart.nvim and reset to proper commit
   - action: git.clone
     repo_url: https://github.com/nvim-lua/kickstart.nvim.git
     directory: '{{ user.config_dir }}/nvim'
@@ -28,6 +29,7 @@ actions:
       - reset
       - --hard
       - 3338d3920620861f8313a2745fd5d2be39f39534
+  # Download init.lua patch, apply it, and remove it
   - action: file.download
     from: '{{ variables.neovim_init_patch_path }}'
     to: /tmp/nvim.patch
@@ -39,11 +41,13 @@ actions:
       - /tmp/nvim.patch
   - action: file.remove
     target: /tmp/nvim.patch
+  # Update custom plugins by removing the old one and downloading the new one
   - action: file.remove
     target: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'
   - action: file.download
     from: '{{ variables.neovim_custom_plugin_path }}'
     to: '{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua'
+  # Update mcphub servers by removing the old one and downloading the new one
   - action: file.remove
     target: '{{ user.config_dir }}/mcphub/servers.json'
   - action: file.download
