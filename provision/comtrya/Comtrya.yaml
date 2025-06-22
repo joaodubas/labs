@@ -4,5 +4,6 @@ variables:
   atuin_config_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/atuin/config.toml'
   mise_config_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/mise/config.toml'
   neovim_custom_plugin_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/nvim/lua/custom/plugins/init.lua'
+  neovim_init_patch_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/patch/kickstart.nvim/updates.patch'
   starship_config_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/starship/config.toml'
   tmux_config_path: 'https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/tmux/tmux.conf'
