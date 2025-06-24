@@ -67,12 +67,17 @@ actions:
     command: fish
     args:
       - -c
-      - 'fish_add_path -p -u $ATUIN_BIN'
+      - 'set -Ux EDITOR nvim'
   - action: command.run
     command: fish
     args:
       - -c
-      - 'fish_add_path -p -u $HOME/.local/bin'
+      - 'fish_add_path -p -U -m -v {$ATUIN_BIN}'
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - 'fish_add_path -p -U -m -v {$LOCAL_BIN_HOME}'
   - action: command.run
     command: fish
     args:

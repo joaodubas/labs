@@ -1,4 +1,6 @@
 [user]
+    email = joao.dubas@syngenta.com
+    name = Joao P Dubas
     signingKey = ~/.ssh/github.pub
 [gpg]
     format = ssh
