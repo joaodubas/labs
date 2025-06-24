@@ -1,0 +1,19 @@
+---
+labels:
+  - cli
+  - sdkman
+depends:
+  - system-deps
+actions:
+  - action: file.download
+    from: https://get.sdkman.io
+    to: /tmp/sdkman.sh
+    chmod: '0750'
+  - action: command.run
+    dir: /tmp
+    command: bash
+    args:
+      - -c
+      - ./sdkman.sh
+  - action: file.remove
+    target: /tmp/sdkman.sh
