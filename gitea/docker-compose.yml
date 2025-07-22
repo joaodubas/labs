@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: 'gitea/gitea:1.23.5'
+    image: 'gitea/gitea:1.24.3'
     init: true
     hostname: git
     environment:
@@ -81,7 +81,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: 'premoweb/chadburn:1.0.7'
+    image: 'premoweb/chadburn:1.9.5'
     init: true
     hostname: cron
     volumes:
@@ -94,7 +94,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: 'renovate/renovate:39.188-full'
+    image: 'renovate/renovate:41.42.5-full'
     init: true
     hostname: renovate
     environment:
