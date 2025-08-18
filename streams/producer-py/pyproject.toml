@@ -11,7 +11,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-redis = "^6.2"
+redis = "^6.4"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^9.4"
