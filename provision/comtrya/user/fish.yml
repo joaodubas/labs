@@ -72,6 +72,11 @@ actions:
     command: fish
     args:
       - -c
+      - "set -U fish_key_bindings fish_vi_key_bindings"
+  - action: command.run
+    command: fish
+    args:
+      - -c
       - "fish_add_path -p -U -m -v {$ATUIN_BIN}"
   - action: command.run
     command: fish
