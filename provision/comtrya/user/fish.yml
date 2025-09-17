@@ -12,74 +12,74 @@ actions:
     privileged: true
     command: usermod
     args:
-      - --shell 
+      - --shell
       - /usr/bin/fish
-      - '{{ user.username }}'
+      - "{{ user.username }}"
   - action: file.copy
     from: fish/config.fish
-    to: '{{ user.config_dir }}/fish/config.fish'
+    to: "{{ user.config_dir }}/fish/config.fish"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux ATUIN_BIN $HOME/.atuin/bin'
+      - "set -Ux ATUIN_BIN $HOME/.atuin/bin"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux LOCAL_BIN_HOME $HOME/.local/bin'
+      - "set -Ux LOCAL_BIN_HOME $HOME/.local/bin"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux LOCAL_SRC_HOME $HOME/.local/src'
+      - "set -Ux LOCAL_SRC_HOME $HOME/.local/src"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux XDG_CONFIG_HOME $HOME/.config'
+      - "set -Ux XDG_CONFIG_HOME $HOME/.config"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux XDG_DATA_HOME $HOME/.local/share'
+      - "set -Ux XDG_DATA_HOME $HOME/.local/share"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux XDG_CACHE_HOME $HOME/.cache'
+      - "set -Ux XDG_CACHE_HOME $HOME/.cache"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml'
+      - "set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux MISE_ENV_FILE .env'
+      - "set -Ux MISE_ENV_FILE .env"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux COMPOSE_BAKE true'
+      - "set -Ux COMPOSE_BAKE true"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'set -Ux EDITOR nvim'
+      - "set -Ux EDITOR nvim"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'fish_add_path -p -U -m -v {$ATUIN_BIN}'
+      - "fish_add_path -p -U -m -v {$ATUIN_BIN}"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'fish_add_path -p -U -m -v {$LOCAL_BIN_HOME}'
+      - "fish_add_path -p -U -m -v {$LOCAL_BIN_HOME}"
   - action: command.run
     command: fish
     args:
       - -c
-      - 'abbr --add wezterm flatpak run org.wezfurlong.wezterm'
+      - "abbr --add wezterm flatpak run org.wezfurlong.wezterm"
