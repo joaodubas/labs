@@ -1,0 +1,78 @@
+---
+labels:
+  - user
+  - fish
+  - macos
+contexts:
+  - os.family == "Darwin"
+depends:
+  - cli.mise-macos
+  - cli.sdkman-macos
+  - system-deps
+actions:
+  # Set Fish as default shell
+  - action: command.run
+    privileged: true
+    command: chsh
+    args:
+      - -s
+      - /opt/homebrew/bin/fish
+      - '{{ user.username }}'
+  # Copy Fish configuration
+  - action: file.copy
+    from: fish/config.fish
+    to: '{{ user.config_dir }}/fish/config.fish'
+  # Set environment variables for macOS
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux XDG_CONFIG_HOME $HOME/.config'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux XDG_DATA_HOME $HOME/.local/share'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux XDG_CACHE_HOME $HOME/.cache'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux EDITOR nvim'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux MISE_ENV_FILE .env'
+  # Add Homebrew to PATH
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'fish_add_path -p -u /opt/homebrew/bin'
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'fish_add_path -p -u /opt/homebrew/sbin'
+  # Add mise to PATH
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'fish_add_path -p -u $HOME/.local/share/mise/shims'
+  # Initialize SDKMAN! for Fish
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - 'set -Ux SDKMAN_DIR $HOME/.sdkman'
