@@ -225,3 +225,40 @@ resource "digitalocean_record" "simplelogin_dmarc" {
   name = "_dmarc"
   value = "v=DMARC1; p=quarantine; pct=100; adkim=s; aspf=s"
 }
+
+resource "digitalocean_record" "mailgun_cname" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "CNAME"
+  name     = "email.mail"
+  value    = "mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_dkim" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "TXT"
+  name     = "mx._domainkey.mail"
+  value    = "k=rsa; p=<secret>"
+}
+
+resource "digitalocean_record" "mailgun_mx_1" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "MX"
+  name     = "mail"
+  priority = 10
+  value    = "mxa.mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_mx_2" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "MX"
+  name     = "mail"
+  priority = 10
+  value    = "mxb.mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_spf" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "TXT"
+  name     = "mail"
+  value    = "v=spf1 include:mailgun.org ~all"
+}
