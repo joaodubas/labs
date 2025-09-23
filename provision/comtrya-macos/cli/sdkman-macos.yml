@@ -1,0 +1,54 @@
+---
+labels:
+  - cli
+  - sdkman
+  - macos
+contexts:
+  - os.family == "Darwin"
+depends:
+  - system-deps
+actions:
+  # Install SDKMAN!
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'curl -s "https://get.sdkman.io" | bash'
+  # Source SDKMAN! for current session
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh"'
+  # Install Java versions via SDKMAN!
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install java 17.0.9-tem'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install java 21.0.1-tem'
+  # Install other JVM tools
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install gradle'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install maven'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install kotlin'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install scala'
