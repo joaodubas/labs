@@ -98,17 +98,17 @@ resource "digitalocean_record" "dev_auth" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_affine" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "affine"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
 resource "digitalocean_record" "dev_bitwarden" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "bitwarden"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_crescer" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "crescer"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -126,6 +126,13 @@ resource "digitalocean_record" "dev_drone" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_echo" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "echo"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_gitea" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
@@ -137,6 +144,13 @@ resource "digitalocean_record" "dev_grafana" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "grafana"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_live" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "live"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -161,17 +175,10 @@ resource "digitalocean_record" "dev_nlw_wabanex" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_opensign_client" {
+resource "digitalocean_record" "dev_signoz" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
-  name = "opensign"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_opensign_server" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "api.opensign"
+  name = "signoz"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
@@ -217,4 +224,41 @@ resource "digitalocean_record" "simplelogin_dmarc" {
   type = "TXT"
   name = "_dmarc"
   value = "v=DMARC1; p=quarantine; pct=100; adkim=s; aspf=s"
+}
+
+resource "digitalocean_record" "mailgun_cname" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "CNAME"
+  name     = "email.mail"
+  value    = "mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_dkim" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "TXT"
+  name     = "mx._domainkey.mail"
+  value    = "k=rsa; p=<secret>"
+}
+
+resource "digitalocean_record" "mailgun_mx_1" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "MX"
+  name     = "mail"
+  priority = 10
+  value    = "mxa.mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_mx_2" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "MX"
+  name     = "mail"
+  priority = 10
+  value    = "mxb.mailgun.org."
+}
+
+resource "digitalocean_record" "mailgun_spf" {
+  domain   = digitalocean_domain.dev_default.name
+  type     = "TXT"
+  name     = "mail"
+  value    = "v=spf1 include:mailgun.org ~all"
 }
