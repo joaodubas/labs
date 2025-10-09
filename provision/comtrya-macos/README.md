@@ -16,3 +16,12 @@ To apply these configurations, navigate to the main `comtrya` directory and run 
 cd /opt/personal/labs/provision/comtrya
 comtrya apply
 ```
+
+## Improvements
+
+This is not a finished project and there are some improvements that must be made:
+
+* [ ] Add `fish` configuration file
+* [ ] Copy `configuration` from `ide` repo
+* [ ] Copy `neovim` configuration from `ide` repo
+* [ ] Copy `git` configuration from `comtrya` folder
