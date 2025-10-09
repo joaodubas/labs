@@ -3,18 +3,14 @@ labels:
   - cli
   - mise
   - macos
-contexts:
-  - os.family == "Darwin"
 depends:
   - system-deps
 actions:
-  # Install mise via Homebrew (preferred method on macOS)
   - action: command.run
     command: /opt/homebrew/bin/brew
     args:
       - install
       - mise
-  # Download mise configuration
   - action: file.download
-    from: '{{ variables.mise_config_path }}'
-    to: '{{ user.config_dir }}/mise/config.toml'
+    from: "{{ variables.mise_config_path }}"
+    to: "{{ user.config_dir }}/mise/config.toml"

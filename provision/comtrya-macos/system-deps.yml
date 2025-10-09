@@ -2,16 +2,13 @@
 labels:
   - system-deps
   - macos
-contexts:
-  - os.family == "Darwin"
 actions:
-  # Install Homebrew
   - action: command.run
+    privileged: true
     command: /bin/bash
     args:
       - -c
       - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-  # Add Homebrew to PATH for current session
   - action: command.run
     command: /bin/bash
     args:
@@ -22,35 +19,32 @@ actions:
     args:
       - -c
       - 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-  # Install essential packages via Homebrew
   - action: command.run
     command: /opt/homebrew/bin/brew
     args:
       - install
-      - git
-      - curl
-      - wget
-      - jq
-      - tmux
-      - neovim
-      - fish
-      - starship
-      - zoxide
-      - fzf
-      - ripgrep
-      - fd
       - bat
-      - exa
+      - curl
+      - eza
+      - fd
+      - fish
+      - fzf
+      - git
+      - gnupg
       - htop
+      - jq
+      - neovim
+      - ripgrep
+      - starship
+      - tmux
       - tree
       - unzip
-      - gpg
-  # Install Homebrew Cask applications
+      - wget
+      - zoxide
   - action: command.run
     command: /opt/homebrew/bin/brew
     args:
       - install
       - --cask
       - visual-studio-code
-      - iterm2
-      - docker
+      - zed

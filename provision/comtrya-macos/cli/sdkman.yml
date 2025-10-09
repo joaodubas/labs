@@ -8,19 +8,17 @@ contexts:
 depends:
   - system-deps
 actions:
-  # Install SDKMAN!
+  # NOTE: (jpd) check if sdkman needs privileged execution
   - action: command.run
     command: /bin/bash
     args:
       - -c
       - 'curl -s "https://get.sdkman.io" | bash'
-  # Source SDKMAN! for current session
   - action: command.run
     command: /bin/bash
     args:
       - -c
       - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh"'
-  # Install Java versions via SDKMAN!
   - action: command.run
     command: /bin/bash
     args:
@@ -31,7 +29,6 @@ actions:
     args:
       - -c
       - 'source "{{ user.home_dir }}/.sdkman/bin/sdkman-init.sh" && sdk install java 21.0.1-tem'
-  # Install other JVM tools
   - action: command.run
     command: /bin/bash
     args:
