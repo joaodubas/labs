@@ -19,3 +19,6 @@ actions:
     username: '{{user.username}}'
     group:
       - docker
+  - action: package.install
+    provider: apt
+    name: docker-model-plugin
