@@ -8,7 +8,7 @@ actions:
   - action: file.download
     from: https://get.docker.com
     to: /tmp/get-docker.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     privileged: true
     dir: /tmp
@@ -16,7 +16,7 @@ actions:
   - action: file.remove
     target: /tmp/get-docker.sh
   - action: user.group
-    username: '{{user.username}}'
+    username: "{{ user.username }}"
     group:
       - docker
   - action: package.install

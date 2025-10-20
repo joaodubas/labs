@@ -9,7 +9,7 @@ depends:
 actions:
   - action: file.download
     from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/tmuxp/personal.yml
-    to: '{{ user.config_dir }}/tmuxp/personal.yml'
+    to: "{{ user.config_dir }}/tmuxp/personal.yml"
   - action: file.download
     from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/tmuxp/work.yml
-    to: '{{ user.config_dir }}/tmuxp/work.yml'
+    to: "{{ user.config_dir }}/tmuxp/work.yml"

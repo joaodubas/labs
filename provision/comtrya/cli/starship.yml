@@ -6,12 +6,12 @@ actions:
   - action: file.download
     from: https://starship.rs/install.sh
     to: /tmp/starship.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     command: mkdir
     args:
-      - '-p'
-      - '{{ user.home_dir }}/.local/bin'
+      - "-p"
+      - "{{ user.home_dir }}/.local/bin"
   - action: command.run
     command: bash
     args:
@@ -20,7 +20,7 @@ actions:
   - action: file.remove
     target: /tmp/starship.sh
   - action: file.remove
-    target: '{{ user.config_dir }}/starship/config.toml'
+    target: "{{ user.config_dir }}/starship/config.toml"
   - action: file.download
-    from: '{{ variables.starship_config_path }}'
-    to: '{{ user.config_dir }}/starship/config.toml'
+    from: "{{ variables.starship_config_path }}"
+    to: "{{ user.config_dir }}/starship/config.toml"

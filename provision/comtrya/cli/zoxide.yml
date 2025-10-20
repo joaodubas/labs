@@ -6,7 +6,7 @@ actions:
   - action: file.download
     from: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
     to: /tmp/zoxide.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     dir: /tmp
     command: bash

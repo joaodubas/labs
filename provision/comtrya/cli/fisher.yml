@@ -14,11 +14,11 @@ actions:
     command: fish
     args:
       - -c
-      - 'source /tmp/fisher.fish && fisher install jorgebucaran/fisher'
+      - "source /tmp/fisher.fish && fisher install jorgebucaran/fisher"
   - action: file.remove
     target: /tmp/fisher.fish
   - action: command.run
     command: fish
     args:
       - -c
-      - 'fisher install reitzig/sdkman-for-fish@v2.1.0'
+      - "fisher install reitzig/sdkman-for-fish@v2.1.0"

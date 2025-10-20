@@ -6,7 +6,7 @@ actions:
   - action: file.download
     from: https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh
     to: /tmp/atuin.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     dir: /tmp
     command: bash
@@ -16,5 +16,5 @@ actions:
   - action: file.remove
     target: /tmp/atuin.sh
   - action: file.download
-    from: '{{ variables.atuin_config_path }}'
-    to: '{{ user.config_dir }}/atuin/config.toml'
+    from: "{{ variables.atuin_config_path }}"
+    to: "{{ user.config_dir }}/atuin/config.toml"

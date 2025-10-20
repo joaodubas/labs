@@ -7,39 +7,69 @@ depends:
 actions:
   - action: command.run
     command: git
-    args: [ config, --global, user.email, joao.dubas@gmail.com ]
+    args: [config, --global, user.email, joao.dubas@gmail.com]
   - action: command.run
     command: git
-    args: [ config, --global, user.name, Joao P Dubas ]
+    args: [config, --global, user.name, Joao P Dubas]
   - action: command.run
     command: git
-    args: [ config, --global, gpg.ssh.allowedSignersFile, '{{ user.config_dir }}/git/allowed_signers' ]
+    args:
+      [
+        config,
+        --global,
+        gpg.ssh.allowedSignersFile,
+        "{{ user.config_dir }}/git/allowed_signers",
+      ]
   - action: command.run
     command: git
-    args: [ config, --global, core.editor, nvim ]
+    args: [config, --global, core.editor, nvim]
   - action: command.run
     command: git
-    args: [ config, --global, diff.tool, nvimdiff ]
+    args: [config, --global, diff.tool, nvimdiff]
   - action: command.run
     command: git
-    args: [ config, --global, difftool.nvimdiff.layout, "LOCAL,REMOTE" ]
+    args: [config, --global, difftool.nvimdiff.layout, "LOCAL,REMOTE"]
   - action: command.run
     command: git
-    args: [ config, --global, merge.tool, nvimdiff ]
+    args: [config, --global, merge.tool, nvimdiff]
   - action: command.run
     command: git
-    args: [ config, --global, mergetool.nvimdiff.layout, "LOCAL,BASE,REMOTE / MERGED" ]
+    args:
+      [
+        config,
+        --global,
+        mergetool.nvimdiff.layout,
+        "LOCAL,BASE,REMOTE / MERGED",
+      ]
   - action: command.run
     command: git
-    args: [ config, --global, includeIf.hasconfig:remote.*.url:gitea:*/**.path, '{{ user.config_dir }}/git/personal_gitea' ]
+    args:
+      [
+        config,
+        --global,
+        includeIf.hasconfig:remote.*.url:gitea:*/**.path,
+        "{{ user.config_dir }}/git/personal_gitea",
+      ]
   - action: command.run
     command: git
-    args: [ config, --global, includeIf.hasconfig:remote.*.url:github:joaodubas/**.path, '{{ user.config_dir }}/git/personal_github' ]
+    args:
+      [
+        config,
+        --global,
+        includeIf.hasconfig:remote.*.url:github:joaodubas/**.path,
+        "{{ user.config_dir }}/git/personal_github",
+      ]
   - action: command.run
     command: git
-    args: [ config, --global, includeIf.gitdir:/opt/work/.path, '{{ user.config_dir }}/git/work' ]
+    args:
+      [
+        config,
+        --global,
+        includeIf.gitdir:/opt/work/.path,
+        "{{ user.config_dir }}/git/work",
+      ]
   - action: directory.create
-    path: '{{ user.config_dir }}/git'
+    path: "{{ user.config_dir }}/git"
   - action: command.run
     command: bash
     args:
@@ -57,10 +87,10 @@ actions:
       - 'echo joao.dubas@syngenta.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
   - action: file.copy
     from: git/personal_gitea
-    to: '{{ user.config_dir }}/git/personal_gitea'
+    to: "{{ user.config_dir }}/git/personal_gitea"
   - action: file.copy
     from: git/personal_github
-    to: '{{ user.config_dir }}/git/personal_github'
+    to: "{{ user.config_dir }}/git/personal_github"
   - action: file.copy
     from: git/work
-    to: '{{ user.config_dir }}/git/work'
+    to: "{{ user.config_dir }}/git/work"
