@@ -1,0 +1,22 @@
+---
+labels:
+  - system-deps
+  - nerd-fonts
+depends:
+  - system-deps
+actions:
+  - action: git.clone
+    repo_url: https://github.com/ryanoasis/nerd-fonts.git
+    directory: "{{ user.home_dir }}/.local/src/nerd-fonts"
+  - action: command.run
+    dir: "{{ user.home_dir }}/.local/src/nerd-fonts"
+    command: bash
+    args:
+      - -c
+      - "./install.sh JetBrainsMono"
+  - action: command.run
+    dir: "{{ user.home_dir }}/.local/src/nerd-fonts"
+    command: bash
+    args:
+      - -c
+      - "./install.sh Go-Mono"
