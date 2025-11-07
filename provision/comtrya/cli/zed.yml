@@ -1,0 +1,17 @@
+---
+labels:
+  - cli
+  - zed
+actions:
+  - action: file.download
+    from: https://zed.dev/install.sh
+    to: /tmp/zed.sh
+    chmod: "0750"
+  - action: command.run
+    dir: /tmp
+    command: bash
+    args:
+      - -c
+      - ./zed.sh
+  - action: file.remove
+    target: /tmp/zed.sh
