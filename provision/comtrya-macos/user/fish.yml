@@ -19,6 +19,16 @@ actions:
     command: /opt/homebrew/bin/fish
     args:
       - -c
+      - "set -Ux LOCAL_BIN_HOME $HOME/.local/bin"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - "set -Ux LOCAL_SRC_HOME $HOME/.local/src"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
       - "set -Ux XDG_CONFIG_HOME $HOME/.config"
   - action: command.run
     command: /opt/homebrew/bin/fish
@@ -34,11 +44,6 @@ actions:
     command: /opt/homebrew/bin/fish
     args:
       - -c
-      - "set -Ux EDITOR nvim"
-  - action: command.run
-    command: /opt/homebrew/bin/fish
-    args:
-      - -c
       - "set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml"
   - action: command.run
     command: /opt/homebrew/bin/fish
@@ -49,14 +54,9 @@ actions:
     command: /opt/homebrew/bin/fish
     args:
       - -c
-      - "fish_add_path -p -u /opt/homebrew/bin"
+      - "set -Ux EDITOR nvim"
   - action: command.run
     command: /opt/homebrew/bin/fish
     args:
       - -c
-      - "fish_add_path -p -u /opt/homebrew/sbin"
-  - action: command.run
-    command: /opt/homebrew/bin/fish
-    args:
-      - -c
-      - "fish_add_path -p -u $HOME/.local/share/mise/shims"
+      - "set -U fish_key_bindings fish_vi_key_bindings"
