@@ -1,0 +1,96 @@
+---
+labels:
+  - user
+  - git
+depends:
+  - user.fish
+actions:
+  - action: command.run
+    command: git
+    args: [config, --global, user.email, joao.dubas@gmail.com]
+  - action: command.run
+    command: git
+    args: [config, --global, user.name, Joao P Dubas]
+  - action: command.run
+    command: git
+    args:
+      [
+        config,
+        --global,
+        gpg.ssh.allowedSignersFile,
+        "{{ env.XDG_CONFIG_HOME }}/git/allowed_signers",
+      ]
+  - action: command.run
+    command: git
+    args: [config, --global, core.editor, nvim]
+  - action: command.run
+    command: git
+    args: [config, --global, diff.tool, nvimdiff]
+  - action: command.run
+    command: git
+    args: [config, --global, difftool.nvimdiff.layout, "LOCAL,REMOTE"]
+  - action: command.run
+    command: git
+    args: [config, --global, merge.tool, nvimdiff]
+  - action: command.run
+    command: git
+    args:
+      [
+        config,
+        --global,
+        mergetool.nvimdiff.layout,
+        "LOCAL,BASE,REMOTE / MERGED",
+      ]
+  - action: command.run
+    command: git
+    args:
+      [
+        config,
+        --global,
+        includeIf.hasconfig:remote.*.url:gitea:*/**.path,
+        "{{ env.XDG_CONFIG_HOME }}/git/personal_gitea",
+      ]
+  - action: command.run
+    command: git
+    args:
+      [
+        config,
+        --global,
+        includeIf.hasconfig:remote.*.url:github:joaodubas/**.path,
+        "{{ env.XDG_CONFIG_HOME }}/git/personal_github",
+      ]
+  - action: command.run
+    command: git
+    args:
+      [
+        config,
+        --global,
+        includeIf.gitdir:/opt/work/.path,
+        "{{ env.XDG_CONFIG_HOME }}/git/work",
+      ]
+  - action: directory.create
+    path: "{{ env.XDG_CONFIG_HOME }}/git"
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - 'echo joao.dubas+gitea@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/gitea.pub) > {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - 'echo joao.dubas@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - 'echo joao.dubas@stord.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
+  - action: file.download
+    from: "{{ variables.git_personal_gitea_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/personal_gitea"
+  - action: file.download
+    from: "{{ variables.git_personal_github_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/personal_github"
+  - action: file.download
+    from: "{{ variables.git_work_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/work"

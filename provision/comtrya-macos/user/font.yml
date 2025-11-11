@@ -1,0 +1,19 @@
+---
+labels:
+  - user
+  - font
+depends:
+  - system-deps
+actions:
+  - action: command.run
+    command: brew
+    args:
+      - install
+      - --cask
+      - font-go-mono-nerd-font
+  - action: command.run
+    command: brew
+    args:
+      - install
+      - --cask
+      - font-jetbrains-mono-nerd-font

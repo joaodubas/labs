@@ -1,0 +1,12 @@
+---
+labels:
+  - user
+  - starship
+depends:
+  - user.fish
+actions:
+  - action: file.remove
+    target: "{{ env.XDG_CONFIG_HOME }}/starship/config.toml"
+  - action: file.download
+    from: "{{ variables.starship_config_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/starship/config.toml"
