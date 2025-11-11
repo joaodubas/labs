@@ -2,7 +2,6 @@
 labels:
   - user
   - fish
-  - macos
 depends:
   - cli.mise
   - cli.sdkman

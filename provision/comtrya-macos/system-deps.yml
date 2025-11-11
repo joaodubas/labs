@@ -1,7 +1,6 @@
 ---
 labels:
   - system-deps
-  - macos
 actions:
   - action: command.run
     privileged: true

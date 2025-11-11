@@ -2,7 +2,6 @@
 labels:
   - cli
   - mise
-  - macos
 depends:
   - system-deps
 actions:
