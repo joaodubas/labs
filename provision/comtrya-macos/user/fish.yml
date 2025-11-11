@@ -4,7 +4,6 @@ labels:
   - fish
 depends:
   - cli.mise
-  - cli.sdkman
 actions:
   - action: command.run
     privileged: true
@@ -62,8 +61,3 @@ actions:
     args:
       - -c
       - "fish_add_path -p -u $HOME/.local/share/mise/shims"
-  - action: command.run
-    command: /opt/homebrew/bin/fish
-    args:
-      - -c
-      - "set -Ux SDKMAN_DIR $HOME/.sdkman"
