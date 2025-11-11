@@ -84,7 +84,7 @@ actions:
     command: bash
     args:
       - -c
-      - 'echo joao.dubas@syngenta.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
+      - 'echo joao.dubas@stord.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
   - action: file.copy
     from: git/personal_gitea
     to: "{{ user.config_dir }}/git/personal_gitea"
