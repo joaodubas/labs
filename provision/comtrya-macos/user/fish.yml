@@ -12,10 +12,9 @@ actions:
       - -s
       - /opt/homebrew/bin/fish
       - "{{ user.username }}"
-  # TODO: (jpd) add fish config file
-  # - action: file.copy
-  #   from: fish/config.fish
-  #   to: '{{ user.config_dir }}/fish/config.fish'
+  - action: file.copy
+    from: fish/config.fish
+    to: "{{ user.home_dir }}/.config/fish/config.fish"
   - action: command.run
     command: /opt/homebrew/bin/fish
     args:
