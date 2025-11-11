@@ -23,6 +23,7 @@ actions:
     command: /opt/homebrew/bin/brew
     args:
       - install
+      - atuin
       - bat
       - curl
       - eza
@@ -37,6 +38,7 @@ actions:
       - ripgrep
       - starship
       - tmux
+      - tmuxp
       - tree
       - unzip
       - wget
@@ -47,4 +49,5 @@ actions:
       - install
       - --cask
       - visual-studio-code
+      - wezterm
       - zed
