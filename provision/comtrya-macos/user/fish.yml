@@ -60,3 +60,23 @@ actions:
     args:
       - -c
       - "set -U fish_key_bindings fish_vi_key_bindings"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - "fish_add_path -p -U -m -v /opt/homebrew/bin"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - "fish_add_path -p -U -m -v /opt/homebrew/sbin"
+  - action: command.run
+    command: fish
+    args:
+      - -c
+      - "fish_add_path -p -U -m -v {$LOCAL_BIN_HOME}"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - "fish_add_path -p -U -m -v $HOME/.local/share/mise/shims"
