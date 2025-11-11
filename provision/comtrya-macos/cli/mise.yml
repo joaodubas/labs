@@ -12,4 +12,4 @@ actions:
       - mise
   - action: file.download
     from: "{{ variables.mise_config_path }}"
-    to: "{{ user.config_dir }}/mise/config.toml"
+    to: "{{ user.home_dir }}/.config/mise/config.toml"
