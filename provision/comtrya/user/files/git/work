@@ -6,3 +6,5 @@
     format = ssh
 [commit]
     gpgSign = true
+[url "github:"]
+    insteadOf = https://github.com
