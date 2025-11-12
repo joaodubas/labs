@@ -3,7 +3,7 @@ labels:
   - user
   - git
 depends:
-  - system-deps
+  - user.fish
 actions:
   - action: command.run
     command: git
@@ -18,7 +18,7 @@ actions:
         config,
         --global,
         gpg.ssh.allowedSignersFile,
-        "{{ user.config_dir }}/git/allowed_signers",
+        "{{ env.XDG_CONFIG_HOME }}/git/allowed_signers",
       ]
   - action: command.run
     command: git
@@ -48,7 +48,7 @@ actions:
         config,
         --global,
         includeIf.hasconfig:remote.*.url:gitea:*/**.path,
-        "{{ user.config_dir }}/git/personal_gitea",
+        "{{ env.XDG_CONFIG_HOME }}/git/personal_gitea",
       ]
   - action: command.run
     command: git
@@ -57,7 +57,7 @@ actions:
         config,
         --global,
         includeIf.hasconfig:remote.*.url:github:joaodubas/**.path,
-        "{{ user.config_dir }}/git/personal_github",
+        "{{ env.XDG_CONFIG_HOME }}/git/personal_github",
       ]
   - action: command.run
     command: git
@@ -66,31 +66,31 @@ actions:
         config,
         --global,
         includeIf.gitdir:/opt/work/.path,
-        "{{ user.config_dir }}/git/work",
+        "{{ env.XDG_CONFIG_HOME }}/git/work",
       ]
   - action: directory.create
-    path: "{{ user.config_dir }}/git"
+    path: "{{ env.XDG_CONFIG_HOME }}/git"
   - action: command.run
     command: bash
     args:
       - -c
-      - 'echo joao.dubas+gitea@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/gitea.pub) > {{ user.config_dir }}/git/allowed_signers'
+      - 'echo joao.dubas+gitea@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/gitea.pub) > {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
   - action: command.run
     command: bash
     args:
       - -c
-      - 'echo joao.dubas@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
+      - 'echo joao.dubas@gmail.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
   - action: command.run
     command: bash
     args:
       - -c
-      - 'echo joao.dubas@stord.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ user.config_dir }}/git/allowed_signers'
-  - action: file.copy
-    from: git/personal_gitea
-    to: "{{ user.config_dir }}/git/personal_gitea"
-  - action: file.copy
-    from: git/personal_github
-    to: "{{ user.config_dir }}/git/personal_github"
-  - action: file.copy
-    from: git/work
-    to: "{{ user.config_dir }}/git/work"
+      - 'echo joao.dubas@stord.com namespaces=\"git\" $(cat {{ user.home_dir }}/.ssh/github.pub) >> {{ env.XDG_CONFIG_HOME }}/git/allowed_signers'
+  - action: file.download
+    from: "{{ variables.git_personal_gitea_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/personal_gitea"
+  - action: file.download
+    from: "{{ variables.git_personal_github_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/personal_github"
+  - action: file.download
+    from: "{{ variables.git_work_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/git/work"

@@ -1,0 +1,53 @@
+---
+labels:
+  - system-deps
+actions:
+  - action: command.run
+    privileged: true
+    command: /bin/bash
+    args:
+      - -c
+      - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'echo "eval \"$(/opt/homebrew/bin/brew shellenv)\"" >> {{ user.home_dir }}/.zprofile'
+  - action: command.run
+    command: /bin/bash
+    args:
+      - -c
+      - 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - atuin
+      - bat
+      - curl
+      - eza
+      - fd
+      - fish
+      - fzf
+      - git
+      - gnupg
+      - htop
+      - jq
+      - neovim
+      - ripgrep
+      - starship
+      - tmux
+      - tmuxp
+      - tree
+      - unzip
+      - wget
+      - zoxide
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - --cask
+      - visual-studio-code
+      - wezterm
+      - zed
+      - zen

@@ -1,0 +1,19 @@
+---
+labels:
+  - cli
+  - podman
+depends:
+  - system-deps
+actions:
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - podman
+      - podman-compose
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - --cask
+      - podman-desktop

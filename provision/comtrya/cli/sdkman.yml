@@ -8,7 +8,7 @@ actions:
   - action: file.download
     from: https://get.sdkman.io
     to: /tmp/sdkman.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     dir: /tmp
     command: bash

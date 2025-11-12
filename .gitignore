@@ -10,6 +10,7 @@ ide/config/**/plugin/
 .nvimlog
 .zcompdump*
 .zcompcache
+***/.DS_Store
 
 ## python
 __pycache__/

@@ -1,17 +1,17 @@
 ---
 labels:
   - cli
-  - zoxide
+  - zed
 actions:
   - action: file.download
-    from: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
-    to: /tmp/zoxide.sh
+    from: https://zed.dev/install.sh
+    to: /tmp/zed.sh
     chmod: "0750"
   - action: command.run
     dir: /tmp
     command: bash
     args:
       - -c
-      - ./zoxide.sh
+      - ./zed.sh
   - action: file.remove
-    target: /tmp/zoxide.sh
+    target: /tmp/zed.sh

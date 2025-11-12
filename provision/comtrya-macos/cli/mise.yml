@@ -1,0 +1,15 @@
+---
+labels:
+  - cli
+  - mise
+depends:
+  - system-deps
+actions:
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - mise
+  - action: file.download
+    from: "{{ variables.mise_config_path }}"
+    to: "{{ user.home_dir }}/.config/mise/config.toml"

@@ -9,22 +9,22 @@ actions:
     command: mkdir
     args:
       - -p
-      - '{{ user.home_dir }}/.local/src'
+      - "{{ user.home_dir }}/.local/src"
   - action: file.download
     from: https://www.openssl.org/source/openssl-1.1.1m.tar.gz
-    to: '{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz'
+    to: "{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz"
   - action: command.run
-    dir: '{{ user.home_dir }}/.local/src'
+    dir: "{{ user.home_dir }}/.local/src"
     command: tar
     args:
       - -x
       - -z
       - -f
-      - '{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz'
+      - "{{ user.home_dir }}/.local/src/openssl-1.1.1m.tar.gz"
   - action: file.copy
     from: openssl/install.sh
     to: /tmp/openssl.sh
-    chmod: '0750'
+    chmod: "0750"
   - action: command.run
     dir: /tmp
     command: bash

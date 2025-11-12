@@ -1,0 +1,10 @@
+---
+labels:
+  - user
+  - atuin
+depends:
+  - user.fish
+actions:
+  - action: file.download
+    from: "{{ variables.atuin_config_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/atuin/config.toml"

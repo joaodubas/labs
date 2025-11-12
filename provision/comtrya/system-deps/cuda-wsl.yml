@@ -1,0 +1,51 @@
+---
+# NOTE: (jpd) Based on https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local
+labels:
+  - system-deps
+  - cuda-wsl
+depends:
+  - system-deps
+actions:
+  - action: file.download
+    from: https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+    to: /tmp/cuda-wsl-ubuntu.pin
+  - action: command.run
+    privileged: true
+    command: mv
+    args:
+      - /tmp/cuda-wsl-ubuntu.pin
+      - /etc/apt/preferences.d/cuda-repository-pin-600
+  - action: file.download
+    from: https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+    to: /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+  - action: command.run
+    command: curl
+    args:
+      - -f
+      - -S
+      - -L
+      - -o
+      - /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+      - https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+  - action: command.run
+    privileged: true
+    command: dpkg
+    args:
+      - -i
+      - /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+  - action: command.run
+    privileged: true
+    command: cp
+    args:
+      - /var/cuda-repo-wsl-ubuntu-13-0-local/cuda-6B8B2C1B-keyring.gpg
+      - /usr/share/keyrings/
+  - action: command.run
+    privileged: true
+    command: apt-get
+    args:
+      - update
+  - action: package.install
+    provider: apt
+    name: cuda-toolkit-13-0
+  - action: file.remove
+    target: /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb

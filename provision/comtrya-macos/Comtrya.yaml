@@ -1,7 +1,11 @@
+---
 manifest_paths:
   - .
 variables:
   atuin_config_path: "https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/atuin/config.toml"
+  git_personal_gitea_path: "https://raw.githubusercontent.com/joaodubas/labs/36bbe1aed7f4cb88079bd04f676c5356011747c7/provision/comtrya/user/files/git/personal_gitea"
+  git_personal_github_path: "https://raw.githubusercontent.com/joaodubas/labs/36bbe1aed7f4cb88079bd04f676c5356011747c7/provision/comtrya/user/files/git/personal_github"
+  git_work_path: "https://raw.githubusercontent.com/joaodubas/labs/36bbe1aed7f4cb88079bd04f676c5356011747c7/provision/comtrya/user/files/git/work"
   mise_config_path: "https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/mise/config.toml"
   neovim_custom_plugin_path: "https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/nvim/lua/custom/plugins/init.lua"
   neovim_init_patch_path: "https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/patch/kickstart.nvim/updates.patch"

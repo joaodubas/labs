@@ -1,0 +1,12 @@
+---
+labels:
+  - cli
+  - ghostty
+actions:
+  - action: command.run
+    privileged: true
+    command: snap
+    args:
+      - install
+      - ghostty
+      - --classic

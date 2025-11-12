@@ -3,88 +3,80 @@ labels:
   - user
   - fish
 depends:
-  - cli.atuin
   - cli.mise
-  - cli.starship
-  - system-deps.wezterm
 actions:
   - action: command.run
     privileged: true
-    command: usermod
+    command: chsh
     args:
-      - --shell
-      - /usr/bin/fish
+      - -s
+      - /opt/homebrew/bin/fish
       - "{{ user.username }}"
   - action: file.copy
     from: fish/config.fish
-    to: "{{ user.config_dir }}/fish/config.fish"
+    to: "{{ user.home_dir }}/.config/fish/config.fish"
   - action: command.run
-    command: fish
-    args:
-      - -c
-      - "set -Ux ATUIN_BIN $HOME/.atuin/bin"
-  - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux LOCAL_BIN_HOME $HOME/.local/bin"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux LOCAL_SRC_HOME $HOME/.local/src"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux XDG_CONFIG_HOME $HOME/.config"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux XDG_DATA_HOME $HOME/.local/share"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux XDG_CACHE_HOME $HOME/.cache"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/config.toml"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux MISE_ENV_FILE .env"
   - action: command.run
-    command: fish
-    args:
-      - -c
-      - "set -Ux COMPOSE_BAKE true"
-  - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -Ux EDITOR nvim"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
       - "set -U fish_key_bindings fish_vi_key_bindings"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
-      - "fish_add_path -p -U -m -v {$ATUIN_BIN}"
+      - "fish_add_path -p -U -m -v /opt/homebrew/bin"
+  - action: command.run
+    command: /opt/homebrew/bin/fish
+    args:
+      - -c
+      - "fish_add_path -p -U -m -v /opt/homebrew/sbin"
   - action: command.run
     command: fish
     args:
       - -c
       - "fish_add_path -p -U -m -v {$LOCAL_BIN_HOME}"
   - action: command.run
-    command: fish
+    command: /opt/homebrew/bin/fish
     args:
       - -c
-      - "abbr --add wezterm flatpak run org.wezfurlong.wezterm"
+      - "fish_add_path -p -U -m -v $HOME/.local/share/mise/shims"

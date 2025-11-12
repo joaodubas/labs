@@ -3,27 +3,27 @@ labels:
   - user
   - neovim
 depends:
-  - system-deps
+  - user.fish
 actions:
   # Clone kickstart.nvim and reset to proper commit
   - action: git.clone
     repo_url: https://github.com/nvim-lua/kickstart.nvim.git
-    directory: "{{ user.config_dir }}/nvim"
+    directory: "{{ env.XDG_CONFIG_HOME }}/nvim"
   - action: command.run
-    dir: "{{ user.config_dir }}/nvim"
+    dir: "{{ env.XDG_CONFIG_HOME }}/nvim"
     command: git
     args:
       - fetch
       - --prune
       - origin
   - action: command.run
-    dir: "{{ user.config_dir }}/nvim"
+    dir: "{{ env.XDG_CONFIG_HOME }}/nvim"
     command: git
     args:
       - restore
       - "*"
   - action: command.run
-    dir: "{{ user.config_dir }}/nvim"
+    dir: "{{ env.XDG_CONFIG_HOME }}/nvim"
     command: git
     args:
       - reset
@@ -34,7 +34,7 @@ actions:
     from: "{{ variables.neovim_init_patch_path }}"
     to: /tmp/nvim.patch
   - action: command.run
-    dir: "{{ user.config_dir }}/nvim"
+    dir: "{{ env.XDG_CONFIG_HOME }}/nvim"
     command: git
     args:
       - apply
@@ -43,13 +43,7 @@ actions:
     target: /tmp/nvim.patch
   # Update custom plugins by removing the old one and downloading the new one
   - action: file.remove
-    target: "{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua"
+    target: "{{ env.XDG_CONFIG_HOME }}/nvim/lua/custom/plugins/init.lua"
   - action: file.download
     from: "{{ variables.neovim_custom_plugin_path }}"
-    to: "{{ user.config_dir }}/nvim/lua/custom/plugins/init.lua"
-  # Update mcphub servers by removing the old one and downloading the new one
-  - action: file.remove
-    target: "{{ user.config_dir }}/mcphub/servers.json"
-  - action: file.download
-    from: "{{ variables.neovim_mcphub_servers_path }}"
-    to: "{{ user.config_dir }}/mcphub/servers.json"
+    to: "{{ env.XDG_CONFIG_HOME }}/nvim/lua/custom/plugins/init.lua"

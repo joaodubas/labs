@@ -1,0 +1,20 @@
+---
+labels:
+  - user
+  - tmux
+  - tmuxp
+depends:
+  - user.fish
+actions:
+  - action: file.download
+    from: "{{ variables.tmux_config_path }}"
+    to: "{{ env.XDG_CONFIG_HOME }}/tmux/tmux.conf"
+  - action: git.clone
+    repo_url: https://github.com/tmux-plugins/tpm.git
+    directory: "{{ env.XDG_CONFIG_HOME }}/tmux/plugins/tpm"
+  - action: file.download
+    from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/tmuxp/personal.yml
+    to: "{{ env.XDG_CONFIG_HOME }}/tmuxp/personal.yml"
+  - action: file.download
+    from: https://gitea.dubas.dev/joao.dubas/ide/raw/branch/main/config/tmuxp/work.yml
+    to: "{{ env.XDG_CONFIG_HOME }}/tmuxp/work.yml"
