@@ -1,7 +1,7 @@
 ---
 labels:
   - cli
-  - podman
+  - container
 depends:
   - system-deps
 actions:
@@ -17,3 +17,8 @@ actions:
       - install
       - --cask
       - podman-desktop
+  - action: command.run
+    privileged: true
+    command: podman-mac-helper
+    args:
+      - install
