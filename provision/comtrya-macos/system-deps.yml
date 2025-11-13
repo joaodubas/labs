@@ -47,6 +47,8 @@ actions:
     args:
       - install
       - --cask
+      - cursor
+      - cursor-cli
       - visual-studio-code
       - wezterm
       - zed
