@@ -47,7 +47,9 @@ actions:
     args:
       - install
       - --cask
+      - 1password-cli
       - cursor
+      - gcloud-cli
       - cursor-cli
       - visual-studio-code
       - wezterm
