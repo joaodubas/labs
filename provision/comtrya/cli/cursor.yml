@@ -1,0 +1,17 @@
+---
+labels:
+  - cli
+  - cursor
+actions:
+  - action: file.download
+    from: https:/cursor.com/install
+    to: /tmp/cursor.sh
+    chmod: "0750"
+  - action: command.run
+    dir: /tmp
+    command: bash
+    args:
+      - -c
+      - ./cursor.sh
+  - action: file.remove
+    target: /tmp/cursor.sh
