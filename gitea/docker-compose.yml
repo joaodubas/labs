@@ -31,7 +31,7 @@ services:
       retries: 3
       start_period: 5s
 
-  # TODO: configure test report based on post:
+  # TODO: (jpd) configure test report based on post:
   # https://medium.com/@boomimagestudio-techblog/goodbye-jenkins-how-drone-simplifies-ci-cd-for-engineering-teams-everywhere-73a7db435a86
   report_test:
     image: "frankescobar/allure-docker-service:2.21.0"
