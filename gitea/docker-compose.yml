@@ -55,6 +55,9 @@ services:
       # NOTE: (jpd) generated with `openssl rand -base64 48`
       WOODPECKER_PROMETHEUS_AUTH_TOKEN: "${WOODPECKER_PROMETHEUS_AUTH_TOKEN:-VzbMSw7vgdHhQxg7v3ahP+5BilsoQ0ja/faSn4xEc+AOk1ee+y9RAJsA0xV1ADMJ}"
     restart: unless-stopped
+    depends_on:
+      git:
+        condition: service_healthy
     volumes:
       - "woodpecker_data:/var/lib/woodpecker/"
       - "woodpekcer_docker_config:/opt/docker"
@@ -75,7 +78,8 @@ services:
       WOODPECKER_TOKEN: "${WOODPECKER_TOKEN:-}"
     restart: unless-stopped
     depends_on:
-      - ci
+      ci:
+        condition: service_healthy
     command: --help
 
   worker:
@@ -89,7 +93,8 @@ services:
     command: agent
     restart: unless-stopped
     depends_on:
-      - ci
+      ci:
+        condition: service_healthy
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
