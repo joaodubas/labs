@@ -31,50 +31,50 @@ services:
     image: "frankescobar/allure-docker-service:2.21.0"
 
   ci:
-    image: "drone/drone:2.26.0"
+    image: "woodpeckerci/woodpecker-server:v3.12.0"
     init: true
     hostname: ci
     environment:
-      DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
-      DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
-      DRONE_GITEA_CLIENT_ID: ${DRONE_GITEA_CLIENT_ID:-}
-      DRONE_GITEA_CLIENT_SECRET: ${DRONE_GITEA_CLIENT_SECRET:-}
-      DRONE_GITEA_SERVER: "http://git:3000"
-      DRONE_GIT_ALWAYS_AUTH: ${DRONE_GIT_ALWAYS_AUTH:-false}
-      DRONE_RPC_SECRET: &drone_rpc_secret ${DRONE_RPC_SECRET:-drone_secret}
-      DRONE_SERVER_HOST: ${DRONE_SERVER_HOST:-localhost}:3000
-      DRONE_SERVER_PROTO: ${DRONE_SERVER_PROTO:-http}
-      DRONE_TLS_AUTOCERT: ${DRONE_TLS_AUTOCERT:-false}
-      DRONE_TMATE_ENABLED: ${DRONE_TMATE_ENABLED:-true}
-      DRONE_USER_CREATE: ${DRONE_USER_CREATE:-username:admin,machine:false,admin:true,token:drone_secret}
+      WOODPECKER_OPEN: true
+      WOODPECKER_ADMIN: "${WOODPECKER_ADMIN:-admin}"
+      WOODPECKER_HOST: "${WOODPECKER_HOST:-http://localhost:8000}"
+      WOODPECKER_DOCKER_CONFIG: /opt/docker/config.json
+      WOODPECKER_GITEA: true
+      WOODPECKER_GITEA_URL: "http://git:3000"
+      WOODPECKER_GITEA_CLIENT: "${WOODPECKER_GITEA_CLIENT:-}"
+      WOODPECKER_GITEA_SECRET: "${WOODPECKER_GITEA_SECRET:-}"
+      # NOTE: (jpd) generated with `openssl rand -hex 32`
+      WOODPECKER_AGENT_SECRET: &ci_agent_secret "${WOODPECKER_AGENT_SECRET:-30ee418ab3ddd7c27835adcc9a5af4dc6a00d5fa6002a96eff49019e25cb3059}"
+      WOODPECKER_DISABLE_USER_AGENT_REGISTRATION: true
+      # NOTE: (jpd) generated with `openssl rand -base64 48`
+      WOODPECKER_PROMETHEUS_AUTH_TOKEN: "${WOODPECKER_PROMETHEUS_AUTH_TOKEN:-VzbMSw7vgdHhQxg7v3ahP+5BilsoQ0ja/faSn4xEc+AOk1ee+y9RAJsA0xV1ADMJ}"
     restart: unless-stopped
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "ci_data:/data"
+      - "woodpecker_data:/var/lib/woodpecker/"
+      - "woodpekcer_docker_config:/opt/docker"
     networks:
       - git_cicd_net
 
   ci_cli:
-    image: "drone/cli:1.9.0"
+    image: "woodpeckerci/woodpecker-cli:v3.12.0"
     init: true
+    environment:
+      WOODPECKER_SERVER: &woodpecker_server "ci:9000"
+      WOODPECKER_TOKEN: "${WOODPECKER_TOKEN:-}"
     restart: unless-stopped
-    entrypoint: sleep
-    command: 3600d
+    depends_on:
+      - ci
+    command: --help
 
   worker:
-    image: "drone/drone-runner-docker:1.8.4"
+    image: "woodpeckerci/woodpecker-agent:v3.12.0"
     init: true
     hostname: ci_worker
     environment:
-      DRONER_RUNNER_CAPACITY: ${WORKER_RUNNER_CAPACTIY:-2}
-      DRONE_DEBUG: ${WORKER_DEBUG:-false}
-      DRONE_RPC_HOST: ${WORKER_RPC_HOST:-ci}
-      DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
-      DRONE_RPC_SECRET: *drone_rpc_secret
-      DRONE_RUNNER_NAME: ${WORKER_RUNNER_NAME:-runner}
-      DRONE_RUNNER_NETWORKS: git_cicd_net
-      DRONE_TMATE_ENABLED: ${WORKER_TMATE_ENABLED:-true}
-      DRONE_TRACE: ${WORKER_TRACE:-false}
+      WOODPECKER_SERVER: *woodpecker_server
+      WOODPECKER_AGENT_SECRET: *ci_agent_secret
+      WOODPECKER_BACKEND: docker
+    command: agent
     restart: unless-stopped
     depends_on:
       - ci
@@ -146,7 +146,10 @@ services:
 
 volumes:
   git_data: {}
+  # NOTE: (jpd) keeping old ci volume data for now
   ci_data: {}
+  woodpecker_data: {}
+  woodpekcer_docker_config: {}
   renovate_data: {}
   minio_data: {}
   minio_snsd_data: {}
