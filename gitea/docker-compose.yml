@@ -43,10 +43,10 @@ services:
     environment:
       WOODPECKER_OPEN: true
       WOODPECKER_ADMIN: "${WOODPECKER_ADMIN:-admin}"
-      WOODPECKER_HOST: "${WOODPECKER_HOST:-http://localhost:8000}"
+      WOODPECKER_HOST: "${WOODPECKER_HOST:-http://127.0.0.1:8000}"
       WOODPECKER_DOCKER_CONFIG: /opt/docker/config.json
       WOODPECKER_GITEA: true
-      WOODPECKER_GITEA_URL: "http://git:3000"
+      WOODPECKER_GITEA_URL: "${WOODPECKER_GITEA_URL:-http://127.0.0.1:3000}"
       WOODPECKER_GITEA_CLIENT: "${WOODPECKER_GITEA_CLIENT:-}"
       WOODPECKER_GITEA_SECRET: "${WOODPECKER_GITEA_SECRET:-}"
       # NOTE: (jpd) generated with `openssl rand -hex 32`
