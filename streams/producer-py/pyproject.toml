@@ -14,4 +14,4 @@ python = "^3.12"
 redis = "^7.0"
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^9.7"
+ipython = "^9.8"
