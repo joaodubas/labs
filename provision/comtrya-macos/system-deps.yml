@@ -49,8 +49,8 @@ actions:
       - --cask
       - 1password-cli
       - cursor
-      - gcloud-cli
       - cursor-cli
+      - gcloud-cli
       - visual-studio-code
       - wezterm
       - zed
