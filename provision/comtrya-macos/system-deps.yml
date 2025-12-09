@@ -51,6 +51,7 @@ actions:
       - cursor
       - cursor-cli
       - gcloud-cli
+      - raycast
       - visual-studio-code
       - wezterm
       - zed
