@@ -18,9 +18,9 @@ alias nh="nvim --listen 0.0.0.0:6666 --headless &> /dev/null"
 alias mise_up="mise outdated --bump --json | jq -r 'map(\"\(.name)@\(.latest)\") | join(\" \")'"
 
 function sesh-sessions
-    # Run sesh list and pipe to fzf to allow interactive selection.
-    # The output of fzf (the selected session) is captured into the 'session' variable.
-    set -l session (sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
+    # Run sesh list and pipe to gum to allow interactive selection.
+    # The output of gum (the selected session) is captured into the 'session' variable.
+    set -l session (sesh list -i | gum filter --limit 1 --no-strip-ansi --no-sort --fuzzy --placeholder 'Pick a sesh' --height 10 --prompt='⚡')
 
     # Repaint the command line to clear any fzf output artifacts.
     commandline -f repaint
