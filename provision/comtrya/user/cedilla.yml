@@ -1,0 +1,26 @@
+---
+labels:
+  - user
+  - cedilla
+actions:
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - |
+        if ! grep -q "GTK_IM_MODULE=cedilla" {{ user.home_dir }}/.xsessionrc 2>/dev/null; then
+          echo "export GTK_IM_MODULE=cedilla" >> {{ user.home_dir }}/.xsessionrc
+        fi
+        if ! grep -q "QT_IM_MODULE=cedilla" {{ user.home_dir }}/.xsessionrc 2>/dev/null; then
+          echo "export QT_IM_MODULE=cedilla" >> {{ user.home_dir }}/.xsessionrc
+        fi
+  - action: file.copy
+    from: cedilla/XCompose
+    to: "{{ user.home_dir }}/.XCompose"
+  - action: command.run
+    command: gsettings
+    args:
+      - set
+      - org.gnome.settings-daemon.plugins.xsettings
+      - overrides
+      - "{'Gtk/IMModule':<'ibus'>}"

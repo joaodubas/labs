@@ -47,6 +47,14 @@ actions:
     args:
       - install
       - --cask
+      - 1password-cli
+      - antigravity
+      - cursor
+      - cursor-cli
+      - gcloud-cli
+      - ghostty
+      - raycast
+      - spotifyd
       - visual-studio-code
       - wezterm
       - zed
