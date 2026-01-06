@@ -1,0 +1,18 @@
+---
+labels:
+  - cli
+  - stordcli
+depends:
+  # - system-deps
+actions:
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - tap
+      - stordco/tap
+      - github:stordco/homebrew-tap.git
+  - action: command.run
+    command: /opt/homebrew/bin/brew
+    args:
+      - install
+      - stordcli

@@ -1,7 +1,7 @@
 ---
 labels:
   - cli
-  - podman
+  - container
 depends:
   - system-deps
 actions:
@@ -11,9 +11,18 @@ actions:
       - install
       - podman
       - podman-compose
+      - docker
+      - docker-buildx
+      - docker-compose
   - action: command.run
     command: /opt/homebrew/bin/brew
     args:
       - install
       - --cask
       - podman-desktop
+      - docker-desktop
+  - action: command.run
+    privileged: true
+    command: podman-mac-helper
+    args:
+      - install
