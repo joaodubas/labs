@@ -128,31 +128,31 @@ Phase 3: CI/CD Migration (Drone → Forgejo Actions)
 
 ### Current Stack (3 Systems)
 ```
-┌──────────────────────────────────────────────┐
-│ Gitea v1.25.2 │ Drone v2.26.0 │ MinIO    │
-│ Code VCS         │ CI/CD Server      │ S3 Storage │
-│ (SQLite)         │ (SQLite)           │ Cache/Obj  │
-└───────────┬───────┘ └───────┬───────┘ └────────┘
-          │                    │
-    git_data vol          ci_data vol       minio_data vol
+┌────────────────────────────────────────────────────┐
+│ Gitea v1.25.2     │ │Drone v2.26.0  │ │ MinIO      │
+│ Code VCS          │ │CI/CD Server   │ │ S3 Storage │
+│ (SQLite)          │ │(SQLite)       │ │ Cache/Obj  │
+└───────────┬───────┘ └───────┬───────┘ └──────┬─────┘
+            │                 │                │
+      git_data vol        ci_data vol    minio_data vol
 ```
 
 ### Target Stack (2 Systems)
 ```
 ┌──────────────────────────────────────────────┐
-│         Forgejo v13.x/v11.x (LTS)         │
-│    ┌────────────────────────────────┐   │
-│    │    Forgejo Actions (Built-in)    │   │
-│    │    Built-in CI/CD                │   │
-│    └───────────┬──────────────────┘   │
-│                  │                     │
-│         ┌───────────────────────────────┐   │
-│         │ SeaweedFS S3 API             │   │
-│         │ Master │ Filer │ Volume     │   │
-│         └───────────────────────────────┘   │
-└───────────────────┬─────────────────────────┘
-                  │
-         seaweedfs_data volume
+│         Forgejo v13.x/v11.x (LTS)            │
+│    ┌────────────────────────────────┐        │
+│    │    Forgejo Actions (Built-in)  │        │
+│    │    Built-in CI/CD              │        │
+│    └─────────────┬──────────────────┘        │
+│                  │                           │
+│    ┌────────────────────────────────┐        │
+│    │ SeaweedFS S3 API               │        │
+│    │ Master │ Filer │ Volume        │        │
+│    └────────────────────────────────┘        │
+└───────────────────┬──────────────────────────┘
+                    │
+            seaweedfs_data volume
 ```
 
 **Benefits:**
