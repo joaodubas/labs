@@ -190,9 +190,9 @@ Phase 3: CI/CD Migration (Drone → Forgejo Actions)
 - **Scope:** Drone → Forgejo Actions pipeline migration
 - **Includes:** Runner deployment, cache strategy, pipeline conversion, plugin equivalents
 
-### Gitea S3 Configuration
+### Forgejo S3 Configuration
 - **File:** [PLAN-GITEA-USE-SEAWEEDFS.md](./PLAN-GITEA-USE-SEAWEEDFS.md)
-- **Scope:** Gitea S3 storage configuration for SeaweedFS
+- **Scope:** Forgejo S3 storage configuration for SeaweedFS
 - **Includes:** Environment variables, bucket setup, LFS/attachment configuration
 
 ---
@@ -275,7 +275,7 @@ Before starting any phase:
 - [PLAN-MIGRATE-MINIO-TO-SEAWEEDFS.md](./PLAN-MIGRATE-MINIO-TO-SEAWEEDFS.md) - MinIO to SeaweedFS
 - [PLAN-MIGRATE-GITEA-TO-FORGEJO.md](./PLAN-MIGRATE-GITEA-TO-FORGEJO.md) - Gitea to Forgejo
 - [PLAN-MIGRATE-DRONE-TO-FORGEJO-ACTIONS.md](./PLAN-MIGRATE-DRONE-TO-FORGEJO-ACTIONS.md) - Drone to Forgejo Actions
-- [PLAN-GITEA-USE-SEAWEEDFS.md](./PLAN-GITEA-USE-SEAWEEDFS.md) - Gitea S3 configuration
+- [PLAN-GITEA-USE-SEAWEEDFS.md](./PLAN-GITEA-USE-SEAWEEDFS.md) - Forgejo S3 configuration
 
 ### Key Plugins & Tools
 - [drone-meltwater-cache](https://github.com/drone-plugins/drone-meltwater-cache) - Current Drone cache plugin
