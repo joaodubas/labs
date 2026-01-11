@@ -81,7 +81,7 @@ services:
     networks:
       - git_cicd_net
   cron:
-    image: "premoweb/chadburn@1.0.7"
+    image: "premoweb/chadburn:1.0.7"
     init: true
     hostname: cron
     volumes:
