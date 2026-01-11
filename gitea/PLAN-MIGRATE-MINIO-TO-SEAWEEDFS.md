@@ -179,7 +179,7 @@ rclone sync minio:bucket-name s3:bucket-name \
 
 Update the services to use the new credentials and endpoint.
 
-### 4.1 `Gitea`
+### 5.1 `Gitea`
 
 Update `app.ini` or the relevant environment variables in `docker-compose.yml`:
 
@@ -190,7 +190,7 @@ Update `app.ini` or the relevant environment variables in `docker-compose.yml`:
 - `MINIO_USE_SSL`: `false`
 - **Important:** Ensure the "Path Style" option is enabled in `Gitea`'s storage settings if configuring via UI.
 
-### 4.2 `Drone` CI
+### 5.2 `Drone` CI
 
 Update your drone secrets or `.drone.yml` configuration:
 
@@ -212,7 +212,7 @@ steps:
 
 `SeaweedFS` components expose Prometheus-compatible metrics on the `/metrics` endpoint. To monitor the health and performance of your storage backend, configure your Prometheus server to scrape these targets.
 
-### 5.1 Scrape Targets
+### 6.1 Scrape Targets
 
 Add the following jobs to your `prometheus.yml` configuration:
 
@@ -231,4 +231,5 @@ scrape_configs:
       - targets: ['seaweedfs:8080']
 ```
 
-> **Note:** Ensure that the port `8080` (Volume Server) is exposed in the `docker-compose.yml` if you are scraping from an external Prometheus instance (as added in section 2.1).
+> [!NOTE]
+> Ensure that the port `8080` (Volume Server) is exposed in the `docker-compose.yml` if you are scraping from an external Prometheus instance (as added in section 2.1).
