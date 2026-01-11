@@ -28,8 +28,10 @@ services:
   # https://medium.com/@boomimagestudio-techblog/goodbye-jenkins-how-drone-simplifies-ci-cd-for-engineering-teams-everywhere-73a7db435a86
   report_test:
     image: "frankescobar/allure-docker-service:2.21.0"
+
   dependency_bot:
     image: "renovate/renovate:37.421.2-slim"
+
   ci:
     image: "drone/drone:2.26.0"
     init: true
@@ -53,12 +55,14 @@ services:
       - "ci_data:/data"
     networks:
       - git_cicd_net
+
   ci_cli:
     image: "drone/cli:1.9.0"
     init: true
     restart: unless-stopped
     entrypoint: sleep
     command: 3600d
+
   worker:
     image: "drone/drone-runner-docker:1.8.4"
     init: true
@@ -80,6 +84,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - git_cicd_net
+
   cron:
     image: "premoweb/chadburn:1.0.7"
     init: true
@@ -91,6 +96,7 @@ services:
     networks:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
+
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
@@ -115,6 +121,7 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
+
   minio:
     image: "quay.io/minio/minio:RELEASE.2025-02-28T09-55-16Z"
     hostname: minio
@@ -131,8 +138,10 @@ services:
     networks:
       - git_cicd_net
     command: 'server --console-address ":9001"'
+
   mc:
     image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
+
   seaweedfs:
     image: &seaweedfs_image "chrislusf/seaweedfs:4.06_full"
     hostname: seaweedfs
