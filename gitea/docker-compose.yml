@@ -133,6 +133,28 @@ services:
     command: 'server --console-address ":9001"'
   mc:
     image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
+  seaweedfs:
+    image: &seaweedfs_image "chrislusf/seaweedfs:4.06_full"
+    hostname: seaweedfs
+    volumes:
+      - "seaweedfs_data:/data"
+      - "./config/seaweedfs/s3_config.json:/etc/seaweedfs/s3_config.json:ro"
+    restart: unless-stopped
+    networks:
+      - git_cicd_net
+    command: server -dir=/data -master -filer -s3 -s3.config=/etc/seaweedfs/s3_config.json -s3.allowEmptyFolder=false -volume -volume.max=0 -webdav
+
+  seaweedfs-init:
+    image: *seaweedfs_image
+    hostname: seaweedfs-init
+    depends_on:
+      - seaweedfs
+    volumes:
+      - "./scripts/seaweedfs/create_buckets.sh:/usr/local/bin/create_buckets.sh:ro"
+    networks:
+      - git_cicd_net
+    entrypoint: /bin/sh
+    command: /usr/local/bin/create_buckets.sh
 
 volumes:
   git_data: {}
@@ -140,6 +162,7 @@ volumes:
   renovate_data: {}
   minio_data: {}
   minio_snsd_data: {}
+  seaweedfs_data: {}
 
 networks:
   git_cicd_net:

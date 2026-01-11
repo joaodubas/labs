@@ -10,7 +10,9 @@
       ],
       "actions": [
         "Admin",
+        "List",
         "Read",
+        "Tagging",
         "Write"
       ]
     },
@@ -23,11 +25,11 @@
         }
       ],
       "actions": [
-        "Read",
-        "Write"
-      ],
-      "resources": [
-        "buckets/forgejo*"
+        "Admin:forgejo",
+        "List:forgejo",
+        "Read:forgejo",
+        "Tagging:forgejo",
+        "Write:forgejo"
       ]
     },
     {
@@ -39,11 +41,11 @@
         }
       ],
       "actions": [
-        "Read",
-        "Write"
-      ],
-      "resources": [
-        "buckets/k3d*"
+        "Admin:k3d",
+        "List:k3d",
+        "Read:k3d",
+        "Tagging:k3d",
+        "Write:k3d"
       ]
     }
   ]
