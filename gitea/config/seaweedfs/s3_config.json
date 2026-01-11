@@ -1,0 +1,50 @@
+{
+  "identities": [
+    {
+      "name": "admin",
+      "credentials": [
+        {
+          "accessKey": "admin_access_key",
+          "secretKey": "admin_secret_key"
+        }
+      ],
+      "actions": [
+        "Admin",
+        "Read",
+        "Write"
+      ]
+    },
+    {
+      "name": "forgejo",
+      "credentials": [
+        {
+          "accessKey": "forgejo_access_key",
+          "secretKey": "forgejo_secret_key"
+        }
+      ],
+      "actions": [
+        "Read",
+        "Write"
+      ],
+      "resources": [
+        "buckets/forgejo*"
+      ]
+    },
+    {
+      "name": "k3d",
+      "credentials": [
+        {
+          "accessKey": "k3d_access_key",
+          "secretKey": "k3d_secret_key"
+        }
+      ],
+      "actions": [
+        "Read",
+        "Write"
+      ],
+      "resources": [
+        "buckets/k3d*"
+      ]
+    }
+  ]
+}
