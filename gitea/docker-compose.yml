@@ -159,11 +159,11 @@ services:
     command: /usr/local/bin/create_buckets.sh
 
 volumes:
-  git_data: {}
   ci_data: {}
-  renovate_data: {}
+  git_data: {}
   minio_data: {}
   minio_snsd_data: {}
+  renovate_data: {}
   seaweedfs_data: {}
 
 networks:
