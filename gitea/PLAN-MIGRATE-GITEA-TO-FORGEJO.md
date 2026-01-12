@@ -147,7 +147,7 @@ export GITEA_URL="http://git:3000"
 
 ### Step 3: Migrate Repositories
 
-**Method 1: Via Forgejo UI (Manual, for small number of repos)**
+#### **Method 1: Via Forgejo UI (Manual, for small number of repos)**
 
 1. **Login to Forgejo** (http://localhost:3001)
 2. **Navigate:** User Menu → Create → Migrate Repository
@@ -168,7 +168,7 @@ export GITEA_URL="http://git:3000"
    - [ ] Wiki (optional)
    - [ ] Releases (optional)
 
-**Method 2: Via API (Automated, for large number of repos)**
+#### **Method 2: Via API (Automated, for large number of repos)**
 
 Use Forgejo's migration API with Gitea source:
 
