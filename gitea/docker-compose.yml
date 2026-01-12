@@ -25,6 +25,31 @@ services:
     ports:
       - "222:22"
 
+  forgejo:
+    image: "codeberg.org/forgejo/forgejo:13.0.4"
+    init: true
+    hostname: forgejo
+    environment:
+      FORGEJO__server__ROOT_URL: ${FORGEJO_ROOT_URL:-http://forgejo:3000}
+      FORGEJO__server__HTTP_PORT: ${FORGEJO_HTTP_PORT:-3000}
+      FORGEJO__database__DB_TYPE: sqlite3
+      FORGEJO__database__PATH: /data/forgejo.db
+      FORGEJO__storage__STORAGE_TYPE: minio
+      FORGEJO__storage__MINIO_ENDPOINT: seaweedfs:9000
+      FORGEJO__storage__MINIO_BUCKET: gitea
+      FORGEJO__storage__MINIO_BUCKET_LOOKUP_TYPE: path
+      FORGEJO__storage__MINIO_USE_SSL: "false"
+      FORGEJO__storage__MINIO_ACCESS_KEY_ID: ${FORGEJO_ACCESS_KEY:-gitea_access_key}
+      FORGEJO__storage__MINIO_SECRET_ACCESS_KEY: ${FORGEJO_SECRET_KEY:-gitea_secret_key}
+      FORGEJO__storage__SERVE_DIRECT: "true"
+    restart: unless-stopped
+    volumes:
+      - "forgejo_data:/data"
+    networks:
+      - git_cicd_net
+    ports:
+      - "223:22"
+
   ci:
     image: "drone/drone:2.26.0"
     init: true
@@ -160,6 +185,7 @@ services:
 
 volumes:
   ci_data: {}
+  forgejo_data: {}
   git_data: {}
   minio_data: {}
   minio_snsd_data: {}
