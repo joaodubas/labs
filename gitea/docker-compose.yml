@@ -161,7 +161,7 @@ services:
     image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
 
   seaweedfs:
-    image: &seaweedfs_image "chrislusf/seaweedfs:4.05_full"
+    image: &seaweedfs_image "chrislusf/seaweedfs:4.06_full"
     hostname: seaweedfs
     volumes:
       - "seaweedfs_data:/data"
@@ -169,7 +169,7 @@ services:
     restart: unless-stopped
     networks:
       - git_cicd_net
-    command: server -dir=/data -s3 -s3.port=9000 -s3.config=/etc/seaweedfs/s3_config.josn -s3.allowEmptyFolder=false -volume.max=0
+    command: server -dir=/data -s3 -s3.port=9000 -s3.config=/etc/seaweedfs/s3_config.json -s3.allowEmptyFolder=false -volume.max=0
 
   init-seaweedfs:
     image: *seaweedfs_image
