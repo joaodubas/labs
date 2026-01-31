@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Wait for SeaweedFS Primary to be ready
-until weed shell -msater=seaweedfs:9333 -comand "cluster.check" > dev/null 2>&1; do
+until weed shell -master=seaweedfs:9333 -comand "cluster.check" > /dev/null 2>&1; do
 	echo "Waiting for SeaweedFS Primary..."
 	sleep 2
 done
