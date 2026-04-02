@@ -24,6 +24,23 @@ services:
       - git_cicd_net
     ports:
       - "222:22"
+  git_runner:
+    image: "gitea/act_runner:0.3.1"
+    init: false
+    hostname: git_runner
+    environment:
+      CONFIG_FILE: /config.yml
+      GITEA_INSTANCE_URL: "http://git:3000"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "${GIT_RUNNER_REGISTRATION_TOKEN:-gitea-runner-token}"
+      GITEA_RUNNER_NAME: "${GIT_RUNNER_NAME:-local-runner}"
+      GITEA_RUNNER_LABELS: "${GIT_RUNNER_LABELS:-ubuntu-latest,ubuntu-24.04,ubuntu-22.04,elixir-1.19.5-otp-28}"
+    restart: unless-stopped
+    volumes:
+      - "runner_data:/data"
+      - "./config/git_runner/config.yml:/config.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - git_cicd_net
   cron:
     image: "premoweb/chadburn:1.0.7"
     init: true
@@ -80,7 +97,7 @@ services:
 
 volumes:
   git_data: {}
-  ci_data: {}
+  runner_data: {}
   renovate_data: {}
   minio_data: {}
   minio_snsd_data: {}
