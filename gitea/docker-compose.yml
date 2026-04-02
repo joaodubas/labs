@@ -25,7 +25,7 @@ services:
     ports:
       - "222:22"
   cron:
-    image: "premoweb/chadburn@1.0.7"
+    image: "premoweb/chadburn:1.0.7"
     init: true
     hostname: cron
     volumes:
