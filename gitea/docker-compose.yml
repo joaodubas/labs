@@ -24,6 +24,7 @@ services:
       - git_cicd_net
     ports:
       - "222:22"
+
   git_runner:
     image: "gitea/act_runner:0.3.1"
     init: false
@@ -41,6 +42,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - git_cicd_net
+
   cron:
     image: "premoweb/chadburn:1.0.7"
     init: true
@@ -52,6 +54,7 @@ services:
     networks:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
+
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
@@ -76,6 +79,25 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
+
+  garage:
+    image: dxflrs/garage:v2.2.0
+    hostname: garage
+    restart: unless-stopped
+    pull_policy: always
+    volumes:
+      - ./priv/docker/config/garage/garage.toml:/etc/garage.toml:ro
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   minio:
     image: "quay.io/minio/minio:RELEASE.2025-02-28T09-55-16Z"
     hostname: minio
@@ -92,6 +114,7 @@ services:
     networks:
       - git_cicd_net
     command: 'server --console-address ":9001"'
+
   mc:
     image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
 
