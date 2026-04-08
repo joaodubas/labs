@@ -102,34 +102,12 @@ services:
       retries: 3
       start_period: 10s
 
-  minio:
-    image: "quay.io/minio/minio:RELEASE.2025-02-28T09-55-16Z"
-    hostname: minio
-    environment:
-      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
-      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost}
-      MINIO_VOLUMES: /snsd_data
-    volumes:
-      - "minio_data:/data"
-      - "minio_snsd_data:/snsd_data"
-    restart: unless-stopped
-    networks:
-      - git_cicd_net
-    command: 'server --console-address ":9001"'
-
-  mc:
-    image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
-
 volumes:
   git_data: {}
   runner_data: {}
   renovate_data: {}
   garage_data: {}
   garage_meta: {}
-  minio_data: {}
-  minio_snsd_data: {}
 
 networks:
   git_cicd_net:
