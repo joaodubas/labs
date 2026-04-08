@@ -94,7 +94,7 @@ services:
       - garage_meta:/var/lib/garage/meta
       - garage_data:/var/lib/garage/data
     networks:
-      - internal
+      - git_cicd_net
     healthcheck:
       test: ["CMD", "/garage", "status"]
       interval: 30s
@@ -126,6 +126,8 @@ volumes:
   git_data: {}
   runner_data: {}
   renovate_data: {}
+  garage_data: {}
+  garage_meta: {}
   minio_data: {}
   minio_snsd_data: {}
 
