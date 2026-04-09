@@ -5,18 +5,16 @@ services:
     init: true
     hostname: git
     environment:
-      APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
       USER_GID: ${GID:-1000}
-      RUN_MODE: ${GIT_RUN_MODE:-prod}
-      DOMAIN: ${GIT_DOMAIN:-localhost}
-      SSH_DOMAIN: ${GIT_SSH_DOMAIN:-localhost}
-      HTTP_PORT: ${GIT_HTTP_PORT:-3000}
-      ROOT_URL: http://${GIT_DOMAIN:-localhost}:3000
-      SSH_PORT: ${GIT_SSH_PORT:-222}
-      SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
-      DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
-      DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
+      GITEA__database__DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
+      GITEA__server__DOMAIN: ${GIT_DOMAIN:-127.0.0.1}
+      GITEA__server__HTTP_PORT: ${GIT_HTTP_PORT:-3000}
+      GITEA__server__ROOT_URL: http://${GIT_DOMAIN:-127.0.0.1}:3000
+      GITEA__server__SSH_DOMAIN: ${GIT_SSH_DOMAIN:-127.0.0.1}
+      GITEA__server__SSH_PORT: ${GIT_SSH_PORT:-222}
+      GITEA__server__SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
+      GITEA__service__DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
       # NOTE: generate with `docker compose run --rm -u git git gitea generate secret LFS_JWT_SECRET`
       GITEA__server__LFS_JWT_SECRET: ${GIT_SERVER_LFS_JWT_SECRET:-}
       # NOTE: generate with `docker compose run --rm -u git git gitea generate secret SECRET_KEY`
