@@ -31,6 +31,13 @@ services:
       - git_cicd_net
     ports:
       - "222:22"
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   git_runner:
     image: "gitea/act_runner:0.3.1"
@@ -42,6 +49,9 @@ services:
       GITEA_RUNNER_REGISTRATION_TOKEN: "${GIT_RUNNER_REGISTRATION_TOKEN:-gitea-runner-token}"
       GITEA_RUNNER_NAME: "${GIT_RUNNER_NAME:-local-runner}"
       GITEA_RUNNER_LABELS: "${GIT_RUNNER_LABELS:-ubuntu-latest,ubuntu-24.04,ubuntu-22.04,elixir-1.19.5-otp-28}"
+    depends_on:
+      git:
+        condition: service_healthy
     restart: unless-stopped
     volumes:
       - "runner_data:/data"
