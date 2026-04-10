@@ -101,10 +101,12 @@ services:
     image: dxflrs/garage:v2.2.0
     hostname: garage
     restart: unless-stopped
+    environment:
+      GARAGE_CONFIG_FILE: /etc/garage/garage.toml
     volumes:
-      - ./priv/docker/config/garage/garage.toml:/etc/garage.toml:ro
-      - garage_meta:/var/lib/garage/meta
-      - garage_data:/var/lib/garage/data
+      - "./config/garage:/etc/garage"
+      - "garage_meta:/var/lib/garage/meta"
+      - "garage_data:/var/lib/garage/data"
     networks:
       - git_cicd_net
     healthcheck:
