@@ -1,5 +1,53 @@
 ---
 services:
+  rustfs_perms:
+    image: alpine
+    user: root
+    volumes:
+      - rustfs_data:/data
+    command: chown -R 10001:10001 /data
+
+  rustfs:
+    image: "rustfs/rustfs:1.0.0-alpha.93"
+    hostname: rustfs
+    restart: unless-stopped
+    depends_on:
+      rustfs_perms:
+        condition: service_completed_successfully
+    environment:
+      RUSTFS_ACCESS_KEY: &rustfs_access_key ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_SECRET_KEY: &rustfs_secret_access_key ${RUSTFS_SECRET_KEY:-rustfsadmin}
+    volumes:
+      - "rustfs_data:/data"
+    networks:
+      - git_cicd_net
+    command: /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "--silent", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  rustfs_init:
+    image: "minio/mc:RELEASE.2025-08-13T08-35-41Z"
+    hostname: rustfs_init
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      RUSTFS_ACCESS_KEY: *rustfs_access_key
+      RUSTFS_SECRET_KEY: *rustfs_secret_access_key
+      RUSTFS_BUCKET: &rustfs_bucket ${RUSTFS_BUCKET:-gitea}
+    networks:
+      - git_cicd_net
+    entrypoint: >
+      /bin/sh -c "
+        mc alias set rustfs http://rustfs:9000 $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY} &&
+        mc mb --ignore-existing rustfs/$${RUSTFS_BUCKET} &&
+        echo 'Bucket $${RUSTFS_BUCKET} ready'
+      "
+
   git:
     image: "gitea/gitea:1.25.5"
     init: true
@@ -97,31 +145,11 @@ services:
     entrypoint: sleep
     command: infinity
 
-  garage:
-    image: dxflrs/garage:v2.2.0
-    hostname: garage
-    restart: unless-stopped
-    environment:
-      GARAGE_CONFIG_FILE: /etc/garage/garage.toml
-    volumes:
-      - "./config/garage:/etc/garage"
-      - "garage_meta:/var/lib/garage/meta"
-      - "garage_data:/var/lib/garage/data"
-    networks:
-      - git_cicd_net
-    healthcheck:
-      test: ["CMD", "/garage", "status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
 volumes:
   git_data: {}
   runner_data: {}
   renovate_data: {}
-  garage_data: {}
-  garage_meta: {}
+  rustfs_data: {}
 
 networks:
   git_cicd_net:
