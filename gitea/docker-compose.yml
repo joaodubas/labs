@@ -45,6 +45,7 @@ services:
       GITEA__server__SSH_PORT: ${GIT_SSH_PORT:-222}
       GITEA__server__SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
       GITEA__service__DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
+      GITEA__storage__STORAGE_TYPE: ${GIT_STORAGE_TYPE:-local}
       GITEA__storage__MINIO_ACCESS_KEY_ID: *rustfs_access_key
       GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID: *rustfs_secret_access_key
       GITEA__storage__MINIO_BUCKET: ${GIT_MINIO_BUCKET:-gitea}
