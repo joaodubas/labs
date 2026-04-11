@@ -17,11 +17,12 @@ services:
     environment:
       RUSTFS_ACCESS_KEY: &rustfs_access_key ${RUSTFS_ACCESS_KEY:-rustfsadmin}
       RUSTFS_SECRET_KEY: &rustfs_secret_access_key ${RUSTFS_SECRET_KEY:-rustfsadmin}
+      RUSTFS_REGION: &rustfs_region us-east-1
+      RUSTFS_VOLUMES: /data
     volumes:
       - "rustfs_data:/data"
     networks:
       - git_cicd_net
-    command: /data
     healthcheck:
       test: ["CMD", "curl", "-f", "--silent", "http://localhost:9000/health"]
       interval: 30s
