@@ -82,6 +82,44 @@ docker compose ps
 
 Access Gitea at `http://<GIT_DOMAIN>:<GIT_HTTP_PORT>` (default: `http://127.0.0.1:3000`).
 
+### Migrate storage from local to s3-like
+
+Before enable `storage.STORAGE_TYPE` to `minio`, the local files must be migrated. This is done by running the command `gitea migrate-storage`. The main options for this command are:
+
+* `--type`: Type of stored files to copy. Allowed types: 'attachments', 'lfs', 'avatars', 'repo-avatars', 'repo-archivers', 'packages', 'actions-log', 'actions-artifacts
+* `--storage`: New storage type: local (default), minio or azureblob
+* `--minio-endpoint`: Minio storage endpoint
+* `--minio-access-key-id`: Minio storage accessKeyID
+* `--minio-secret-access-key`: Minio storage secretAccessKey
+* `--minio-bucket`: Minio storage bucket
+* `--minio-base-path`: Minio storage base path on the bucket
+
+The [default base path for each type](https://docs.gitea.com/administration/config-cheat-sheet#overrided-configurations-storage_override) is:
+
+| storage | base path |
+|---------|-----------|
+| `attachments` | `attachments/` |
+| `lfs` | `lfs/` |
+| `avatars` | `avatars/` |
+| `repo-avatars` | `repo-avatars/` |
+| `repo-archive` | `repo-archive/` |
+| `packages` | `packages/` |
+| `actions_log` | `actions_log/` |
+| `actions_artifacts` | `actions_artifacts/` |
+
+Execute the commands below to migrate from local to s3-like storage:
+
+```bash
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type attachments --minio-base-path attachments/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type lfs --minio-base-path lfs/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type avatars --minio-base-path avatars/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type repo-avatars --minio-base-path repo-avatars/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type repo-archive --minio-base-path repo-archive/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type packages --minio-base-path packages/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type actions_log --minio-base-path actions_log/
+docker compose exec -u git git gitea migrate-storage --storage minio --minio-endpoint ${GITEA__storage__MINIO_ENDPOINT} --minio-access-key-id ${GITEA__storage__MINIO_ACCESS_KEY_ID} --minio-secret-access-key ${GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID} --minio-bucket ${GITEA__storage__MINIO_BUCKET} --minio-location ${GITEA__storage__MINIO_LOCATION} --type actions_artifacts --minio-base-path actions_artifacts/
+```
+
 ## Configuration
 
 All configuration is done through environment variables. Create a `docker-compose.override.yml` to override the defaults — this file is gitignored and is the recommended place for local secrets.
