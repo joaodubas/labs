@@ -1,87 +1,103 @@
 ---
 services:
+  rustfs_perms:
+    image: alpine
+    user: root
+    volumes:
+      - rustfs_data:/data
+    command: chown -R 10001:10001 /data
+
+  rustfs:
+    image: "rustfs/rustfs:1.0.0-alpha.93"
+    hostname: rustfs
+    restart: unless-stopped
+    depends_on:
+      rustfs_perms:
+        condition: service_completed_successfully
+    environment:
+      RUSTFS_ACCESS_KEY: &rustfs_access_key ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_SECRET_KEY: &rustfs_secret_access_key ${RUSTFS_SECRET_KEY:-rustfsadmin}
+      RUSTFS_REGION: &rustfs_region us-east-1
+      RUSTFS_VOLUMES: /data
+    volumes:
+      - "rustfs_data:/data"
+    networks:
+      - git_cicd_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "--silent", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   git:
-    image: "gitea/gitea:1.25.2"
+    image: "gitea/gitea:1.25.5"
     init: true
     hostname: git
     environment:
-      APP_NAME: ${GIT_APP_NAME:-gitea}
       USER_UID: ${UID:-1000}
       USER_GID: ${GID:-1000}
-      RUN_MODE: ${GIT_RUN_MODE:-prod}
-      DOMAIN: ${GIT_DOMAIN:-localhost}
-      SSH_DOMAIN: ${GIT_SSH_DOMAIN:-localhost}
-      HTTP_PORT: ${GIT_HTTP_PORT:-3000}
-      ROOT_URL: http://${GIT_DOMAIN:-localhost}:3000
-      SSH_PORT: ${GIT_SSH_PORT:-222}
-      SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
-      DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
-      DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
+      GITEA__database__DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
+      GITEA__server__DOMAIN: ${GIT_DOMAIN:-127.0.0.1}
+      GITEA__server__HTTP_PORT: ${GIT_HTTP_PORT:-3000}
+      GITEA__server__ROOT_URL: http://${GIT_DOMAIN:-127.0.0.1}:3000
+      GITEA__server__SSH_DOMAIN: ${GIT_SSH_DOMAIN:-127.0.0.1}
+      GITEA__server__SSH_PORT: ${GIT_SSH_PORT:-222}
+      GITEA__server__SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
+      GITEA__service__DISABLE_REGISTRATION: ${GIT_DISABLE_REGISTRATION:-true}
+      GITEA__storage__STORAGE_TYPE: ${GIT_STORAGE_TYPE:-local}
+      GITEA__storage__MINIO_ACCESS_KEY_ID: *rustfs_access_key
+      GITEA__storage__MINIO_SECRET_ACCESS_KEY_ID: *rustfs_secret_access_key
+      GITEA__storage__MINIO_BUCKET: ${GIT_MINIO_BUCKET:-gitea}
+      GITEA__storage__MINIO_ENDPOINT: ${GIT_MINIO_ENDPOINT:-rustfs:9000}
+      GITEA__storage__MINIO_LOCATION: *rustfs_region
+      # NOTE: generate with `docker compose run --rm -u git git gitea generate secret LFS_JWT_SECRET`
+      GITEA__server__LFS_JWT_SECRET: ${GIT_SERVER_LFS_JWT_SECRET:-}
+      # NOTE: generate with `docker compose run --rm -u git git gitea generate secret SECRET_KEY`
+      GITEA__security__SECRET_KEY: ${GIT_SECURITY_SECRET_KEY:-}
+      # NOTE: generate with `docker compose run --rm -u git git gitea generate secret INTERNAL_TOKEN`
+      GITEA__security__INTERNAL_TOKEN: ${GIT_SECURITY_INTERNAL_TOKEN:-}
+      # NOTE: generate with `docker compose run --rm -u git git gitea generate secret JWT_SECRET`
+      GITEA__oauth2__JWT_SECRET: ${GIT_OAUTH2_JWT_SECRET:-}
     restart: unless-stopped
     volumes:
       - "git_data:/data"
+      - "./config/git:/data/gitea/conf"
     networks:
       - git_cicd_net
     ports:
       - "222:22"
-  # TODO: configure test report based on post:
-  # https://medium.com/@boomimagestudio-techblog/goodbye-jenkins-how-drone-simplifies-ci-cd-for-engineering-teams-everywhere-73a7db435a86
-  report_test:
-    image: "frankescobar/allure-docker-service:2.21.0"
-  dependency_bot:
-    image: "renovate/renovate:37.421.2-slim"
-  ci:
-    image: "drone/drone:2.26.0"
-    init: true
-    hostname: ci
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  git_runner:
+    image: "gitea/act_runner:0.3.1"
+    init: false
+    hostname: git_runner
     environment:
-      DRONE_DATABASE_DATASOURCE: ${DRONE_DATABASE_DATASOURCE:-/data/database.sqlite}
-      DRONE_DATABASE_DRIVER: ${DRONE_DATABASE_DRIVER:-sqlite3}
-      DRONE_GITEA_CLIENT_ID: ${DRONE_GITEA_CLIENT_ID:-}
-      DRONE_GITEA_CLIENT_SECRET: ${DRONE_GITEA_CLIENT_SECRET:-}
-      DRONE_GITEA_SERVER: "http://git:3000"
-      DRONE_GIT_ALWAYS_AUTH: ${DRONE_GIT_ALWAYS_AUTH:-false}
-      DRONE_RPC_SECRET: &drone_rpc_secret ${DRONE_RPC_SECRET:-drone_secret}
-      DRONE_SERVER_HOST: ${DRONE_SERVER_HOST:-localhost}:3000
-      DRONE_SERVER_PROTO: ${DRONE_SERVER_PROTO:-http}
-      DRONE_TLS_AUTOCERT: ${DRONE_TLS_AUTOCERT:-false}
-      DRONE_TMATE_ENABLED: ${DRONE_TMATE_ENABLED:-true}
-      DRONE_USER_CREATE: ${DRONE_USER_CREATE:-username:admin,machine:false,admin:true,token:drone_secret}
-    restart: unless-stopped
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "ci_data:/data"
-    networks:
-      - git_cicd_net
-  ci_cli:
-    image: "drone/cli:1.9.0"
-    init: true
-    restart: unless-stopped
-    entrypoint: sleep
-    command: 3600d
-  worker:
-    image: "drone/drone-runner-docker:1.8.4"
-    init: true
-    hostname: ci_worker
-    environment:
-      DRONER_RUNNER_CAPACITY: ${WORKER_RUNNER_CAPACTIY:-2}
-      DRONE_DEBUG: ${WORKER_DEBUG:-false}
-      DRONE_RPC_HOST: ${WORKER_RPC_HOST:-ci}
-      DRONE_RPC_PROTO: ${WORKER_RPC_PROTO:-http}
-      DRONE_RPC_SECRET: *drone_rpc_secret
-      DRONE_RUNNER_NAME: ${WORKER_RUNNER_NAME:-runner}
-      DRONE_RUNNER_NETWORKS: git_cicd_net
-      DRONE_TMATE_ENABLED: ${WORKER_TMATE_ENABLED:-true}
-      DRONE_TRACE: ${WORKER_TRACE:-false}
-    restart: unless-stopped
+      CONFIG_FILE: /opt/runner/config/config.yml
+      GITEA_INSTANCE_URL: "http://git:3000"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "${GIT_RUNNER_REGISTRATION_TOKEN:-gitea-runner-token}"
+      GITEA_RUNNER_NAME: "${GIT_RUNNER_NAME:-local-runner}"
+      GITEA_RUNNER_LABELS: "${GIT_RUNNER_LABELS:-ubuntu-latest,ubuntu-24.04,ubuntu-22.04,elixir-1.19.5-otp-28}"
     depends_on:
-      - ci
+      git:
+        condition: service_healthy
+    restart: unless-stopped
     volumes:
+      - "runner_data:/data"
+      - "./config/git_runner:/opt/runner/config"
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - git_cicd_net
+
   cron:
-    image: "premoweb/chadburn@1.0.7"
+    image: "premoweb/chadburn:1.0.7"
     init: true
     hostname: cron
     volumes:
@@ -91,10 +107,11 @@ services:
     networks:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
+
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: "renovate/renovate:42.41.1-full"
+    image: "renovate/renovate:43.102.11-full"
     init: true
     hostname: renovate
     environment:
@@ -115,31 +132,12 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
-  minio:
-    image: "quay.io/minio/minio:RELEASE.2025-02-28T09-55-16Z"
-    hostname: minio
-    environment:
-      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dubas}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dubas}
-      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost}
-      MINIO_VOLUMES: /snsd_data
-    volumes:
-      - "minio_data:/data"
-      - "minio_snsd_data:/snsd_data"
-    restart: unless-stopped
-    networks:
-      - git_cicd_net
-    command: 'server --console-address ":9001"'
-  mc:
-    image: "quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z"
 
 volumes:
   git_data: {}
-  ci_data: {}
+  runner_data: {}
   renovate_data: {}
-  minio_data: {}
-  minio_snsd_data: {}
+  rustfs_data: {}
 
 networks:
   git_cicd_net:
