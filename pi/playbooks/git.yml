@@ -1,0 +1,20 @@
+---
+- hosts: dev
+  vars:
+    git:
+      - name: 'user.email'
+        scope: global
+        value: 'joao.dubas@gmail.com'
+      - name: 'user.name'
+        scope: global
+        value: 'João P Dubas'
+  tasks:
+    - name: configure git
+      git_config:
+        name: '{{ item.name }}'
+        scope: '{{ item.scope }}'
+        value: '{{ item.value }}'
+      loop: '{{ vars.git }}'
+      tags:
+        - config
+        - git
