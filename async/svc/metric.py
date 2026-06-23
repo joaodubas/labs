@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import datetime
 import logging
+import time
 
 import influxdb
 import pytz
@@ -38,7 +39,9 @@ class Emitter(object):
         point = {
             'measurement': measurement,
             'fields': fields,
-            'time': dt.strftime('%Y-%m-%dT%H:%M:%S.%f%Z')
+            'precision': 'n',
+            # 'time': dt.strftime('%Y-%m-%dT%H:%M:%S.%f%Z')
+            'time': time.time_ns(),
         }
         if tags:
             point['tags'] = tags
