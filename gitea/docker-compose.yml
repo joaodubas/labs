@@ -31,7 +31,7 @@ services:
       start_period: 10s
 
   git:
-    image: "gitea/gitea:1.25.5"
+    image: "gitea/gitea:1.26.4"
     init: true
     hostname: git
     environment:
@@ -68,8 +68,7 @@ services:
     ports:
       - "222:22"
     healthcheck:
-      test:
-        ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -111,7 +110,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: "renovate/renovate:43.102.11-full"
+    image: "renovate/renovate:43.242.0-full"
     init: true
     hostname: renovate
     environment:
