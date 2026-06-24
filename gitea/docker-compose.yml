@@ -34,6 +34,8 @@ services:
     image: "gitea/gitea:1.26.4"
     init: true
     hostname: git
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
     environment:
       USER_UID: ${UID:-1000}
       USER_GID: ${GID:-1000}
@@ -131,6 +133,29 @@ services:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
+
+  backup:
+    image: "offen/docker-volume-backup:v2.48.1"
+    restart: unless-stopped
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      AWS_S3_BUCKET_NAME: ${BACKUP_S3_BUCKET:-gitea-backups}
+      AWS_ACCESS_KEY_ID: *rustfs_access_key
+      AWS_SECRET_ACCESS_KEY: *rustfs_secret_access_key
+      AWS_ENDPOINT: "rustfs"
+      AWS_ENDPOINT_PROTO: "http"
+      BACKUP_CRON_EXPRESSION: ${BACKUP_CRON:-0 2 * * *}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+    volumes:
+      - "git_data:/backup/git_data:ro"
+      - "runner_data:/backup/runner_data:ro"
+      - "rustfs_data:/backup/rustfs_data:ro"
+      - "renovate_data:/backup/renovate_data:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - git_cicd_net
 
 volumes:
   git_data: {}

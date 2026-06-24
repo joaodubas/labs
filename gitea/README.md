@@ -14,6 +14,7 @@ graph TB
         git_runner["git_runner<br/><i>act_runner:0.3.1</i>"]
         cron["cron<br/><i>chadburn:1.0.7</i>"]
         renovate["renovate<br/><i>renovate:43.102.11-full</i>"]
+        backup["backup<br/><i>offen/docker-volume-backup:v2</i>"]
     end
 
     vol_git[("git_data")]
@@ -31,6 +32,12 @@ graph TB
     git_runner -->|depends: healthy| git
     cron -->|every 30m| renovate
     cron -.->|/var/run/docker.sock| git_runner
+    backup -->|stop| git
+    backup -->|S3 backup| rustfs
+    backup --- vol_git
+    backup --- vol_runner
+    backup --- vol_rustfs
+    backup --- vol_renovate
 ```
 
 | Service | Image | Description |
@@ -40,6 +47,7 @@ graph TB
 | **rustfs** | `rustfs/rustfs:1.0.0-alpha.93` | S3-compatible object storage |
 | **cron** | `premoweb/chadburn:1.0.7` | Job scheduler |
 | **renovate** | `renovate/renovate:43.102.11-full` | Dependency update automation |
+| **backup** | `offen/docker-volume-backup:v2` | Automated volume backups to S3 |
 
 ## Prerequisites
 
@@ -225,6 +233,57 @@ By default, Gitea uses local storage. To switch to S3-compatible storage (RustFS
 1. Set `GIT_STORAGE_TYPE=minio`
 2. Ensure `RUSTFS_ACCESS_KEY` and `RUSTFS_SECRET_KEY` are set
 3. The bucket `gitea` will be used automatically
+
+### Backup
+
+Automated volume backups using [offen/docker-volume-backup](https://github.com/offen/docker-volume-backup). Backs up all volumes to an S3 bucket on RustFS on a daily schedule.
+
+**Prerequisites:**
+
+1. Create the backup bucket in RustFS (e.g. `gitea-backups`) through its web UI or CLI
+2. Ensure RustFS credentials allow read/write to the backup bucket
+
+**How it works:**
+
+- Runs on a cron schedule (default: daily at 2 AM)
+- Stops Gitea before backup (via Docker label) for SQLite consistency
+- Creates compressed tar archives of all 4 volumes
+- Uploads to the configured S3 bucket
+- Prunes backups older than the retention period (default: 30 days)
+- Restarts Gitea after backup completes
+
+**Manual backup:**
+
+```bash
+docker compose run --rm backup
+```
+
+**Restore from backup:**
+
+```bash
+# 1. Stop services
+docker compose stop git git_runner
+
+# 2. Download the latest backup from S3 (using mc or the RustFS web UI)
+# 3. Extract volumes from the backup archive
+for vol in git_data runner_data rustfs_data renovate_data; do
+  docker run --rm \
+    -v "gitea_${vol}:/target" \
+    -v "$(pwd)/backups:/backups" \
+    alpine sh -c "rm -rf /target/* && tar xzf /backups/${vol}-*.tar.gz -C /target --strip-components=1"
+done
+
+# 4. Restart services
+docker compose up -d git git_runner
+```
+
+#### Backup configuration
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `BACKUP_S3_BUCKET` | S3 bucket for storing backups | `gitea-backups` |
+| `BACKUP_CRON` | Cron expression for schedule | `0 2 * * *` |
+| `BACKUP_RETENTION_DAYS` | Days to keep backups (`-1` = forever) | `30` |
 
 ## Notes
 
