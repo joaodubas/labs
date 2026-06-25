@@ -9,12 +9,12 @@ graph TB
     subgraph git_cicd_net
         direction TB
         rustfs_perms["rustfs_perms<br/><i>alpine · init only</i>"]
-        rustfs["rustfs<br/><i>rustfs:1.0.0-alpha.93</i>"]
-        git["git<br/><i>gitea:1.25.5</i>"]
-        git_runner["git_runner<br/><i>act_runner:0.3.1</i>"]
-        cron["cron<br/><i>chadburn:1.0.7</i>"]
-        renovate["renovate<br/><i>renovate:43.102.11-full</i>"]
-        backup["backup<br/><i>offen/docker-volume-backup:v2</i>"]
+        rustfs["rustfs<br/><i>rustfs</i>"]
+        git["git<br/><i>gitea</i>"]
+        git_runner["git_runner<br/><i>runner</i>"]
+        cron["cron<br/><i>chadburn</i>"]
+        renovate["renovate<br/><i>renovate</i>"]
+        backup["backup<br/><i>offen/docker-volume-backup</i>"]
     end
 
     vol_git[("git_data")]
@@ -42,17 +42,17 @@ graph TB
 
 | Service | Image | Description |
 |---------|-------|-------------|
-| **git** | `gitea/gitea:1.25.5` | Git hosting with Actions CI/CD |
-| **git_runner** | `gitea/act_runner:0.3.1` | CI/CD runner (ubuntu, elixir) |
-| **rustfs** | `rustfs/rustfs:1.0.0-alpha.93` | S3-compatible object storage |
-| **cron** | `premoweb/chadburn:1.0.7` | Job scheduler |
-| **renovate** | `renovate/renovate:43.102.11-full` | Dependency update automation |
-| **backup** | `offen/docker-volume-backup:v2` | Automated volume backups to S3 |
+| [**git**](https://github.com/go-gitea/gitea) | [`gitea/gitea`](https://hub.docker.com/r/gitea/gitea) | Git hosting with Actions CI/CD |
+| [**git_runner**](https://gitea.com/gitea/runner) | [`gitea/runner`](https://hub.docker.com/r/gitea/runner) | CI/CD runner (ubuntu, elixir) |
+| [**rustfs**](https://github.com/rustfs/rustfs) | [`rustfs/rustfs`](https://hub.docker.com/r/rustfs/rustfs) | S3-compatible object storage |
+| [**cron**](https://github.com/PremoWeb/chadburn) | [`premoweb/chadburn`](https://hub.docker.com/r/premoweb/chadburn) | Job scheduler |
+| [**renovate**](https://github.com/renovatebot/renovate) | [`renovate/renovate`](https://hub.docker.com/r/renovate/renovate) | Dependency update automation |
+| [**backup**](https://github.com/offen/docker-volume-backup) | [`offen/docker-volume-backup`](https://hub.docker.com/r/offen/docker-volume-backup) | Automated volume backups to S3 |
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose v2](https://docs.docker.com/compose/install/)
-- Docker socket access (required by `git_runner` and `cron`)
+- [`docker`](https://docs.docker.com/get-docker/) and [`docker compose v2`](https://docs.docker.com/compose/install/)
+- `docker` socket access (required by `git_runner` and `cron`)
 
 ## Quick Start
 
