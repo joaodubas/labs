@@ -109,10 +109,16 @@ services:
       - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
 
-  # TODO (jpd): to start renovate we must change ownership of renovate_data to
-  # ubuntu user
+  renovate_perms:
+    image: &renovate_image "renovate/renovate:43.242.0-full"
+    user: root
+    volumes:
+      - "renovate_data:/opt/renovate_data"
+    entrypoint: chown
+    command: -R 12021:12021 /opt/renovate_data
+
   renovate:
-    image: "renovate/renovate:43.242.0-full"
+    image: *renovate_image
     init: true
     hostname: renovate
     environment:
@@ -125,6 +131,9 @@ services:
       chadburn.enabled: "true"
       chadburn.job-exec.renovate.schedule: "@every 30m"
       chadburn.job-exec.renovate.command: "/usr/local/sbin/renovate"
+    depends_on:
+      renovate_perms:
+        condition: service_completed_successfully
     volumes:
       - "./config/renovate:/opt/renovate"
       - "renovate_data:/opt/renovate_data"
