@@ -119,13 +119,6 @@ resource "digitalocean_record" "dev_coder" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_drone" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "drone"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
 resource "digitalocean_record" "dev_echo" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
@@ -154,24 +147,17 @@ resource "digitalocean_record" "dev_live" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
-resource "digitalocean_record" "dev_minio" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "minio"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
-resource "digitalocean_record" "dev_minio_console" {
-  domain = digitalocean_domain.dev_default.name
-  type = "A"
-  name = "console.minio"
-  value = digitalocean_droplet.dev_server.ipv4_address
-}
-
 resource "digitalocean_record" "dev_nlw_wabanex" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
   name = "wabanex"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
+resource "digitalocean_record" "dev_storage" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "storage"
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
