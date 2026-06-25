@@ -1,6 +1,6 @@
 module.exports = {
 	autodiscover: true,
-	endpoint: 'https://gitea.dubas.dev/api/v1',
+	endpoint: process.env.RENOVATE_GITEA_API || 'http://git:3000/api/v1',
 	onboardingConfig: {
 		extends: ['config:recommended'],
 	},

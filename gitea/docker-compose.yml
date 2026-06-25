@@ -4,7 +4,7 @@ services:
     image: alpine
     user: root
     volumes:
-      - rustfs_data:/data
+      - "rustfs_data:/data"
     command: chown -R 10001:10001 /data
 
   rustfs:
@@ -127,6 +127,7 @@ services:
       RENOVATE_GIT_AUTHOR: ${RENOVATE_GIT_AUTHOR:-'renovate <renovate@example.com>'}
       RENOVATE_CONFIG_FILE: "/opt/renovate/config.js"
       RENOVATE_BASE_DIR: "/opt/renovate_data"
+      RENOVATE_GITEA_API: ${RENOVATE_GITEA_API:-http://git:3000/api/v1}
     labels:
       chadburn.enabled: "true"
       chadburn.job-exec.renovate.schedule: "@every 30m"
@@ -153,7 +154,7 @@ services:
       AWS_S3_BUCKET_NAME: ${BACKUP_S3_BUCKET:-gitea-backups}
       AWS_ACCESS_KEY_ID: *rustfs_access_key
       AWS_SECRET_ACCESS_KEY: *rustfs_secret_access_key
-      AWS_ENDPOINT: "rustfs"
+      AWS_ENDPOINT: "rustfs:9000"
       AWS_ENDPOINT_PROTO: "http"
       BACKUP_CRON_EXPRESSION: ${BACKUP_CRON:-0 2 * * *}
       BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
