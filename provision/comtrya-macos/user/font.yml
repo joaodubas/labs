@@ -17,3 +17,15 @@ actions:
       - install
       - --cask
       - font-jetbrains-mono-nerd-font
+  - action: command.run
+    command: brew
+    args:
+      - install
+      - --cask
+      - font-monaspice-nerd-font
+  - action: command.run
+    command: brew
+    args:
+      - install
+      - --cask
+      - font-blex-mono-nerd-font
