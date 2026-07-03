@@ -1,0 +1,16 @@
+---
+labels:
+  - cli
+  - claude
+actions:
+  - action: file.download
+    from: https://claude.ai/install.sh
+    to: /tmp/claude.sh
+    chmod: "0750"
+  - action: command.run
+    command: bash
+    args:
+      - -c
+      - /tmp/claude.sh
+  - action: file.remove
+    target: /tmp/claude.sh
