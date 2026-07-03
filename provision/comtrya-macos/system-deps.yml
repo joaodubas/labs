@@ -33,6 +33,7 @@ actions:
       - gnupg
       - htop
       - jq
+      - libpq
       - neovim
       - ripgrep
       - starship
@@ -53,6 +54,7 @@ actions:
       - cursor-cli
       - gcloud-cli
       - ghostty
+      - httpie-desktop
       - raycast
       - spotifyd
       - visual-studio-code
