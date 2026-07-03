@@ -7,11 +7,11 @@ do the hard work.
 Besides that, I have a docker image, and compose file, that already have
 installed:
 
-1. terraform 1.8.3
-2. docker 27.1.1
-3. docker-compose 2.29.1
-4. ansible-core 2.17.2
-5. ansible 10.2.0
+1. terraform 1.14.8
+2. docker 29.4.0
+3. docker-compose 5.1.2
+4. ansible-core 2.20.4
+5. ansible 13.5.0
 
 ## Running the project for remote machines
 
