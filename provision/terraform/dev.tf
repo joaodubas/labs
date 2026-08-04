@@ -105,6 +105,13 @@ resource "digitalocean_record" "dev_bitwarden" {
   value = digitalocean_droplet.dev_server.ipv4_address
 }
 
+resource "digitalocean_record" "dev_bogglex" {
+  domain = digitalocean_domain.dev_default.name
+  type = "A"
+  name = "bogglex"
+  value = digitalocean_droplet.dev_server.ipv4_address
+}
+
 resource "digitalocean_record" "dev_crescer" {
   domain = digitalocean_domain.dev_default.name
   type = "A"
