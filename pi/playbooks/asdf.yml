@@ -1,0 +1,13 @@
+---
+- hosts: dev
+  vars:
+    asdf_version: 'v0.8.1'
+  tasks:
+    - name: install asdf
+      git:
+        repo: 'https://github.com/asdf-vm/asdf.git'
+        dest: '{{ ansible_env.HOME }}/.config/asdf'
+        version: '{{ vars.asdf_version }}'
+      tags:
+        - install
+        - asdf
