@@ -37,10 +37,14 @@ services:
     restart: unless-stopped
     pull_policy: never
     working_dir: /opt/ansible
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GH_TOKEN: ${GH_TOKEN:-}
     volumes:
+      - 'playground_ansible_root:/home/playground/.ansible'
       - './ansible:/opt/ansible'
       - './comtrya:/opt/comtrya'
-      - 'playground_ansible_root:/home/playground/.ansible'
+      - './mise:/opt/mise'
 
 volumes:
   ansible_root: {}
