@@ -74,4 +74,9 @@ cd "$SCRIPT_DIR"
 for config_file in mise.toml "mise.${os_env}.toml"; do
   mise trust --quiet "$config_file" 2>/dev/null || true
 done
-exec mise --env "$os_env" bootstrap "$@"
+# --skip tools: the native tools phase reads the *global* runtime config
+# (~/.config/mise/config.toml, copied from the ide repo by config:mise),
+# whose tools are managed by `mise activate` — not by the bootstrap pipeline
+# (it trips on entries like r="4.6.0" that aren't in the tool registry).
+# Tool installation for the bootstrap itself is the tools:cli task.
+exec mise --env "$os_env" bootstrap --skip tools "$@"

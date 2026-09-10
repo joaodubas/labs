@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
-# Clone ryanoasis/nerd-fonts and install JetBrainsMono + Go-Mono.
-# Idempotent: an existing clone is reused; install.sh skips installed fonts.
+# Install Nerd Fonts (JetBrainsMono + Go-Mono) by downloading the release
+# tarballs directly — no GitHub API calls (the API is rate-limited for
+# unauthenticated clients), no repo clone (the repo is ~2GB for one script).
+#
+# Pinned to nerd-fonts v3.5.0 (the version validated in the playground;
+# matches installer v2.0.1). Idempotent: re-running overwrites the same
+# font files under ~/.local/share/fonts/NerdFonts.
 set -euo pipefail
 
-fonts_dir="$HOME/.local/src/nerd-fonts"
+NF_VERSION="v3.5.0"
+FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+BASE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NF_VERSION}"
 
-if [[ ! -d "$fonts_dir/.git" ]]; then
-  mkdir -p "$HOME/.local/src"
-  git clone https://github.com/ryanoasis/nerd-fonts.git "$fonts_dir"
+mkdir -p "$FONT_DIR"
+for font in JetBrainsMono Go-Mono; do
+  echo ">> downloading ${font} (${NF_VERSION})"
+  curl -fL --retry 3 "${BASE_URL}/${font}.tar.xz" | tar -xJ -C "$FONT_DIR"
+done
+
+if command -v fc-cache >/dev/null 2>&1; then
+  fc-cache -f "$FONT_DIR" >/dev/null
 fi
-
-(
-  cd "$fonts_dir"
-  ./install.sh JetBrainsMono
-  ./install.sh Go-Mono
-)

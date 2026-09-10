@@ -70,6 +70,9 @@ run = 'sudo chsh -s /opt/homebrew/bin/fish "$(id -un)"'
 [tasks."config:mise"]
 depends = ["macos:brew"]
 
+[tasks."ide:clone"]
+depends = ["macos:formulae"]
+
 [tasks."git:config"]
 depends = ["macos:formulae"]
 

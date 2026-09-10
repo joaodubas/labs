@@ -31,7 +31,9 @@ sudo apt-get install -y \
 
 [tasks."linux:docker"]
 description = "Docker engine via get.docker.com, docker group, docker-model-plugin"
-depends = ["linux:apt-base"]
+# serializes with flatpak: both run apt-get, and dpkg holds a global lock
+# while mise runs tasks in parallel (comtrya ordered these via depends: too)
+depends = ["linux:apt-base", "linux:flatpak"]
 run = '''
 curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
 chmod 0750 /tmp/get-docker.sh
@@ -53,7 +55,9 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
 
 [tasks."linux:cuda-wsl"]
 description = "NVIDIA CUDA 13.0 toolkit for WSL2 (skipped outside WSL)"
-depends = ["linux:apt-base"]
+# apt chain (dpkg global lock; mise runs tasks in parallel):
+# apt-base → flatpak → docker → cuda-wsl → qemu
+depends = ["linux:apt-base", "linux:docker"]
 run = '''
 if [ -z "${WSL_DISTRO_NAME:-}" ]; then
   echo "not running under WSL, skipping cuda-wsl"
@@ -74,14 +78,26 @@ rm -f /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
 # ---------------------------------------------------------------------------
 
 [tasks."apps:wezterm"]
-description = "wezterm via flatpak"
+description = "wezterm via flatpak (needs system bus — skipped headless)"
 depends = ["linux:flatpak"]
-run = 'flatpak install -y --or-update flathub org.wezfurlong.wezterm'
+run = '''
+if [ ! -S /run/dbus/system_bus_socket ]; then
+  echo "no system bus (systemd), skipping flatpak install"
+  exit 0
+fi
+sudo flatpak install -y --or-update flathub org.wezfurlong.wezterm
+'''
 
 [tasks."apps:zenbrowser"]
-description = "zen browser via flatpak"
+description = "zen browser via flatpak (needs system bus — skipped headless)"
 depends = ["linux:flatpak"]
-run = 'flatpak install -y --or-update flathub app.zen_browser.zen'
+run = '''
+if [ ! -S /run/dbus/system_bus_socket ]; then
+  echo "no system bus (systemd), skipping flatpak install"
+  exit 0
+fi
+sudo flatpak install -y --or-update flathub app.zen_browser.zen
+'''
 
 [tasks."apps:ghostty"]
 description = "ghostty via snap (classic); skipped where snapd can't run (no systemd)"
@@ -110,7 +126,8 @@ depends = ["linux:apt-base"]
 run = '''
 curl -fsSL https://zed.dev/install.sh -o /tmp/zed.sh
 chmod 0750 /tmp/zed.sh
-(cd /tmp && ./zed.sh)
+# zed.sh dereferences $SHELL unguarded (set -u); docker exec sessions have none
+(cd /tmp && SHELL="${SHELL:-/bin/bash}" ./zed.sh)
 rm -f /tmp/zed.sh
 '''
 
@@ -127,6 +144,18 @@ run = '{{ config_root }}/scripts/nerd-fonts.sh'
 description = "Set fish as the login shell (usermod)"
 depends = ["linux:apt-base"]
 run = 'sudo usermod --shell /usr/bin/fish "$(id -un)"'
+
+[tasks."linux:qemu"]
+description = "QEMU/KVM tooling for the provision VM playground (provision/vm/vm.sh)"
+depends = ["linux:cuda-wsl"]
+run = '''
+sudo apt-get install -y qemu-system-x86 qemu-utils cloud-image-utils
+# group membership applies to new login sessions; vm.sh falls back to `sg kvm`
+if ! id -nG "$(id -un)" | grep -qw kvm; then
+  sudo usermod -aG kvm "$(id -un)"
+  echo "added to kvm group — re-login (or let vm.sh use sg kvm) for it to apply"
+fi
+'''
 
 [tasks."linux:cedilla"]
 description = "cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"
@@ -155,6 +184,9 @@ fi
 [tasks."config:mise"]
 depends = ["linux:apt-base"]
 
+[tasks."ide:clone"]
+depends = ["linux:apt-base"]
+
 [tasks."git:config"]
 depends = ["linux:apt-base"]
 
@@ -178,6 +210,7 @@ depends = [
   "linux:docker",
   "linux:flatpak",
   "linux:cuda-wsl",
+  "linux:qemu",
   "linux:cedilla",
   "apps:wezterm",
   "apps:zenbrowser",
