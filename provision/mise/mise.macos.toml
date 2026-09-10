@@ -1,0 +1,111 @@
+# macOS layer for the mise bootstrap. Loaded via `mise -E macos ...`
+# (bootstrap.sh picks the variant based on `uname -s`).
+#
+# Privileged operations use `sudo` inside the task commands: mise 2026.9.3
+# has no task-level `sudo` field (verified against `mise tasks validate`).
+
+# ---------------------------------------------------------------------------
+# homebrew
+# ---------------------------------------------------------------------------
+
+[tasks."macos:brew"]
+description = "Install Homebrew and persist brew shellenv in ~/.zprofile (append-once)"
+run = '''
+if ! command -v /opt/homebrew/bin/brew >/dev/null 2>&1; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+if ! grep -qF 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$HOME/.zprofile" 2>/dev/null; then
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
+'''
+
+[tasks."macos:formulae"]
+description = "brew formulae (atuin/starship/zoxide are global mise tools, plan §7.2; fish/neovim/tmux/tmuxp stay system packages, plan §10.3)"
+depends = ["macos:brew"]
+run = '/opt/homebrew/bin/brew install bat curl eza fd fish fzf git gnupg htop jq neovim ripgrep tmux tmuxp tree unzip wget'
+
+# font casks from the former user/font.yml are merged in here (plan §7.2)
+[tasks."macos:casks"]
+description = "brew casks (GUI apps + nerd fonts)"
+depends = ["macos:brew"]
+run = '/opt/homebrew/bin/brew install --cask 1password-cli antigravity cursor cursor-cli gcloud-cli ghostty raycast spotifyd visual-studio-code wezterm zed zen font-go-mono-nerd-font font-jetbrains-mono-nerd-font'
+
+[tasks."macos:containers"]
+description = "podman/docker CLI stacks + podman-mac-helper (sudo)"
+depends = ["macos:brew"]
+run = '''
+/opt/homebrew/bin/brew install podman podman-compose docker docker-buildx docker-compose
+/opt/homebrew/bin/brew install --cask podman-desktop docker-desktop
+sudo /opt/homebrew/bin/podman-mac-helper install
+'''
+
+# opt-in, work machines only (plan §10.4): skipped unless STORD_WORK=1
+[tasks."macos:stordcli"]
+description = "stordcli via stordco homebrew tap (opt-in: STORD_WORK=1)"
+depends = ["macos:brew"]
+run = '''
+if [ "${STORD_WORK:-0}" != "1" ]; then
+  echo "STORD_WORK is not 1, skipping stordcli (work machines only)"
+  exit 0
+fi
+/opt/homebrew/bin/brew tap stordco/tap github:stordco/homebrew-tap.git
+/opt/homebrew/bin/brew install stordcli
+'''
+
+# ---------------------------------------------------------------------------
+# shell
+# ---------------------------------------------------------------------------
+
+[tasks."shell:fish"]
+description = "Set fish as the login shell (chsh)"
+depends = ["macos:formulae"]
+run = 'sudo chsh -s /opt/homebrew/bin/fish "$(id -un)"'
+
+# ---------------------------------------------------------------------------
+# ordering of shared tasks relative to brew (fields merge with mise.toml
+# definitions; only `depends` is added here)
+# ---------------------------------------------------------------------------
+
+[tasks."config:mise"]
+depends = ["macos:brew"]
+
+[tasks."git:config"]
+depends = ["macos:formulae"]
+
+[tasks."fish:config"]
+depends = ["shell:fish"]
+
+[tasks."neovim:kickstart"]
+depends = ["macos:formulae"]
+
+[tasks."tmux:config"]
+depends = ["macos:formulae"]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full macOS bootstrap: brew, apps, shell, user config"
+depends = [
+  "macos:brew",
+  "macos:formulae",
+  "macos:casks",
+  "macos:containers",
+  "macos:stordcli",
+  "shell:fish",
+  "fish:config",
+  "fish:env",
+  "git:config",
+  "git:includes",
+  "git:allowed-signers",
+  "neovim:kickstart",
+  "tmux:config",
+  "tmux:tpm",
+  "tmuxp:sessions",
+  "config:mise",
+  "config:atuin",
+  "config:starship",
+  "tools:cli",
+]

@@ -1,0 +1,202 @@
+# Linux layer for the mise bootstrap. Loaded via `mise -E linux ...`
+# (bootstrap.sh picks the variant based on `uname -s`).
+#
+# Privileged operations use `sudo` inside the task commands: mise 2026.9.3
+# has no task-level `sudo` field (verified against `mise tasks validate`).
+
+# ---------------------------------------------------------------------------
+# system packages
+# ---------------------------------------------------------------------------
+
+[tasks."linux:apt-base"]
+description = "fish-4/neovim-unstable PPAs + base apt package set"
+run = '''
+sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y ppa:fish-shell/release-4
+sudo add-apt-repository -y ppa:neovim-ppa/unstable
+sudo apt-get update
+sudo apt-get install -y \
+  autoconf automake build-essential ca-certificates curl doas fish fop g++ gcc \
+  gfortran git gosu gpg gpg-agent groff jq less libbz2-1.0 libbz2-dev libc6-dev \
+  libcurl3-dev libffi-dev libgl1-mesa-dev libglu1-mesa-dev liblzma-dev liblzma5 \
+  libncurses-dev libncurses5-dev libncursesw5-dev libnss-myhostname libodbc2 \
+  libpcre2-dev libpng-dev libreadline-dev libsctp-dev libsctp1 libsqlite3-dev \
+  libssh-dev libssl-dev libtool libwxgtk-webview3.2-dev libwxgtk3.2-dev \
+  libxml2-utils libxslt-dev libyaml-dev llvm locales m4 make ncal neovim \
+  net-tools openjdk-17-jdk openssh-client openssl parallel pkg-config \
+  python3-openssl sudo tk-dev tmux tmuxp unixodbc-dev unzip uuid-dev wget \
+  xorg-dev xsel xsltproc xz-utils zlib1g-dev
+'''
+
+[tasks."linux:docker"]
+description = "Docker engine via get.docker.com, docker group, docker-model-plugin"
+depends = ["linux:apt-base"]
+run = '''
+curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+chmod 0750 /tmp/get-docker.sh
+(cd /tmp && sudo ./get-docker.sh)
+rm -f /tmp/get-docker.sh
+sudo groupadd -f docker
+sudo usermod --append --groups docker "$(id -un)"
+sudo apt-get update
+sudo apt-get install -y docker-model-plugin
+'''
+
+[tasks."linux:flatpak"]
+description = "flatpak + gnome software plugin + flathub remote"
+depends = ["linux:apt-base"]
+run = '''
+sudo apt-get install -y flatpak gnome-software-plugin-flatpak
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+'''
+
+[tasks."linux:cuda-wsl"]
+description = "NVIDIA CUDA 13.0 toolkit for WSL2 (skipped outside WSL)"
+depends = ["linux:apt-base"]
+run = '''
+if [ -z "${WSL_DISTRO_NAME:-}" ]; then
+  echo "not running under WSL, skipping cuda-wsl"
+  exit 0
+fi
+curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin -o /tmp/cuda-wsl-ubuntu.pin
+sudo mv /tmp/cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+curl -fSL -o /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+sudo dpkg -i /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+sudo cp /var/cuda-repo-wsl-ubuntu-13-0-local/cuda-6B8B2C1B-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get install -y cuda-toolkit-13-0
+rm -f /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+'''
+
+# ---------------------------------------------------------------------------
+# desktop apps (not in the mise registry: vendor scripts / flatpak / snap)
+# ---------------------------------------------------------------------------
+
+[tasks."apps:wezterm"]
+description = "wezterm via flatpak"
+depends = ["linux:flatpak"]
+run = 'flatpak install -y --or-update flathub org.wezfurlong.wezterm'
+
+[tasks."apps:zenbrowser"]
+description = "zen browser via flatpak"
+depends = ["linux:flatpak"]
+run = 'flatpak install -y --or-update flathub app.zen_browser.zen'
+
+[tasks."apps:ghostty"]
+description = "ghostty via snap (classic); skipped where snapd can't run (no systemd)"
+depends = ["linux:apt-base"]
+run = '''
+if [ ! -d /run/systemd/system ]; then
+  echo "systemd not available, skipping ghostty (snap requires it)"
+  exit 0
+fi
+sudo snap install ghostty --classic
+'''
+
+[tasks."apps:cursor"]
+description = "cursor editor via vendor install script"
+depends = ["linux:apt-base"]
+run = '''
+curl -fsSL https://cursor.com/install -o /tmp/cursor.sh
+chmod 0750 /tmp/cursor.sh
+(cd /tmp && ./cursor.sh)
+rm -f /tmp/cursor.sh
+'''
+
+[tasks."apps:zed"]
+description = "zed editor via vendor install script"
+depends = ["linux:apt-base"]
+run = '''
+curl -fsSL https://zed.dev/install.sh -o /tmp/zed.sh
+chmod 0750 /tmp/zed.sh
+(cd /tmp && ./zed.sh)
+rm -f /tmp/zed.sh
+'''
+
+# ---------------------------------------------------------------------------
+# fonts / shell / desktop input
+# ---------------------------------------------------------------------------
+
+[tasks."fonts:nerd"]
+description = "JetBrainsMono + Go-Mono nerd fonts"
+depends = ["linux:apt-base"]
+run = '{{ config_root }}/scripts/nerd-fonts.sh'
+
+[tasks."shell:fish"]
+description = "Set fish as the login shell (usermod)"
+depends = ["linux:apt-base"]
+run = 'sudo usermod --shell /usr/bin/fish "$(id -un)"'
+
+[tasks."linux:cedilla"]
+description = "cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"
+depends = ["linux:apt-base"]
+run = '''
+if ! grep -qF "GTK_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
+  echo "export GTK_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
+fi
+if ! grep -qF "QT_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
+  echo "export QT_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
+fi
+cp "{{ config_root }}/files/cedilla/XCompose" "$HOME/.XCompose"
+if command -v gsettings >/dev/null 2>&1 && \
+   gsettings list-schemas 2>/dev/null | grep -q '^org\.gnome\.settings-daemon\.plugins\.xsettings$'; then
+  gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'ibus'>}"
+else
+  echo "gsettings/GNOME schemas not available, skipping ibus override"
+fi
+'''
+
+# ---------------------------------------------------------------------------
+# ordering of shared tasks relative to the apt base (fields merge with
+# mise.toml definitions; only `depends` is added here)
+# ---------------------------------------------------------------------------
+
+[tasks."config:mise"]
+depends = ["linux:apt-base"]
+
+[tasks."git:config"]
+depends = ["linux:apt-base"]
+
+[tasks."fish:config"]
+depends = ["shell:fish"]
+
+[tasks."neovim:kickstart"]
+depends = ["linux:apt-base"]
+
+[tasks."tmux:config"]
+depends = ["linux:apt-base"]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full Linux bootstrap: system packages, apps, fonts, shell, user config"
+depends = [
+  "linux:apt-base",
+  "linux:docker",
+  "linux:flatpak",
+  "linux:cuda-wsl",
+  "linux:cedilla",
+  "apps:wezterm",
+  "apps:zenbrowser",
+  "apps:ghostty",
+  "apps:cursor",
+  "apps:zed",
+  "fonts:nerd",
+  "shell:fish",
+  "fish:config",
+  "fish:env",
+  "git:config",
+  "git:includes",
+  "git:allowed-signers",
+  "neovim:kickstart",
+  "tmux:config",
+  "tmux:tpm",
+  "tmuxp:sessions",
+  "config:mise",
+  "config:atuin",
+  "config:starship",
+  "tools:cli",
+]
