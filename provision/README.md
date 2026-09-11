@@ -1,4 +1,4 @@
-# terraform/ansible/comtrya provisioner
+# terraform/ansible provisioner (remote) + mise bootstrap (local)
 
 To make easier the task of provisioning my remove server machine, on
 DigitalOcean, I created a terraform script and a series of ansible playbooks, to
@@ -38,33 +38,39 @@ ansible-playbook -i inventory/digital_ocean.py <path-to-playbook>
 
 ## Running the project for local machine
 
-To provision a local development machine we use [`comtrya`][0] to execute a
-series of manifests that install:
-
-1. system dependencies
-2. command line utilities
-   1. mise
-   2. atuin
-   3. starship
-   4. zoxide
-3. user
-   1. fish
-   2. git
-   3. neovim
-   4. tmux
-   5. tmuxp
-
-To execute it:
+Local provisioning uses [mise bootstrap][0]: `provision/mise/` holds the
+bootstrap config (`mise.toml` plus the `mise.linux.toml` / `mise.macos.toml`
+OS variants), task scripts and static files. The entrypoint installs mise
+system-wide if missing, then runs the bootstrap pipeline:
 
 ```bash
-cd /opt/comtrya
-comtrya apply
+provision/mise/bootstrap.sh
 ```
 
-To test the manifests we can use the playground service:
+What gets provisioned:
+
+1. system dependencies (apt / Homebrew, docker, flatpak apps, nerd fonts)
+2. CLI tools as pinned global mise tools (atuin, starship, zoxide)
+3. user environment (fish, git, neovim, tmux, tmuxp) — runtime configs copied
+   from a single clone of the [ide][1] repo
+
+### Testing
+
+Two playgrounds exist:
 
 ```bash
-docker compose run --entrypoint bash playground -c bash
+# container (no systemd — snap/flatpak/docker tasks are smoke-tested only)
+docker compose run --entrypoint bash playground
+# inside: cd /opt/mise && ./bootstrap.sh
+
+# full-system KVM VM (real systemd; qemu tooling comes from the
+# linux:qemu bootstrap task)
+provision/vm/vm.sh up
+provision/vm/vm.sh provision   # copies provision/mise and runs bootstrap.sh
 ```
 
-[0]: https://www.comtrya.dev/
+Feasibility analysis, verification procedures and migration notes from the
+former comtrya-based setup: `docs/mise-bootstrap-migration.md`.
+
+[0]: https://mise.jdx.dev/bootstrap.html
+[1]: https://gitea.dubas.dev/joao.dubas/ide

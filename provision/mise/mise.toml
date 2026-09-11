@@ -1,4 +1,4 @@
-# mise bootstrap configuration — machine provisioning (replaces comtrya).
+# mise bootstrap configuration — machine provisioning.
 #
 # Run via ./bootstrap.sh, which installs mise if missing and invokes
 # `mise -E linux|macos bootstrap`, layering mise.linux.toml or mise.macos.toml

@@ -43,7 +43,6 @@ services:
     volumes:
       - 'playground_ansible_root:/home/playground/.ansible'
       - './ansible:/opt/ansible'
-      - './comtrya:/opt/comtrya'
       - './mise:/opt/mise'
 
 volumes:

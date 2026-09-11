@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Entrypoint for the mise-based machine bootstrap (replaces `comtrya apply`).
+# Entrypoint for the mise-based machine bootstrap.
 #
 #   1. Installs mise system-wide if missing:
 #      - Linux: official apt repository when available, otherwise the static

@@ -1,5 +1,4 @@
-# Unified fish config for the mise bootstrap (merges the former
-# provision/comtrya and provision/comtrya-macos variants).
+# Unified fish config for the mise bootstrap.
 # atuin/mise/starship/zoxide are installed as mise tools; `mise activate`
 # puts them on PATH, so they are invoked without absolute paths.
 mise activate fish | source

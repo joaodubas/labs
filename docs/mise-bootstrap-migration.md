@@ -1,10 +1,16 @@
 # Feasibility: migrating local provisioning from Comtrya to mise bootstrap
 
-Status: phases 1–4 implemented (`provision/mise/` + playground updates);
-Phase 5 (cutover/deletion) pending. Phase 0 spike findings recorded in §7.4.
-Scope: `provision/comtrya/` (Linux) and `provision/comtrya-macos/` (macOS) local
-provisioning. `provision/ansible/` + `provision/terraform/` (remote DigitalOcean)
-are out of scope.
+Status: implemented and verified — green + idempotent on the docker
+playground, a full-system KVM VM (Ubuntu 26.04) and a real WSL distro
+(Ubuntu 26.04, incl. cuda-wsl). Phase 5 cutover applied: comtrya trees
+removed (recoverable from git history, last present at commit `02e4102`).
+The macOS port is untested by decision (no spare machine); the macOS
+comtrya manifests are likewise recoverable from git history. Phase 0 spike
+findings recorded in §7.4.
+Scope: the former `provision/comtrya/` (Linux) and `provision/comtrya-macos/`
+(macOS) local provisioning, now `provision/mise/`.
+`provision/ansible/` + `provision/terraform/` (remote DigitalOcean) are out
+of scope.
 References:
 - https://github.com/comtrya/comtrya-dotfiles
 - mise docs — bootstrap: https://mise.jdx.dev/bootstrap.html · CLI:
@@ -585,6 +591,13 @@ of what the playground can prove, not migration regressions):
 4. **`stordcli` — opt-in, work machines only.** Ported as an env-var-guarded
    task (`STORD_WORK=1`): the script exits early when unset, so default
    `mise bootstrap` runs skip it.
+5. **macOS — no pre-testing, full removal.** No spare machine was available,
+   so the macOS port (brew tasks, shared user tasks) is verified by review
+   only. `provision/comtrya-macos/` was removed at cutover together with the
+   Linux tree; both are recoverable from git history (last present at
+   commit `02e4102`). The two SPEC docs
+   (`SPEC_PROVISION_MULTI_OS.md`, `CROSS_PLATFORM_SPECIFICATION.md`) lived
+   inside `provision/comtrya/` and are superseded by this document.
 
 ### Open (resolved by Phase 0 unless noted)
 
