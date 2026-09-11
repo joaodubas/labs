@@ -203,11 +203,8 @@ the same reference):
 **Deliberate scope line.** The hand-written tasks (apt via sudo, `git clone`,
 `cp`, `usermod`) intentionally re-implement what native phases could do
 declaratively (packages/repos/dotfiles/shell-activation). That was a parity
-decision — migrate behavior 1:1 first — and doubles as the evolution path:
-move `linux:apt-base` into a packages phase, `ide:clone` + kickstart into a
-repos phase, `files/` copies into dotfiles, validating each with the
-per-phase `status` / `apply --dry-run` subcommands in the playground before
-committing.
+decision — migrate behavior 1:1 first. The follow-up assessment of those
+native primitives, with mapping and adoption order, is §3.2 (deferred).
 
 **References:**
 
@@ -221,6 +218,45 @@ committing.
 | Configuration hierarchy, `min_version` | https://mise.jdx.dev/configuration.html |
 | Templates (Tera: `vars`, `config_root`, …) | https://mise.jdx.dev/templates.html |
 | `mise use` (tool pins) | https://mise.jdx.dev/cli/use.html |
+
+### 3.2 Native bootstrap primitives — assessment (post-cutover, deferred)
+
+`mise bootstrap` in 2026.9.3 ships real, schema-backed primitives beyond
+the task DAG (verified via per-subcommand `--help`):
+
+- `[bootstrap.packages]` — declarative system packages with `apply` /
+  `status` / `upgrade` / `prune` / `import` (import installed packages into
+  the config) and Homebrew tap management
+- `[bootstrap.repos]` — git checkouts: clone/reconcile (`apply`), `status`,
+  `update`, `exec`, `--skip-dirty`
+- `[dotfiles]` — dotfile management: `add` / `apply` / `diff` / `capture` /
+  `history` (checkpoints)
+- `[bootstrap.user]` — login-shell management
+
+**Verdict: deferred, incremental.** The current tree is green and
+idempotent across three environments; a rewrite re-opens that verification
+for ergonomic gains only. The mapping is partial — the primitives absorb
+the well-behaved half, while the fragile half (the source of every bug
+fixed during the migration) stays hand-written regardless:
+
+| Migrates cleanly | Stays a task |
+|---|---|
+| `ide:clone`, kickstart, tpm → `[bootstrap.repos]` | get.docker.com vendor script, cuda-wsl, snap (ghostty), flatpak apps, brew casks, cursor/zed |
+| `files/` copies → `[dotfiles]` | WSL guards, cedilla gsettings, allowed-signers build |
+| login shell (`shell:fish`) → `[bootstrap.user]` | ide config downloads (repos phase gets the clone; the copy step stays ours) |
+| apt list, maybe → `[bootstrap.packages]` (PPA support unverified) | `tools:cli` (native tools phase conflicts with the global runtime config — the `--skip tools` rationale stands) |
+
+**Adoption order when triggered:** `[bootstrap.user]` (trivial) →
+`[bootstrap.repos]` → `[dotfiles]` → evaluate `[bootstrap.packages]`
+(check PPA support; `import` can seed the config from the installed
+state). Same discipline as this migration: playground + VM
+re-verification, old tasks kept as fallback until green.
+
+**Triggers:** the next brand-new machine provisioned (feels the lack of
+`status --missing` / dry-run); the mise bootstrap schema stabilizes and the
+docs page matches the CLI; or the "move `provision/` into the ide repo"
+idea (§10.2) is taken up — native `[dotfiles]` / `[repos]` primitives are
+designed for exactly that shape.
 
 ## 4. Capability-by-capability comparison
 
@@ -598,6 +634,12 @@ of what the playground can prove, not migration regressions):
    commit `02e4102`). The two SPEC docs
    (`SPEC_PROVISION_MULTI_OS.md`, `CROSS_PLATFORM_SPECIFICATION.md`) lived
    inside `provision/comtrya/` and are superseded by this document.
+6. **Native bootstrap primitives — deferred, incremental.** `mise bootstrap`
+   ships schema-backed primitives (`[bootstrap.packages]` / `[bootstrap.repos]`
+   / `[dotfiles]` / `[bootstrap.user]`) that would absorb roughly half the
+   current tasks; the other half (vendor scripts, PPAs, flatpak/snap, WSL
+   guards) stays hand-written regardless. Full assessment, mapping and
+   adoption order in §3.2 — revisit when a trigger there fires.
 
 ### Open (resolved by Phase 0 unless noted)
 
