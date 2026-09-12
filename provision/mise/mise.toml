@@ -34,35 +34,8 @@ ide_dir = "$HOME/.local/share/ide"
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# neovim / tmux / tmuxp
+# neovim / tmux / tmuxp — task bodies live in mise/tasks/{neovim,tmux,tmuxp}
 # ---------------------------------------------------------------------------
-
-[tasks."tmux:config"]
-description = "Install tmux.conf from the local ide clone"
-depends = ["ide:clone"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/tmux"
-cp "{{ vars.ide_dir }}/config/tmux/tmux.conf" "{{ xdg_config_home }}/tmux/tmux.conf"
-'''
-
-[tasks."tmux:tpm"]
-description = "Clone tmux plugin manager (tpm)"
-depends = ["tmux:config"]
-run = '''
-if [ ! -d "{{ xdg_config_home }}/tmux/plugins/tpm/.git" ]; then
-  mkdir -p "{{ xdg_config_home }}/tmux/plugins"
-  git clone https://github.com/tmux-plugins/tpm.git "{{ xdg_config_home }}/tmux/plugins/tpm"
-fi
-'''
-
-[tasks."tmuxp:sessions"]
-description = "Install tmuxp session files from the local ide clone"
-depends = ["ide:clone"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/tmuxp"
-cp "{{ vars.ide_dir }}/config/tmuxp/personal.yml" "{{ xdg_config_home }}/tmuxp/personal.yml"
-cp "{{ vars.ide_dir }}/config/tmuxp/work.yml" "{{ xdg_config_home }}/tmuxp/work.yml"
-'''
 
 # ---------------------------------------------------------------------------
 # bootstrap entry task (runs after the tools phase). The OS variant files

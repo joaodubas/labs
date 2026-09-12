@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Clone tmux plugin manager (tpm)"
+#MISE depends=["tmux:config"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+if [ ! -d "$config_home/tmux/plugins/tpm/.git" ]; then
+  mkdir -p "$config_home/tmux/plugins"
+  git clone https://github.com/tmux-plugins/tpm.git "$config_home/tmux/plugins/tpm"
+fi

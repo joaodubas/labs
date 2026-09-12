@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Install tmux.conf from the local ide clone"
+#MISE depends=["ide:clone"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+ide_dir="$HOME/.local/share/ide"
+mkdir -p "$config_home/tmux"
+cp "$ide_dir/config/tmux/tmux.conf" "$config_home/tmux/tmux.conf"
