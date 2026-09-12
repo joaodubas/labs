@@ -5,76 +5,13 @@
 # has no task-level `sudo` field (verified against `mise tasks validate`).
 
 # ---------------------------------------------------------------------------
-# system packages
+# system packages — task bodies live in tasks/linux/* (file tasks);
+# this file keeps only depends stubs and the bootstrap override
 # ---------------------------------------------------------------------------
-
-[tasks."linux:apt-base"]
-description = "fish-4/neovim-unstable PPAs + base apt package set"
-run = '''
-sudo apt-get update
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:fish-shell/release-4
-sudo add-apt-repository -y ppa:neovim-ppa/unstable
-sudo apt-get update
-sudo apt-get install -y \
-  autoconf automake build-essential ca-certificates curl doas fish fop g++ gcc \
-  gfortran git gosu gpg gpg-agent groff jq less libbz2-1.0 libbz2-dev libc6-dev \
-  libcurl3-dev libffi-dev libgl1-mesa-dev libglu1-mesa-dev liblzma-dev liblzma5 \
-  libncurses-dev libncurses5-dev libncursesw5-dev libnss-myhostname libodbc2 \
-  libpcre2-dev libpng-dev libreadline-dev libsctp-dev libsctp1 libsqlite3-dev \
-  libssh-dev libssl-dev libtool libwxgtk-webview3.2-dev libwxgtk3.2-dev \
-  libxml2-utils libxslt-dev libyaml-dev llvm locales m4 make ncal neovim \
-  net-tools openjdk-17-jdk openssh-client openssl parallel pkg-config \
-  python3-openssl sudo tk-dev tmux tmuxp unixodbc-dev unzip uuid-dev wget \
-  xorg-dev xsel xsltproc xz-utils zlib1g-dev
-'''
-
-[tasks."linux:docker"]
-description = "Docker engine via get.docker.com, docker group, docker-model-plugin"
-# serializes with flatpak: both run apt-get, and dpkg holds a global lock
-# while mise runs tasks in parallel (apt holds a single global lock)
-depends = ["linux:apt-base", "linux:flatpak"]
-run = '''
-curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
-chmod 0750 /tmp/get-docker.sh
-(cd /tmp && sudo ./get-docker.sh)
-rm -f /tmp/get-docker.sh
-sudo groupadd -f docker
-sudo usermod --append --groups docker "$(id -un)"
-sudo apt-get update
-sudo apt-get install -y docker-model-plugin
-'''
-
-[tasks."linux:flatpak"]
-description = "flatpak + gnome software plugin + flathub remote"
-depends = ["linux:apt-base"]
-run = '''
-sudo apt-get install -y flatpak gnome-software-plugin-flatpak
-sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-'''
-
-[tasks."linux:cuda-wsl"]
-description = "NVIDIA CUDA 13.0 toolkit for WSL2 (skipped outside WSL)"
-# apt chain (dpkg global lock; mise runs tasks in parallel):
-# apt-base → flatpak → docker → cuda-wsl → qemu
-depends = ["linux:apt-base", "linux:docker"]
-run = '''
-if [ -z "${WSL_DISTRO_NAME:-}" ]; then
-  echo "not running under WSL, skipping cuda-wsl"
-  exit 0
-fi
-curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin -o /tmp/cuda-wsl-ubuntu.pin
-sudo mv /tmp/cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
-curl -fSL -o /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
-sudo dpkg -i /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
-sudo cp /var/cuda-repo-wsl-ubuntu-13-0-local/cuda-6B8B2C1B-keyring.gpg /usr/share/keyrings/
-sudo apt-get update
-sudo apt-get install -y cuda-toolkit-13-0
-rm -f /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
-'''
 
 # ---------------------------------------------------------------------------
 # desktop apps (not in the mise registry: vendor scripts / flatpak / snap)
+# — task bodies live in tasks/apps/*
 # ---------------------------------------------------------------------------
 
 [tasks."apps:wezterm"]
@@ -144,18 +81,6 @@ run = '{{ config_root }}/scripts/nerd-fonts.sh'
 description = "Set fish as the login shell (usermod)"
 depends = ["linux:apt-base"]
 run = 'sudo usermod --shell /usr/bin/fish "$(id -un)"'
-
-[tasks."linux:qemu"]
-description = "QEMU/KVM tooling for the provision VM playground (provision/vm/vm.sh)"
-depends = ["linux:cuda-wsl"]
-run = '''
-sudo apt-get install -y qemu-system-x86 qemu-utils cloud-image-utils
-# group membership applies to new login sessions; vm.sh falls back to `sg kvm`
-if ! id -nG "$(id -un)" | grep -qw kvm; then
-  sudo usermod -aG kvm "$(id -un)"
-  echo "added to kvm group — re-login (or let vm.sh use sg kvm) for it to apply"
-fi
-'''
 
 [tasks."linux:cedilla"]
 description = "cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"

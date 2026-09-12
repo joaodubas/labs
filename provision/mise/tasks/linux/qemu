@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="QEMU/KVM tooling for the provision VM playground (provision/vm/vm.sh)"
+#MISE depends=["linux:cuda-wsl"]
+set -euo pipefail
+
+sudo apt-get install -y qemu-system-x86 qemu-utils cloud-image-utils
+# group membership applies to new login sessions; vm.sh falls back to `sg kvm`
+if ! id -nG "$(id -un)" | grep -qw kvm; then
+  sudo usermod -aG kvm "$(id -un)"
+  echo "added to kvm group — re-login (or let vm.sh use sg kvm) for it to apply"
+fi
