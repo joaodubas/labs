@@ -5,37 +5,12 @@
 # over this file (mise 2026.9.3 has no automatic OS-variant config loading;
 # the -E/--env mechanism is used instead).
 #
-# This file holds the OS-independent surface: [vars] and the shared tasks.
-# OS-specific tasks and `depends` wiring live in the variant files.
+# This file holds the OS-independent surface: just the shared `bootstrap`
+# aggregator. All task bodies are file tasks under mise/tasks/<ns>/<name>
+# (extension-less, executable, #MISE frontmatter); OS-specific `depends`
+# wiring lives in the variant files.
 
 min_version = "2026.9.3"
-
-[vars]
-# Single source of truth for runtime configs: the ide repo, cloned once by
-# the ide:clone task; every config task copies from the local clone.
-ide_repo_url = "https://gitea.dubas.dev/joao.dubas/ide.git"
-ide_dir = "$HOME/.local/share/ide"
-
-# CLI tools previously installed via vendor install.sh scripts; now pinned,
-# *global* mise tools — body lives in mise/tasks/tools/cli (file task).
-
-# ---------------------------------------------------------------------------
-# ide repo clone + config files copied from it (single source of truth, §10.2)
-# — task bodies live in mise/tasks/ide/clone and mise/tasks/config/*
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# git — task bodies live in mise/tasks/git/* (file tasks)
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# fish (login shell setup itself is OS-specific: shell/fish file task +
-# variant depends stubs); bodies live in mise/tasks/fish/*
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# neovim / tmux / tmuxp — task bodies live in mise/tasks/{neovim,tmux,tmuxp}
-# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # bootstrap entry task (runs after the tools phase). The OS variant files
