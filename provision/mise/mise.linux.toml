@@ -23,10 +23,10 @@ description = "JetBrainsMono + Go-Mono nerd fonts"
 depends = ["linux:apt-base"]
 run = '{{ config_root }}/scripts/nerd-fonts.sh'
 
+# shell:fish body lives in tasks/shell/fish (uname-branched); the stub
+# below pins its position in the apt chain
 [tasks."shell:fish"]
-description = "Set fish as the login shell (usermod)"
 depends = ["linux:apt-base"]
-run = 'sudo usermod --shell /usr/bin/fish "$(id -un)"'
 
 [tasks."linux:cedilla"]
 description = "cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"
@@ -49,7 +49,7 @@ fi
 
 # ---------------------------------------------------------------------------
 # ordering of shared tasks relative to the apt base (fields merge with
-# mise.toml definitions; only `depends` is added here)
+# the file-task definitions under tasks/; only `depends` is added here)
 # ---------------------------------------------------------------------------
 
 [tasks."config:mise"]

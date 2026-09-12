@@ -13,14 +13,14 @@
 # shell
 # ---------------------------------------------------------------------------
 
+# shell:fish body lives in tasks/shell/fish (uname-branched); the stub
+# below pins its position after the brew formulae that install fish
 [tasks."shell:fish"]
-description = "Set fish as the login shell (chsh)"
 depends = ["macos:formulae"]
-run = 'sudo chsh -s /opt/homebrew/bin/fish "$(id -un)"'
 
 # ---------------------------------------------------------------------------
-# ordering of shared tasks relative to brew (fields merge with mise.toml
-# definitions; only `depends` is added here)
+# ordering of shared tasks relative to brew (fields merge with
+# the file-task definitions under tasks/; only `depends` is added here)
 # ---------------------------------------------------------------------------
 
 [tasks."config:mise"]

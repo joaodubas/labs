@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#MISE description="Set fish as the login shell (usermod on Linux, chsh on macOS)"
+# Per-OS depends live in the variant stubs (mise.linux.toml /
+# mise.macos.toml): linux:apt-base / macos:formulae respectively.
+set -euo pipefail
+
+case "$(uname -s)" in
+  Linux)  sudo usermod --shell /usr/bin/fish "$(id -un)" ;;
+  Darwin) sudo chsh -s /opt/homebrew/bin/fish "$(id -un)" ;;
+  *)
+    echo "error: unsupported OS: $(uname -s)" >&2
+    exit 1
+    ;;
+esac
