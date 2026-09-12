@@ -37,11 +37,6 @@ ide_dir = "$HOME/.local/share/ide"
 # neovim / tmux / tmuxp
 # ---------------------------------------------------------------------------
 
-[tasks."neovim:kickstart"]
-description = "Clone kickstart.nvim @ 626c660, apply ide patch, install custom plugins"
-depends = ["ide:clone"]
-run = '{{ config_root }}/scripts/neovim-kickstart.sh "{{ vars.ide_dir }}"'
-
 [tasks."tmux:config"]
 description = "Install tmux.conf from the local ide clone"
 depends = ["ide:clone"]
