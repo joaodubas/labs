@@ -5,7 +5,7 @@
 # has no task-level `sudo` field (verified against `mise tasks validate`).
 
 # ---------------------------------------------------------------------------
-# homebrew — task bodies live in tasks/macos/* (file tasks);
+# homebrew — task bodies live in mise/tasks/macos/* (file tasks);
 # this file keeps only depends stubs and the bootstrap override
 # ---------------------------------------------------------------------------
 
@@ -13,14 +13,14 @@
 # shell
 # ---------------------------------------------------------------------------
 
-# shell:fish body lives in tasks/shell/fish (uname-branched); the stub
+# shell:fish body lives in mise/tasks/shell/fish (uname-branched); the stub
 # below pins its position after the brew formulae that install fish
 [tasks."shell:fish"]
 depends = ["macos:formulae"]
 
 # ---------------------------------------------------------------------------
 # ordering of shared tasks relative to brew (fields merge with
-# the file-task definitions under tasks/; only `depends` is added here)
+# the file-task definitions under mise/tasks/; only `depends` is added here)
 # ---------------------------------------------------------------------------
 
 [tasks."config:mise"]

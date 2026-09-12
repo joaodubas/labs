@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"
+#MISE depends=["linux:apt-base"]
+set -euo pipefail
+
+if ! grep -qF "GTK_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
+  echo "export GTK_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
+fi
+if ! grep -qF "QT_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
+  echo "export QT_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
+fi
+cp "$MISE_CONFIG_ROOT/files/cedilla/XCompose" "$HOME/.XCompose"
+if command -v gsettings >/dev/null 2>&1 && \
+   gsettings list-schemas 2>/dev/null | grep -q '^org\.gnome\.settings-daemon\.plugins\.xsettings$'; then
+  gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'ibus'>}"
+else
+  echo "gsettings/GNOME schemas not available, skipping ibus override"
+fi

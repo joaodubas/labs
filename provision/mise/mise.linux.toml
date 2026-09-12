@@ -5,51 +5,27 @@
 # has no task-level `sudo` field (verified against `mise tasks validate`).
 
 # ---------------------------------------------------------------------------
-# system packages — task bodies live in tasks/linux/* (file tasks);
+# system packages — task bodies live in mise/tasks/linux/* (file tasks);
 # this file keeps only depends stubs and the bootstrap override
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # desktop apps (not in the mise registry: vendor scripts / flatpak / snap)
-# — task bodies live in tasks/apps/*
+# — task bodies live in mise/tasks/apps/*
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# fonts / shell / desktop input
+# fonts / shell / desktop input — bodies live in mise/tasks/{fonts,shell,linux}
 # ---------------------------------------------------------------------------
 
-[tasks."fonts:nerd"]
-description = "JetBrainsMono + Go-Mono nerd fonts"
-depends = ["linux:apt-base"]
-run = '{{ config_root }}/scripts/nerd-fonts.sh'
-
-# shell:fish body lives in tasks/shell/fish (uname-branched); the stub
+# shell:fish body lives in mise/tasks/shell/fish (uname-branched); the stub
 # below pins its position in the apt chain
 [tasks."shell:fish"]
 depends = ["linux:apt-base"]
 
-[tasks."linux:cedilla"]
-description = "cedilla input: .xsessionrc appends (once), XCompose, gsettings ibus override"
-depends = ["linux:apt-base"]
-run = '''
-if ! grep -qF "GTK_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
-  echo "export GTK_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
-fi
-if ! grep -qF "QT_IM_MODULE=cedilla" "$HOME/.xsessionrc" 2>/dev/null; then
-  echo "export QT_IM_MODULE=cedilla" >> "$HOME/.xsessionrc"
-fi
-cp "{{ config_root }}/files/cedilla/XCompose" "$HOME/.XCompose"
-if command -v gsettings >/dev/null 2>&1 && \
-   gsettings list-schemas 2>/dev/null | grep -q '^org\.gnome\.settings-daemon\.plugins\.xsettings$'; then
-  gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'ibus'>}"
-else
-  echo "gsettings/GNOME schemas not available, skipping ibus override"
-fi
-'''
-
 # ---------------------------------------------------------------------------
 # ordering of shared tasks relative to the apt base (fields merge with
-# the file-task definitions under tasks/; only `depends` is added here)
+# the file-task definitions under mise/tasks/; only `depends` is added here)
 # ---------------------------------------------------------------------------
 
 [tasks."config:mise"]
