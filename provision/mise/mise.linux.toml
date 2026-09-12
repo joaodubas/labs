@@ -14,60 +14,6 @@
 # — task bodies live in tasks/apps/*
 # ---------------------------------------------------------------------------
 
-[tasks."apps:wezterm"]
-description = "wezterm via flatpak (needs system bus — skipped headless)"
-depends = ["linux:flatpak"]
-run = '''
-if [ ! -S /run/dbus/system_bus_socket ]; then
-  echo "no system bus (systemd), skipping flatpak install"
-  exit 0
-fi
-sudo flatpak install -y --or-update flathub org.wezfurlong.wezterm
-'''
-
-[tasks."apps:zenbrowser"]
-description = "zen browser via flatpak (needs system bus — skipped headless)"
-depends = ["linux:flatpak"]
-run = '''
-if [ ! -S /run/dbus/system_bus_socket ]; then
-  echo "no system bus (systemd), skipping flatpak install"
-  exit 0
-fi
-sudo flatpak install -y --or-update flathub app.zen_browser.zen
-'''
-
-[tasks."apps:ghostty"]
-description = "ghostty via snap (classic); skipped where snapd can't run (no systemd)"
-depends = ["linux:apt-base"]
-run = '''
-if [ ! -d /run/systemd/system ]; then
-  echo "systemd not available, skipping ghostty (snap requires it)"
-  exit 0
-fi
-sudo snap install ghostty --classic
-'''
-
-[tasks."apps:cursor"]
-description = "cursor editor via vendor install script"
-depends = ["linux:apt-base"]
-run = '''
-curl -fsSL https://cursor.com/install -o /tmp/cursor.sh
-chmod 0750 /tmp/cursor.sh
-(cd /tmp && ./cursor.sh)
-rm -f /tmp/cursor.sh
-'''
-
-[tasks."apps:zed"]
-description = "zed editor via vendor install script"
-depends = ["linux:apt-base"]
-run = '''
-curl -fsSL https://zed.dev/install.sh -o /tmp/zed.sh
-chmod 0750 /tmp/zed.sh
-# zed.sh dereferences $SHELL unguarded (set -u); docker exec sessions have none
-(cd /tmp && SHELL="${SHELL:-/bin/bash}" ./zed.sh)
-rm -f /tmp/zed.sh
-'''
-
 # ---------------------------------------------------------------------------
 # fonts / shell / desktop input
 # ---------------------------------------------------------------------------

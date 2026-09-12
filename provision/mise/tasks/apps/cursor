@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="cursor editor via vendor install script"
+#MISE depends=["linux:apt-base"]
+set -euo pipefail
+
+curl -fsSL https://cursor.com/install -o /tmp/cursor.sh
+chmod 0750 /tmp/cursor.sh
+(cd /tmp && ./cursor.sh)
+rm -f /tmp/cursor.sh

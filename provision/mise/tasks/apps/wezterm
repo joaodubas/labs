@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="wezterm via flatpak (needs system bus — skipped headless)"
+#MISE depends=["linux:flatpak"]
+set -euo pipefail
+
+if [ ! -S /run/dbus/system_bus_socket ]; then
+  echo "no system bus (systemd), skipping flatpak install"
+  exit 0
+fi
+sudo flatpak install -y --or-update flathub org.wezfurlong.wezterm

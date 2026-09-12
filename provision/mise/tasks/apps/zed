@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="zed editor via vendor install script"
+#MISE depends=["linux:apt-base"]
+set -euo pipefail
+
+curl -fsSL https://zed.dev/install.sh -o /tmp/zed.sh
+chmod 0750 /tmp/zed.sh
+# zed.sh dereferences $SHELL unguarded (set -u); docker exec sessions have none
+(cd /tmp && SHELL="${SHELL:-/bin/bash}" ./zed.sh)
+rm -f /tmp/zed.sh
