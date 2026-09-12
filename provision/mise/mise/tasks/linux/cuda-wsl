@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #MISE description="NVIDIA CUDA 13.0 toolkit for WSL2 (skipped outside WSL)"
+#MISE depends=["linux:apt-base", "linux:docker"]
 # apt chain (dpkg global lock; mise runs tasks in parallel):
 # apt-base → flatpak → docker → cuda-wsl → qemu
-#MISE depends=["linux:apt-base", "linux:docker"]
 set -euo pipefail
 
 if [ -z "${WSL_DISTRO_NAME:-}" ]; then

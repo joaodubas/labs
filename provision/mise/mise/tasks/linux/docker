@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #MISE description="Docker engine via get.docker.com, docker group, docker-model-plugin"
+#MISE depends=["linux:apt-base", "linux:flatpak"]
 # serializes with flatpak: both run apt-get, and dpkg holds a global lock
 # while mise runs tasks in parallel (apt holds a single global lock)
-#MISE depends=["linux:apt-base", "linux:flatpak"]
 set -euo pipefail
 
 curl -fsSL https://get.docker.com -o /tmp/get-docker.sh

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# opt-in, work machines only (plan §10.4): skipped unless STORD_WORK=1
 #MISE description="stordcli via stordco homebrew tap (opt-in: STORD_WORK=1)"
 #MISE depends=["macos:brew"]
+# opt-in, work machines only (plan §10.4): skipped unless STORD_WORK=1
 set -euo pipefail
 
 if [ "${STORD_WORK:-0}" != "1" ]; then
