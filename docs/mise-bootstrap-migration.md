@@ -648,3 +648,53 @@ of what the playground can prove, not migration regressions):
    `env_files` doesn't conflict with the runtime `.env` pattern.
 3. Does mise have (or plan) a brew backend? Informational only — would
    simplify `macos:formulae` marginally; casks remain tasks regardless.
+
+## 11. Addendum (2026-09-12): task bodies migrated to mise file tasks
+
+> Supersedes the `scripts/` convention described in §7.1–§7.3, §8 and §10 —
+> those sections are kept as written for historical accuracy.
+
+All task bodies now live as **mise file tasks** under
+`provision/mise/mise/tasks/<namespace>/<task>` (extension-less, executable,
+`#!/usr/bin/env bash` + `#MISE` frontmatter + `set -euo pipefail`). The TOML
+files shrank to wiring only: `mise.toml` = `min_version` + the shared
+`bootstrap` aggregator; the variant files = depends stubs + their `bootstrap`
+overrides. `provision/mise/scripts/` and the `[vars]` table are deleted —
+the task file *is* the thin script, and with no Tera left, `ide_dir` /
+`ide_repo_url` are inline in the tasks that need them. Tera substitutions
+applied: `{{ config_root }}` → `$MISE_CONFIG_ROOT`, `{{ xdg_config_home }}` →
+`config_home="${XDG_CONFIG_HOME:-$HOME/.config}"`, `{{ vars.ide_dir }}` →
+`ide_dir="$HOME/.local/share/ide"`. `shell:fish` was unified into one
+uname-branched file task with depends-only stubs in both variants.
+
+Layout findings from implementation (mise 2026.9.3, plan:
+`docs/task-layout-plan.md`):
+
+1. **File tasks must sit at `<config_root>/mise/tasks/`.** mise derives a
+   file task's config root as the parent of the `mise/` dir containing
+   `tasks/`. Under `provision/mise/tasks/` the root resolved to `provision/`
+   (≠ the TOML root `provision/mise/`) and — critically — a same-named TOML
+   stub then *shadows* the file task instead of merging (`tasks info` shows
+   one source, `run: []`, the file body never executes). The extra `mise/`
+   segment (`provision/mise/mise/tasks/`) aligns the roots; `tasks info`
+   then shows both sources with the stub's `depends` applied, and
+   `MISE_CONFIG_ROOT` inside file tasks equals the old Tera
+   `{{ config_root }}`.
+2. **The executable bit is the discovery criterion** — a non-executable file
+   in `mise/tasks/` is silently not a task (caught by the DAG diff gate).
+3. **`#MISE` must have no space** and the tasks must not go through
+   shfmt/prettier — a `# MISE` line is a plain comment and the depends edges
+   vanish (dpkg-lock serialization relies on them).
+4. **File tasks are env-agnostic**: `linux:*`/`macos:*` tasks appear in both
+   `-E linux` and `-E macos` `tasks ls` listings. They are never scheduled
+   outside their environment's `bootstrap` DAG, so this is cosmetic — the
+   migration gate therefore diffs the bootstrap *dependency graph* (nodes +
+   edges), not the raw listings.
+5. **`--dry-run` placement**: `mise run <task> --dry-run` forwards the flag
+   *to the task* (real execution!); use `mise run --dry-run <task>` or the
+   `mise -E <env> <task> ... --dry-run` shorthand form bootstrap.sh uses.
+
+Verification per phase-commit: `mise -E {linux,macos} tasks deps bootstrap`
+diffed against pre-migration baselines (identical nodes and edges), `mise
+tasks validate`, and `--dry-run` per environment. Playground/VM double-run
+idempotency per §9.1 remains the end-to-end check.

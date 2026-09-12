@@ -40,7 +40,8 @@ ansible-playbook -i inventory/digital_ocean.py <path-to-playbook>
 
 Local provisioning uses [mise bootstrap][0]: `provision/mise/` holds the
 bootstrap config (`mise.toml` plus the `mise.linux.toml` / `mise.macos.toml`
-OS variants), task scripts and static files. The entrypoint installs mise
+OS variants), the file tasks under `mise/tasks/<namespace>/<task>` and the
+static `files/` tree. The entrypoint installs mise
 system-wide if missing, then runs the bootstrap pipeline:
 
 ```bash

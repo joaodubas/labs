@@ -6,7 +6,10 @@
 #        binary at /usr/local/bin/mise (visible to every user).
 #      - macOS: `brew install mise`.
 #   2. Runs `mise -E <os> bootstrap` from this directory, layering
-#      mise.linux.toml / mise.macos.toml over mise.toml.
+#      mise.linux.toml / mise.macos.toml over mise.toml. Task bodies are
+#      file tasks under mise/tasks/<namespace>/<task> (extension-less,
+#      executable, #MISE frontmatter); the TOML files carry only depends
+#      wiring and the bootstrap aggregators.
 #
 # Idempotent: an existing mise is reused as-is, and `mise bootstrap` skips
 # unchanged declarative state. Extra arguments are forwarded to
