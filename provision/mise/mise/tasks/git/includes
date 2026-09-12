@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Install git includeIf fragments from the local files/ tree (both OSes)"
+#MISE depends=["git:config"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+mkdir -p "$config_home/git"
+cp "$MISE_CONFIG_ROOT/files/git/personal_gitea" "$config_home/git/personal_gitea"
+cp "$MISE_CONFIG_ROOT/files/git/personal_github" "$config_home/git/personal_github"
+cp "$MISE_CONFIG_ROOT/files/git/work" "$config_home/git/work"

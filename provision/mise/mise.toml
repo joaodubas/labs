@@ -25,39 +25,8 @@ ide_dir = "$HOME/.local/share/ide"
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# git
+# git — task bodies live in mise/tasks/git/* (file tasks)
 # ---------------------------------------------------------------------------
-
-[tasks."git:config"]
-description = "Set global git configuration (identity, nvim difftool/mergetool, includeIf rules)"
-run = [
-  'git config --global user.email joao.dubas@gmail.com',
-  'git config --global user.name "Joao P Dubas"',
-  'git config --global gpg.ssh.allowedSignersFile "{{ xdg_config_home }}/git/allowed_signers"',
-  'git config --global core.editor nvim',
-  'git config --global diff.tool nvimdiff',
-  'git config --global difftool.nvimdiff.layout "LOCAL,REMOTE"',
-  'git config --global merge.tool nvimdiff',
-  'git config --global mergetool.nvimdiff.layout "LOCAL,BASE,REMOTE / MERGED"',
-  'git config --global "includeIf.hasconfig:remote.*.url:gitea:*/**.path" "{{ xdg_config_home }}/git/personal_gitea"',
-  'git config --global "includeIf.hasconfig:remote.*.url:github:joaodubas/**.path" "{{ xdg_config_home }}/git/personal_github"',
-  'git config --global "includeIf.gitdir:/opt/work/.path" "{{ xdg_config_home }}/git/work"',
-]
-
-[tasks."git:includes"]
-description = "Install git includeIf fragments from the local files/ tree (both OSes)"
-depends = ["git:config"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/git"
-cp "{{ config_root }}/files/git/personal_gitea" "{{ xdg_config_home }}/git/personal_gitea"
-cp "{{ config_root }}/files/git/personal_github" "{{ xdg_config_home }}/git/personal_github"
-cp "{{ config_root }}/files/git/work" "{{ xdg_config_home }}/git/work"
-'''
-
-[tasks."git:allowed-signers"]
-description = "Build git allowed_signers from ~/.ssh/*.pub keys"
-depends = ["git:includes"]
-run = '{{ config_root }}/scripts/git-allowed-signers.sh'
 
 # ---------------------------------------------------------------------------
 # fish (login shell setup itself is OS-specific: shell:fish in the variants)
