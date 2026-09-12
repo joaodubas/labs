@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Install the starship config from the local ide clone"
+#MISE depends=["ide:clone"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+ide_dir="$HOME/.local/share/ide"
+mkdir -p "$config_home/starship"
+rm -f "$config_home/starship/config.toml"
+cp "$ide_dir/config/starship/config.toml" "$config_home/starship/config.toml"

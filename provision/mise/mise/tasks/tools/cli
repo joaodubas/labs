@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="Install atuin/starship/zoxide as pinned global mise tools"
+#MISE depends=["config:mise"]
+set -euo pipefail
+
+# CLI tools previously installed via vendor install.sh scripts; now pinned,
+# *global* mise tools (fish/neovim/tmux/tmuxp deliberately stay system
+# packages, apt/brew).
+#
+# Why global and not a project-scoped [tools] table here: [tools] would only
+# put them on PATH inside this directory tree, while daily shells see the
+# runtime global config (downloaded by config:mise from the ide repo), which
+# does not provide atuin/starship. `depends` on config:mise because that task
+# rewrites the global config file on every run (copy from the local ide
+# clone) — this task re-adds the pins afterwards.
+mise use --global atuin@18.21.0 starship@1.26.0 zoxide@0.10.0

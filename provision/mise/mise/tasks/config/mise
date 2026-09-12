@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Install the runtime mise config from the local ide clone"
+#MISE depends=["ide:clone"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+ide_dir="$HOME/.local/share/ide"
+mkdir -p "$config_home/mise"
+rm -f "$config_home/mise/config.toml"
+cp "$ide_dir/config/mise/config.toml" "$config_home/mise/config.toml"

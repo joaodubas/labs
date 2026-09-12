@@ -17,62 +17,12 @@ ide_repo_url = "https://gitea.dubas.dev/joao.dubas/ide.git"
 ide_dir = "$HOME/.local/share/ide"
 
 # CLI tools previously installed via vendor install.sh scripts; now pinned,
-# *global* mise tools (fish/neovim/tmux/tmuxp deliberately stay system
-# packages, apt/brew).
-#
-# Why global and not a project-scoped [tools] table here: [tools] would only
-# put them on PATH inside this directory tree, while daily shells see the
-# runtime global config (downloaded by config:mise from the ide repo), which
-# does not provide atuin/starship. `depends` on config:mise because that task
-# rewrites the global config file on every run (copy from the local ide
-# clone) — this task re-adds the pins afterwards.
-[tasks."tools:cli"]
-description = "Install atuin/starship/zoxide as pinned global mise tools"
-depends = ["config:mise"]
-run = "mise use --global atuin@18.21.0 starship@1.26.0 zoxide@0.10.0"
+# *global* mise tools — body lives in mise/tasks/tools/cli (file task).
 
 # ---------------------------------------------------------------------------
 # ide repo clone + config files copied from it (single source of truth, §10.2)
+# — task bodies live in mise/tasks/ide/clone and mise/tasks/config/*
 # ---------------------------------------------------------------------------
-
-[tasks."ide:clone"]
-description = "Clone/update the ide repo (all runtime configs come from it)"
-run = '''
-ide_dir="{{ vars.ide_dir }}"
-if [ -d "$ide_dir/.git" ]; then
-  git -C "$ide_dir" fetch --prune origin
-  git -C "$ide_dir" reset --hard origin/main
-else
-  mkdir -p "$(dirname "$ide_dir")"
-  git clone "{{ vars.ide_repo_url }}" "$ide_dir"
-fi
-'''
-
-[tasks."config:mise"]
-description = "Install the runtime mise config from the local ide clone"
-depends = ["ide:clone"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/mise"
-rm -f "{{ xdg_config_home }}/mise/config.toml"
-cp "{{ vars.ide_dir }}/config/mise/config.toml" "{{ xdg_config_home }}/mise/config.toml"
-'''
-
-[tasks."config:atuin"]
-description = "Install the atuin config from the local ide clone"
-depends = ["ide:clone"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/atuin"
-cp "{{ vars.ide_dir }}/config/atuin/config.toml" "{{ xdg_config_home }}/atuin/config.toml"
-'''
-
-[tasks."config:starship"]
-description = "Install the starship config from the local ide clone"
-depends = ["ide:clone"]
-run = '''
-mkdir -p "{{ xdg_config_home }}/starship"
-rm -f "{{ xdg_config_home }}/starship/config.toml"
-cp "{{ vars.ide_dir }}/config/starship/config.toml" "{{ xdg_config_home }}/starship/config.toml"
-'''
 
 # ---------------------------------------------------------------------------
 # git
