@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Install fish config.fish from the local files/ tree"
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+mkdir -p "$config_home/fish"
+cp "$MISE_CONFIG_ROOT/files/fish/config.fish" "$config_home/fish/config.fish"

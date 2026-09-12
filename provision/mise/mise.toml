@@ -29,20 +29,9 @@ ide_dir = "$HOME/.local/share/ide"
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# fish (login shell setup itself is OS-specific: shell:fish in the variants)
+# fish (login shell setup itself is OS-specific: shell/fish file task +
+# variant depends stubs); bodies live in mise/tasks/fish/*
 # ---------------------------------------------------------------------------
-
-[tasks."fish:config"]
-description = "Install fish config.fish from the local files/ tree"
-run = '''
-mkdir -p "{{ xdg_config_home }}/fish"
-cp "{{ config_root }}/files/fish/config.fish" "{{ xdg_config_home }}/fish/config.fish"
-'''
-
-[tasks."fish:env"]
-description = "Set fish universal variables, PATH entries and abbreviations"
-depends = ["fish:config", "tools:cli"]
-run = '{{ config_root }}/scripts/fish-env.sh'
 
 # ---------------------------------------------------------------------------
 # neovim / tmux / tmuxp
