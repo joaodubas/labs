@@ -5,17 +5,9 @@
 # has no task-level `sudo` field (verified against `mise tasks validate`).
 
 # ---------------------------------------------------------------------------
-# system packages — task bodies live in mise/tasks/linux/* (file tasks);
-# this file keeps only depends stubs and the bootstrap override
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# desktop apps (not in the mise registry: vendor scripts / flatpak / snap)
-# — task bodies live in mise/tasks/apps/*
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# fonts / shell / desktop input — bodies live in mise/tasks/{fonts,shell,linux}
+# system packages / desktop apps / fonts / shell — task bodies live in
+# mise/tasks/{linux,apps,fonts,shell}/* (file tasks); this file keeps only
+# depends stubs and the bootstrap override
 # ---------------------------------------------------------------------------
 
 # shell:fish body lives in mise/tasks/shell/fish (uname-branched); the stub
