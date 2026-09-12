@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# opt-in, work machines only (plan §10.4): skipped unless STORD_WORK=1
+#MISE description="stordcli via stordco homebrew tap (opt-in: STORD_WORK=1)"
+#MISE depends=["macos:brew"]
+set -euo pipefail
+
+if [ "${STORD_WORK:-0}" != "1" ]; then
+  echo "STORD_WORK is not 1, skipping stordcli (work machines only)"
+  exit 0
+fi
+/opt/homebrew/bin/brew tap stordco/tap github:stordco/homebrew-tap.git
+/opt/homebrew/bin/brew install stordcli

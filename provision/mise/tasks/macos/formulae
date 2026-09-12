@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="brew formulae (atuin/starship/zoxide are global mise tools, plan §7.2; fish/neovim/tmux/tmuxp stay system packages, plan §10.3)"
+#MISE depends=["macos:brew"]
+set -euo pipefail
+
+/opt/homebrew/bin/brew install bat curl eza fd fish fzf git gnupg htop jq neovim ripgrep tmux tmuxp tree unzip wget
