@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #MISE description="fish-4/neovim-unstable PPAs + base apt package set"
+#MISE interactive=true
 set -euo pipefail
 
 sudo apt-get update

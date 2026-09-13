@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #MISE description="Set fish as the login shell (usermod on Linux, chsh on macOS)"
+#MISE interactive=true
 # Per-OS depends live in the variant stubs (mise.linux.toml /
 # mise.macos.toml): linux:apt-base / macos:formulae respectively.
 set -euo pipefail
