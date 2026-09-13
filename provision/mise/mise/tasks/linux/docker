@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 #MISE description="Docker engine via get.docker.com, docker group, docker-model-plugin"
-#MISE depends=["linux:apt-base", "linux:flatpak"]
+#MISE depends=["linux:apt-base"]
+#MISE wait_for=["linux:flatpak"]
 #MISE interactive=true
-# serializes with flatpak: both run apt-get, and dpkg holds a global lock
-# while mise runs tasks in parallel (apt holds a single global lock)
+# dpkg-lock serialization: docker needs apt-base's *result* (depends), but
+# only non-overlap with flatpak — both run apt-get and dpkg holds a single
+# global lock while mise runs tasks in parallel — so flatpak is wait_for,
+# not depends. A standalone `mise run linux:docker` no longer drags
+# flatpak in; under full bootstrap the schedule is identical.
 set -euo pipefail
 
 curl -fsSL https://get.docker.com -o /tmp/get-docker.sh

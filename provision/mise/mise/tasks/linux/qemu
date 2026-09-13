@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 #MISE description="QEMU/KVM tooling for the provision VM playground (provision/vm/vm.sh)"
-#MISE depends=["linux:cuda-wsl"]
+#MISE depends=["linux:apt-base"]
+#MISE wait_for=["linux:cuda-wsl"]
+# dpkg-lock serialization: qemu needs only apt-base's *result* (depends);
+# cuda-wsl is wait_for — qemu must not overlap its apt/dpkg runs (single
+# global dpkg lock) but never consumes its output (cuda-wsl self-skips
+# outside WSL).
 set -euo pipefail
 
 sudo apt-get install -y qemu-system-x86 qemu-utils cloud-image-utils
