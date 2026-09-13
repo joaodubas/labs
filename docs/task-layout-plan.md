@@ -192,21 +192,19 @@ each re-running the Phase 9/10 verification gates.
 
 ### Recommended
 
-1. **`sources`/`outputs` freshness on the pure file-copy tasks**
-   (`config:mise`, `config:atuin`, `config:starship`, `tmux:config`,
-   `tmuxp:sessions`, `fish:config`, `git:includes`, `tmux:tpm`). Makes
-   re-runs skip instead of re-executing (`sources up-to-date, skipping` —
-   verified). Editing the task auto-invalidates (task definition is an
-   implicit source); `ide:clone` pulling a changed config re-triggers the
-   copy via mtime. Safe to combine with `tools:cli`'s re-pin-after-rewrite
-   semantics: if `config:mise` is skipped, `tools:cli` still runs (no
-   freshness declared) and re-pins harmlessly.
-   - ⚠️ Verification item: sources pointing into the ide clone need absolute
-     paths. Tera (`{{ vars.ide_dir }}`) renders in TOML task fields but NOT
-     in `#MISE` frontmatter of file tasks — confirm whether mise expands
-     `~`/env vars in `sources`/`outputs` before relying on it post-migration.
-   - Do NOT add freshness to apt/brew/vendor-script tasks: their side
-     effects aren't file-trackable and freshness would lie.
+1. ~~**`sources`/`outputs` freshness on the pure file-copy tasks**~~ —
+   **REJECTED after empirical testing** (mise 2026.9.3, post-migration):
+   - `#MISE` frontmatter in file tasks does NOT expand `$VARS` or `~` in
+     `sources`/`outputs` — the paths are stored literally unexpanded
+     (verified: `tasks info` shows the raw `$HOME`/tilde string), so
+     freshness never triggers.
+   - Even with expansion, the copy tasks' sources live under
+     `$HOME/.local/share/ide` — outside the project root — so freshness is
+     impossible post-migration regardless.
+   - `outputs = { auto = true }` without `sources` always runs (verified),
+     so it buys nothing either.
+   The pre-migration "confirm whether mise expands `~`/env vars" caveat
+   above resolved to: it doesn't, and the idea dies with it.
 2. **`interactive = true` on sudo-prompting tasks** (`linux:apt-base`,
    `linux:docker`, `shell:fish`, `macos:containers`). Gives the task
    exclusive stdin/stdout (global lock) so a sudo password prompt isn't
