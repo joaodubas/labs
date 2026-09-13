@@ -4,12 +4,14 @@
 #USAGE flag "--work" env="STORD_WORK" help="work machine opt-in (installs stordco tap)"
 # opt-in, work machines only (plan §10.4): skipped unless --work / STORD_WORK
 # (usage exports the flag as $usage_work; env="STORD_WORK" keeps the old
-# env-var interface working)
+# env-var interface working). Any truthy value opts in — only unset/empty/0/
+# false skip. Note: --work is parsed per-task; it does NOT propagate through
+# `mise run bootstrap`, so a full bootstrap needs STORD_WORK set instead.
 set -euo pipefail
 
 case "${usage_work:-}" in
   "" | 0 | false)
-    echo "stordcli opt-in not set (--work or STORD_WORK=1), skipping (work machines only)"
+    echo "stordcli opt-in not set (--work or STORD_WORK truthy), skipping (work machines only)"
     exit 0
     ;;
 esac

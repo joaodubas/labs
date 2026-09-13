@@ -216,7 +216,9 @@ each re-running the Phase 9/10 verification gates.
    `flag "--work" env="STORD_WORK" help="work machine opt-in"`. Turns the
    magic env var into a documented CLI interface
    (`mise -E macos run macos:stordcli --work`); env var keeps working
-   (verified both paths, plus `STORD_WORK=1`).
+   (verified both paths, plus `STORD_WORK=1`). Any truthy value opts in;
+   only unset/empty/`0`/`false` skip. `--work` is parsed per-task, so under
+   a full `bootstrap` run only `STORD_WORK` applies.
 
 ### Deferred (bundle with the bootstrap de-triplication follow-up) — DONE
 
