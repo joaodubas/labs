@@ -47,11 +47,12 @@ provably identical task DAG before/after.
 - **`[vars]` is removed.** After migration no Tera remains anywhere.
   `ide_dir` becomes `ide_dir="$HOME/.local/share/ide"` inline in the ~7
   scripts that need it; the repo URL is hardcoded in `tasks/ide/clone`.
-- **De-triplicating bootstrap lists via aggregate tasks: deferred.** It
-  changes the DAG *shape* (new aggregate nodes), breaking the before/after
-  graph-diff invariant this migration relies on for safety. It touches only
-  the three TOML aggregators, so it can be done later standalone — file tasks
-  don't affect it either way.
+- **De-triplicating bootstrap lists via aggregate tasks: DONE** (branch
+  `jpd-feat-update-boostrap`, deferred follow-up batch). It changes the DAG
+  *shape* (new aggregate nodes: `user:config`, `linux:system`, `linux:apps`,
+  `macos:system`), which is why it was kept out of the migration phases —
+  the transitive leaf set before/after is identical (verified via
+  `tasks deps` node-set diff).
 
 ## Plan
 
@@ -206,25 +207,27 @@ each re-running the Phase 9/10 verification gates.
    The pre-migration "confirm whether mise expands `~`/env vars" caveat
    above resolved to: it doesn't, and the idea dies with it.
 2. **`interactive = true` on sudo-prompting tasks** (`linux:apt-base`,
-   `linux:docker`, `shell:fish`, `macos:containers`). Gives the task
-   exclusive stdin/stdout (global lock) so a sudo password prompt isn't
+   `linux:docker`, `shell:fish`, `macos:containers`) — **DONE**. Gives the
+   task exclusive stdin/stdout (global lock) so a sudo password prompt isn't
    interleaved with parallel prefixed output. Verified accepted on 2026.9.3.
    Putting it on `apt-base` costs no parallelism — everything already
    serializes behind it.
-3. **`usage` env-backed flag for `macos:stordcli`**:
+3. **`usage` env-backed flag for `macos:stordcli`** — **DONE**:
    `flag "--work" env="STORD_WORK" help="work machine opt-in"`. Turns the
    magic env var into a documented CLI interface
    (`mise -E macos run macos:stordcli --work`); env var keeps working
-   (verified both paths).
+   (verified both paths, plus `STORD_WORK=1`).
 
-### Deferred (bundle with the bootstrap de-triplication follow-up)
+### Deferred (bundle with the bootstrap de-triplication follow-up) — DONE
 
-4. **`wait_for` for apt-lock-only edges**: `linux:docker` doesn't need
-   flatpak's *result*, only non-overlap (dpkg global lock).
-   `wait_for = ["linux:flatpak"]` expresses exactly that, so a standalone
-   `mise run linux:docker` no longer drags flatpak in. Identical behavior
-   under full `bootstrap` (everything is scheduled), but it's a DAG-shape
-   change → same batch as the aggregate-task follow-up.
+4. **`wait_for` for apt-lock-only edges** — **DONE**: `linux:docker` doesn't
+   need flatpak's *result*, only non-overlap (dpkg global lock).
+   `#MISE wait_for=["linux:flatpak"]` expresses exactly that, so a standalone
+   `mise run linux:docker` no longer drags flatpak in. Same for
+   `linux:cuda-wsl` vs `linux:docker` and `linux:qemu` vs `linux:cuda-wsl`.
+   Identical behavior under full `bootstrap` (everything is scheduled).
+   Bundled with the aggregate-task follow-up since both are DAG-shape
+   changes; transitive leaf set verified identical before/after.
 
 ### Rejected (checked, don't fit)
 
