@@ -42,11 +42,11 @@ depends = ["macos:formulae"]
 depends = ["macos:formulae"]
 
 # ---------------------------------------------------------------------------
-# full bootstrap (overrides the shared bootstrap task)
+# aggregates (depends-only; bodies are file tasks under mise/tasks/)
 # ---------------------------------------------------------------------------
 
-[tasks.bootstrap]
-description = "Full macOS bootstrap: brew, apps, shell, user config"
+[tasks."macos:system"]
+description = "macOS system aggregate: brew, formulae, casks, containers, stordcli, login shell"
 depends = [
   "macos:brew",
   "macos:formulae",
@@ -54,17 +54,12 @@ depends = [
   "macos:containers",
   "macos:stordcli",
   "shell:fish",
-  "fish:config",
-  "fish:env",
-  "git:config",
-  "git:includes",
-  "git:allowed-signers",
-  "neovim:kickstart",
-  "tmux:config",
-  "tmux:tpm",
-  "tmuxp:sessions",
-  "config:mise",
-  "config:atuin",
-  "config:starship",
-  "tools:cli",
 ]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full macOS bootstrap: brew, apps, shell, user config"
+depends = ["macos:system", "user:config"]

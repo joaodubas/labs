@@ -14,11 +14,22 @@ min_version = "2026.9.3"
 
 # ---------------------------------------------------------------------------
 # bootstrap entry task (runs after the tools phase). The OS variant files
-# override this with their full depends list; this base covers shared tasks.
+# override this with their full depends list; this base defers to the
+# user:config aggregate below so the shared list lives in exactly one place.
 # ---------------------------------------------------------------------------
 
 [tasks.bootstrap]
-description = "Shared bootstrap: ide clone, configs, git, fish, neovim, tmux/tmuxp"
+description = "Shared bootstrap: user config (ide clone, configs, git, fish, neovim, tmux/tmuxp)"
+depends = ["user:config"]
+
+# ---------------------------------------------------------------------------
+# user:config — aggregate over the 14 shared user-level tasks. Depends-only;
+# the task bodies are file tasks under mise/tasks/. Variants reference this
+# from their bootstrap overrides instead of repeating the list.
+# ---------------------------------------------------------------------------
+
+[tasks."user:config"]
+description = "Shared user-config aggregate: ide clone, configs, git, fish, neovim, tmux/tmuxp"
 depends = [
   "ide:clone",
   "config:mise",

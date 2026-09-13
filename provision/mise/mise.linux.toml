@@ -39,11 +39,11 @@ depends = ["linux:apt-base"]
 depends = ["linux:apt-base"]
 
 # ---------------------------------------------------------------------------
-# full bootstrap (overrides the shared bootstrap task)
+# aggregates (depends-only; bodies are file tasks under mise/tasks/)
 # ---------------------------------------------------------------------------
 
-[tasks.bootstrap]
-description = "Full Linux bootstrap: system packages, apps, fonts, shell, user config"
+[tasks."linux:system"]
+description = "Linux system aggregate: apt base, docker, flatpak, cuda-wsl, qemu, cedilla"
 depends = [
   "linux:apt-base",
   "linux:docker",
@@ -51,6 +51,11 @@ depends = [
   "linux:cuda-wsl",
   "linux:qemu",
   "linux:cedilla",
+]
+
+[tasks."linux:apps"]
+description = "Linux apps aggregate: desktop apps, nerd fonts, login shell"
+depends = [
   "apps:wezterm",
   "apps:zenbrowser",
   "apps:ghostty",
@@ -58,17 +63,12 @@ depends = [
   "apps:zed",
   "fonts:nerd",
   "shell:fish",
-  "fish:config",
-  "fish:env",
-  "git:config",
-  "git:includes",
-  "git:allowed-signers",
-  "neovim:kickstart",
-  "tmux:config",
-  "tmux:tpm",
-  "tmuxp:sessions",
-  "config:mise",
-  "config:atuin",
-  "config:starship",
-  "tools:cli",
 ]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full Linux bootstrap: system packages, apps, fonts, shell, user config"
+depends = ["linux:system", "linux:apps", "user:config"]
