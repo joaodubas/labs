@@ -8,7 +8,7 @@
 # patch is re-applied.
 set -euo pipefail
 
-PIN="626c660f54054953e630bef85fdf65e159c7516a"
+PIN="748f67f49dd9fed47686d1d15e8566d2cba8ed35"
 
 ide_dir="$HOME/.local/share/ide"
 if [ ! -d "$ide_dir/.git" ]; then
