@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="flatpak + gnome software plugin + flathub remote"
+#MISE depends=["linux:apt-base"]
+set -euo pipefail
+
+sudo apt-get install -y flatpak gnome-software-plugin-flatpak
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

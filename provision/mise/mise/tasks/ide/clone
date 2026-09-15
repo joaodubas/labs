@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE description="Clone/update the ide repo (all runtime configs come from it)"
+set -euo pipefail
+
+ide_dir="$HOME/.local/share/ide"
+if [ -d "$ide_dir/.git" ]; then
+  git -C "$ide_dir" fetch --prune origin
+  git -C "$ide_dir" reset --hard origin/main
+else
+  mkdir -p "$(dirname "$ide_dir")"
+  git clone https://gitea.dubas.dev/joao.dubas/ide.git "$ide_dir"
+fi

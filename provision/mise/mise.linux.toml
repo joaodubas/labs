@@ -1,0 +1,74 @@
+# Linux layer for the mise bootstrap. Loaded via `mise -E linux ...`
+# (bootstrap.sh picks the variant based on `uname -s`).
+#
+# Privileged operations use `sudo` inside the task commands: mise 2026.9.3
+# has no task-level `sudo` field (verified against `mise tasks validate`).
+
+# ---------------------------------------------------------------------------
+# system packages / desktop apps / fonts / shell — task bodies live in
+# mise/tasks/{linux,apps,fonts,shell}/* (file tasks); this file keeps only
+# depends stubs and the bootstrap override
+# ---------------------------------------------------------------------------
+
+# shell:fish body lives in mise/tasks/shell/fish (uname-branched); the stub
+# below pins its position in the apt chain
+[tasks."shell:fish"]
+depends = ["linux:apt-base"]
+
+# ---------------------------------------------------------------------------
+# ordering of shared tasks relative to the apt base (fields merge with
+# the file-task definitions under mise/tasks/; only `depends` is added here)
+# ---------------------------------------------------------------------------
+
+[tasks."config:mise"]
+depends = ["linux:apt-base"]
+
+[tasks."ide:clone"]
+depends = ["linux:apt-base"]
+
+[tasks."git:config"]
+depends = ["linux:apt-base"]
+
+[tasks."fish:config"]
+depends = ["shell:fish"]
+
+[tasks."neovim:kickstart"]
+depends = ["linux:apt-base"]
+
+[tasks."tmux:config"]
+depends = ["linux:apt-base"]
+
+# ---------------------------------------------------------------------------
+# aggregates (depends-only; bodies are file tasks under mise/tasks/)
+# ---------------------------------------------------------------------------
+
+[tasks."linux:system"]
+description = "Linux system aggregate: apt base, docker, flatpak, cuda-wsl, qemu, cedilla"
+depends = [
+  "linux:apt-base",
+  "linux:docker",
+  "linux:flatpak",
+  "linux:cuda-wsl",
+  "linux:qemu",
+  "linux:cedilla",
+]
+
+[tasks."linux:apps"]
+description = "Linux apps aggregate: desktop apps, nerd fonts, login shell"
+depends = [
+  "apps:wezterm",
+  "apps:zenbrowser",
+  "apps:ghostty",
+  "apps:cursor",
+  "apps:zed",
+  "fonts:nerd",
+  "shell:fish",
+]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full Linux bootstrap: system packages, apps, fonts, shell, user config"
+depends = ["linux:system", "linux:apps", "user:config"]

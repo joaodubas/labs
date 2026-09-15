@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Install the atuin config from the local ide clone"
+#MISE depends=["ide:clone"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+ide_dir="$HOME/.local/share/ide"
+mkdir -p "$config_home/atuin"
+cp "$ide_dir/config/atuin/config.toml" "$config_home/atuin/config.toml"

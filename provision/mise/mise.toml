@@ -1,0 +1,48 @@
+# mise bootstrap configuration — machine provisioning.
+#
+# Run via ./bootstrap.sh, which installs mise if missing and invokes
+# `mise -E linux|macos bootstrap`, layering mise.linux.toml or mise.macos.toml
+# over this file (mise 2026.9.3 has no automatic OS-variant config loading;
+# the -E/--env mechanism is used instead).
+#
+# This file holds the OS-independent surface: just the shared `bootstrap`
+# aggregator. All task bodies are file tasks under mise/tasks/<ns>/<name>
+# (extension-less, executable, #MISE frontmatter); OS-specific `depends`
+# wiring lives in the variant files.
+
+min_version = "2026.9.3"
+
+# ---------------------------------------------------------------------------
+# bootstrap entry task (runs after the tools phase). The OS variant files
+# override this with their full depends list; this base defers to the
+# user:config aggregate below so the shared list lives in exactly one place.
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Shared bootstrap: user config (ide clone, configs, git, fish, neovim, tmux/tmuxp)"
+depends = ["user:config"]
+
+# ---------------------------------------------------------------------------
+# user:config — aggregate over the 14 shared user-level tasks. Depends-only;
+# the task bodies are file tasks under mise/tasks/. Variants reference this
+# from their bootstrap overrides instead of repeating the list.
+# ---------------------------------------------------------------------------
+
+[tasks."user:config"]
+description = "Shared user-config aggregate: ide clone, configs, git, fish, neovim, tmux/tmuxp"
+depends = [
+  "ide:clone",
+  "config:mise",
+  "config:atuin",
+  "config:starship",
+  "tools:cli",
+  "git:config",
+  "git:includes",
+  "git:allowed-signers",
+  "fish:config",
+  "fish:env",
+  "neovim:kickstart",
+  "tmux:config",
+  "tmux:tpm",
+  "tmuxp:sessions",
+]

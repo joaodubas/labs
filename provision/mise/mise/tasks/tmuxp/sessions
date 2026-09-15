@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Install tmuxp session files from the local ide clone"
+#MISE depends=["ide:clone"]
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+ide_dir="$HOME/.local/share/ide"
+mkdir -p "$config_home/tmuxp"
+cp "$ide_dir/config/tmuxp/personal.yml" "$config_home/tmuxp/personal.yml"
+cp "$ide_dir/config/tmuxp/work.yml" "$config_home/tmuxp/work.yml"

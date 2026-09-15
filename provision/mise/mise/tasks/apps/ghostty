@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="ghostty via snap (classic); skipped where snapd can't run (no systemd)"
+#MISE depends=["linux:apt-base"]
+set -euo pipefail
+
+if [ ! -d /run/systemd/system ]; then
+  echo "systemd not available, skipping ghostty (snap requires it)"
+  exit 0
+fi
+sudo snap install ghostty --classic

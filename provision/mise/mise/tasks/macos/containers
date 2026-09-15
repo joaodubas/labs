@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="podman/docker CLI stacks + podman-mac-helper (sudo)"
+#MISE depends=["macos:brew"]
+#MISE interactive=true
+set -euo pipefail
+
+/opt/homebrew/bin/brew install podman podman-compose docker docker-buildx docker-compose
+/opt/homebrew/bin/brew install --cask podman-desktop docker-desktop
+sudo /opt/homebrew/bin/podman-mac-helper install

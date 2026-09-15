@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#MISE description="Docker engine via get.docker.com, docker group, docker-model-plugin"
+#MISE depends=["linux:apt-base"]
+#MISE wait_for=["linux:flatpak"]
+#MISE interactive=true
+# wait_for, not depends: docker needs apt-base's *result* (depends) but
+# only non-overlap with flatpak (both run apt-get; dpkg holds one global
+# lock). A standalone `mise run linux:docker` no longer drags flatpak in;
+# under full bootstrap the schedule is identical.
+set -euo pipefail
+
+curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+chmod 0750 /tmp/get-docker.sh
+(cd /tmp && sudo ./get-docker.sh)
+rm -f /tmp/get-docker.sh
+sudo groupadd -f docker
+sudo usermod --append --groups docker "$(id -un)"
+sudo apt-get update
+sudo apt-get install -y docker-model-plugin

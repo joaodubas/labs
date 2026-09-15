@@ -18,7 +18,9 @@ RUN apt-get update \
     ansible \
     curl \
     sudo \
-  && curl -fsSL https://get.comtrya.dev | bash
+  && echo 'install mise system-wide' \
+  && curl -fsSL https://mise.jdx.dev/install.sh | MISE_INSTALL_PATH=/usr/local/bin/mise sh \
+  && mise --version
 
 RUN groupadd --gid ${GID} playground \
   && useradd \

@@ -1,0 +1,65 @@
+# macOS layer for the mise bootstrap. Loaded via `mise -E macos ...`
+# (bootstrap.sh picks the variant based on `uname -s`).
+#
+# Privileged operations use `sudo` inside the task commands: mise 2026.9.3
+# has no task-level `sudo` field (verified against `mise tasks validate`).
+
+# ---------------------------------------------------------------------------
+# homebrew — task bodies live in mise/tasks/macos/* (file tasks);
+# this file keeps only depends stubs and the bootstrap override
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# shell
+# ---------------------------------------------------------------------------
+
+# shell:fish body lives in mise/tasks/shell/fish (uname-branched); the stub
+# below pins its position after the brew formulae that install fish
+[tasks."shell:fish"]
+depends = ["macos:formulae"]
+
+# ---------------------------------------------------------------------------
+# ordering of shared tasks relative to brew (fields merge with
+# the file-task definitions under mise/tasks/; only `depends` is added here)
+# ---------------------------------------------------------------------------
+
+[tasks."config:mise"]
+depends = ["macos:brew"]
+
+[tasks."ide:clone"]
+depends = ["macos:formulae"]
+
+[tasks."git:config"]
+depends = ["macos:formulae"]
+
+[tasks."fish:config"]
+depends = ["shell:fish"]
+
+[tasks."neovim:kickstart"]
+depends = ["macos:formulae"]
+
+[tasks."tmux:config"]
+depends = ["macos:formulae"]
+
+# ---------------------------------------------------------------------------
+# aggregates (depends-only; bodies are file tasks under mise/tasks/)
+# ---------------------------------------------------------------------------
+
+[tasks."macos:system"]
+description = "macOS system aggregate: brew, formulae, casks, containers, stordcli, login shell"
+depends = [
+  "macos:brew",
+  "macos:formulae",
+  "macos:casks",
+  "macos:containers",
+  "macos:stordcli",
+  "shell:fish",
+]
+
+# ---------------------------------------------------------------------------
+# full bootstrap (overrides the shared bootstrap task)
+# ---------------------------------------------------------------------------
+
+[tasks.bootstrap]
+description = "Full macOS bootstrap: brew, apps, shell, user config"
+depends = ["macos:system", "user:config"]

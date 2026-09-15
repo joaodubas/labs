@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="brew casks (GUI apps + nerd fonts)"
+#MISE depends=["macos:brew"]
+# font casks from the former user/font.yml are merged in here (plan §7.2)
+set -euo pipefail
+
+/opt/homebrew/bin/brew install --cask 1password-cli antigravity cursor cursor-cli gcloud-cli ghostty raycast spotifyd visual-studio-code wezterm zed zen font-go-mono-nerd-font font-jetbrains-mono-nerd-font

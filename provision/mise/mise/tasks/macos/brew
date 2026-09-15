@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Install Homebrew and persist brew shellenv in ~/.zprofile (append-once)"
+set -euo pipefail
+
+if ! command -v /opt/homebrew/bin/brew >/dev/null 2>&1; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+if ! grep -qF 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$HOME/.zprofile" 2>/dev/null; then
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+fi
+eval "$(/opt/homebrew/bin/brew shellenv)"

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Set global git configuration (identity, nvim difftool/mergetool, includeIf rules)"
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+git config --global user.email joao.dubas@gmail.com
+git config --global user.name "Joao P Dubas"
+git config --global gpg.ssh.allowedSignersFile "$config_home/git/allowed_signers"
+git config --global core.editor nvim
+git config --global diff.tool nvimdiff
+git config --global difftool.nvimdiff.layout "LOCAL,REMOTE"
+git config --global merge.tool nvimdiff
+git config --global mergetool.nvimdiff.layout "LOCAL,BASE,REMOTE / MERGED"
+git config --global "includeIf.hasconfig:remote.*.url:gitea:*/**.path" "$config_home/git/personal_gitea"
+git config --global "includeIf.hasconfig:remote.*.url:github:joaodubas/**.path" "$config_home/git/personal_github"
+git config --global "includeIf.gitdir:/opt/work/.path" "$config_home/git/work"

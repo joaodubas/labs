@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#MISE description="fish-4/neovim-unstable PPAs + base apt package set"
+#MISE interactive=true
+set -euo pipefail
+
+sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y ppa:fish-shell/release-4
+sudo add-apt-repository -y ppa:neovim-ppa/unstable
+sudo apt-get update
+sudo apt-get install -y \
+  autoconf automake build-essential ca-certificates curl doas fish fop g++ gcc \
+  gfortran git gosu gpg gpg-agent groff jq less libbz2-1.0 libbz2-dev libc6-dev \
+  libcurl3-dev libffi-dev libgl1-mesa-dev libglu1-mesa-dev liblzma-dev liblzma5 \
+  libncurses-dev libncurses5-dev libncursesw5-dev libnss-myhostname libodbc2 \
+  libpcre2-dev libpng-dev libreadline-dev libsctp-dev libsctp1 libsqlite3-dev \
+  libssh-dev libssl-dev libtool libwxgtk-webview3.2-dev libwxgtk3.2-dev \
+  libxml2-utils libxslt-dev libyaml-dev llvm locales m4 make ncal neovim \
+  net-tools openjdk-17-jdk openssh-client openssl parallel pkg-config \
+  python3-openssl sudo tk-dev tmux tmuxp unixodbc-dev unzip uuid-dev wget \
+  xorg-dev xsel xsltproc xz-utils zlib1g-dev

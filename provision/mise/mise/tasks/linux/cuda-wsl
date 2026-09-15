@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#MISE description="NVIDIA CUDA 13.0 toolkit for WSL2 (skipped outside WSL)"
+#MISE depends=["linux:apt-base"]
+#MISE wait_for=["linux:docker"]
+# dpkg-lock serialization: cuda-wsl needs apt-base's *result* (depends)
+# but only non-overlap with docker — both run apt-get and dpkg holds a
+# single global lock while mise runs tasks in parallel — so docker is
+# wait_for, not depends.
+set -euo pipefail
+
+if [ -z "${WSL_DISTRO_NAME:-}" ]; then
+  echo "not running under WSL, skipping cuda-wsl"
+  exit 0
+fi
+curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin -o /tmp/cuda-wsl-ubuntu.pin
+sudo mv /tmp/cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+curl -fSL -o /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+sudo dpkg -i /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
+sudo cp /var/cuda-repo-wsl-ubuntu-13-0-local/cuda-6B8B2C1B-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get install -y cuda-toolkit-13-0
+rm -f /tmp/cuda-repo-wsl-ubuntu-13-0-local_13.0.2-1_amd64.deb
