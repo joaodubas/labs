@@ -1,7 +1,7 @@
 ---
 services:
   git:
-    image: "gitea/gitea:28.0.0"
+    image: "gitea/gitea:28.1.0"
     init: true
     hostname: git
     environment:
@@ -38,7 +38,7 @@ services:
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
   renovate:
-    image: "renovate/renovate:44.134.1-full"
+    image: "renovate/renovate:44.151.5-full"
     init: true
     hostname: renovate
     environment:
