@@ -1,0 +1,17 @@
+[r0]
+rasp00 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+
+[r1]
+rasp01 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+
+[r2]
+rasp02 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+
+[r3]
+rasp03 ansible_user=pi ansible_become_pass=iO020045 ansible_ssh_private_key_file=~/.ssh/pi
+
+[dev:children]
+r0
+r1
+r2
+r3

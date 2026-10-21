@@ -1,0 +1,13 @@
+---
+- hosts: dev
+  become: yes
+  vars:
+    pip_package: python3-pip
+    pip_instal_packages:
+      - name: docker
+    docker_install_compose: true
+    docker_users:
+      - pi
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker_arm
