@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="QEMU/KVM tooling for the provision VM playground (provision/vm/vm.sh)"
+#MISE description="QEMU/KVM and libvirt tooling for the provision VM playground (provision/vm/vm.sh) and uncloud lab (provision/uncloud)"
 #MISE depends=["linux:apt-base"]
 #MISE wait_for=["linux:cuda-wsl"]
 # dpkg-lock serialization: qemu needs only apt-base's *result* (depends);
@@ -8,9 +8,19 @@
 # outside WSL).
 set -euo pipefail
 
-sudo apt-get install -y qemu-system-x86 qemu-utils cloud-image-utils
+sudo apt-get install -y \
+  qemu-system-x86 \
+  qemu-utils \
+  cloud-image-utils \
+  libvirt-daemon-system \
+  libvirt-clients \
+  bridge-utils \
+  libnss3-tools
+
 # group membership applies to new login sessions; vm.sh falls back to `sg kvm`
-if ! id -nG "$(id -un)" | grep -qw kvm; then
-  sudo usermod -aG kvm "$(id -un)"
-  echo "added to kvm group — re-login (or let vm.sh use sg kvm) for it to apply"
-fi
+for grp in kvm libvirt; do
+  if ! id -nG "$(id -un)" | grep -qw "$grp"; then
+    sudo usermod -aG "$grp" "$(id -un)"
+    echo "added to $grp group — re-login (or use sg $grp) for it to apply"
+  fi
+done

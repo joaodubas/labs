@@ -73,5 +73,19 @@ provision/vm/vm.sh provision   # copies provision/mise and runs bootstrap.sh
 Feasibility analysis, verification procedures and migration notes from the
 former comtrya-based setup: `docs/mise-bootstrap-migration.md`.
 
+## Multi-node Uncloud lab (`provision/uncloud`)
+
+A declarative multi-node [Uncloud][2] cluster lab using QEMU/KVM (`libvirt`),
+Technitium DNS (`*.internal`), and Caddy internal PKI (`local_certs`) lives in
+[`provision/uncloud`](./uncloud/README.md). It runs on both native Ubuntu Linux
+and Windows + WSL2:
+
+```bash
+cd provision/uncloud
+mise run up
+mise run deploy-demo
+```
+
 [0]: https://mise.jdx.dev/bootstrap.html
 [1]: https://gitea.dubas.dev/joao.dubas/ide
+[2]: https://uncloud.run/
