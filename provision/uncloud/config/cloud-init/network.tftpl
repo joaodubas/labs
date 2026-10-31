@@ -13,7 +13,7 @@ ethernets:
         via: ${gateway_ip}
     nameservers:
       search:
-        - internal
+        - ${domain_suffix}
       addresses:
         - ${dns_ip}
         - 1.1.1.1

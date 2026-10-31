@@ -45,6 +45,7 @@ resource "libvirt_cloudinit_disk" "node_seed" {
 
   user_data = templatefile("${local.lab_root}/config/cloud-init/user-data.tftpl", {
     hostname       = local.nodes[count.index].hostname
+    domain_suffix  = var.domain_suffix
     ssh_user       = var.ssh_user
     ssh_public_key = trimspace(tls_private_key.ssh.public_key_openssh)
   })
@@ -55,6 +56,7 @@ resource "libvirt_cloudinit_disk" "node_seed" {
     subnet_prefix = local.subnet_prefix
     gateway_ip    = local.gateway_ip
     dns_ip        = local.gateway_ip
+    domain_suffix = var.domain_suffix
   })
 }
 

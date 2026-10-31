@@ -1,6 +1,6 @@
 #cloud-config
 hostname: ${hostname}
-fqdn: ${hostname}.internal
+fqdn: ${hostname}.${domain_suffix}
 manage_etc_hosts: true
 users:
   - name: ${ssh_user}
