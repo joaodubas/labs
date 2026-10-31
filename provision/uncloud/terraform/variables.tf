@@ -32,6 +32,12 @@ variable "vm_memory_mb" {
   default     = 2048
 }
 
+variable "vm_autostart" {
+  description = "Start Uncloud VMs automatically with libvirtd when the host boots"
+  type        = bool
+  default     = false
+}
+
 variable "vm_disk_gb" {
   description = "Root disk size (in GB) per Uncloud VM node"
   type        = number

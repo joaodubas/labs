@@ -65,7 +65,7 @@ resource "libvirt_domain" "node" {
   name      = local.nodes[count.index].name
   memory    = var.vm_memory_mb
   vcpu      = var.vm_vcpu
-  autostart = false
+  autostart = var.vm_autostart
 
   cpu {
     mode = "host-passthrough"

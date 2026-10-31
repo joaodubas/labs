@@ -74,7 +74,9 @@ You can adjust the number of VM nodes or resources via Terraform variables:
 terraform -chdir=terraform apply -var="vm_count=3"
 ```
 
-All configurable variables (`vm_count`, `vm_vcpu`, `vm_memory_mb`, `vm_disk_gb`, `ubuntu_release`, `subnet_cidr`, `dns_admin_password`) are documented in [`terraform/variables.tf`](./terraform/variables.tf).
+All configurable variables (`vm_count`, `vm_vcpu`, `vm_memory_mb`, `vm_disk_gb`, `vm_autostart`, `ubuntu_release`, `subnet_cidr`, `dns_admin_password`) are documented in [`terraform/variables.tf`](./terraform/variables.tf).
+
+By default the lab does **not** survive a host reboot (VMs have `autostart = false`). Set `-var="vm_autostart=true"` to have libvirtd start the nodes on boot; `uncloudd` and Caddy come back on their own once the VMs are up.
 
 ## Using `uc` Directly
 
