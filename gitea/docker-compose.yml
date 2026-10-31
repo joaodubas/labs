@@ -9,10 +9,10 @@ services:
       USER_UID: ${UID:-1000}
       USER_GID: ${GID:-1000}
       RUN_MODE: ${GIT_RUN_MODE:-prod}
-      DOMAIN: ${GIT_DOMAIN:-localhost}
-      SSH_DOMAIN: ${GIT_SSH_DOMAIN:-localhost}
+      DOMAIN: ${GIT_DOMAIN:-gitea.internal}
+      SSH_DOMAIN: ${GIT_SSH_DOMAIN:-gitea.internal}
       HTTP_PORT: ${GIT_HTTP_PORT:-3000}
-      ROOT_URL: http://${GIT_DOMAIN:-localhost}:3000
+      ROOT_URL: ${GIT_ROOT_URL:-https://${GIT_DOMAIN:-gitea.internal}/}
       SSH_PORT: ${GIT_SSH_PORT:-222}
       SSH_LISTEN_PORT: ${GIT_SSH_LISTEN_PORT:-22}
       DB_TYPE: ${GIT_DB_TYPE:-sqlite3}
@@ -23,15 +23,18 @@ services:
     networks:
       - git_cicd_net
     ports:
+      - "${GIT_HTTP_PORT:-3000}:3000"
       - "222:22"
 
   cron:
     image: "premoweb/chadburn:1.0.7"
     init: true
     hostname: cron
+    configs:
+      - source: chadburn_config
+        target: /opt/chadburn/config.ini
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./config/cron:/opt/chadburn"
     restart: unless-stopped
     networks:
       - git_cicd_net
@@ -46,6 +49,7 @@ services:
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN:-token}
       RENOVATE_TOKEN: ${RENOVATE_TOKEN:-token}
+      RENOVATE_ENDPOINT: ${RENOVATE_ENDPOINT:-http://git:3000/api/v1}
       RENOVATE_GIT_AUTHOR: ${RENOVATE_GIT_AUTHOR:-'renovate <renovate@example.com>'}
       RENOVATE_CONFIG_FILE: "/opt/renovate/config.js"
       RENOVATE_BASE_DIR: "/opt/renovate_data"
@@ -53,14 +57,22 @@ services:
       chadburn.enabled: "true"
       chadburn.job-exec.renovate.schedule: "@every 30m"
       chadburn.job-exec.renovate.command: "/usr/local/sbin/renovate"
+    configs:
+      - source: renovate_config
+        target: /opt/renovate/config.js
     volumes:
-      - "./config/renovate:/opt/renovate"
       - "renovate_data:/opt/renovate_data"
     restart: unless-stopped
     networks:
       - git_cicd_net
     entrypoint: sleep
     command: infinity
+
+configs:
+  chadburn_config:
+    file: ./config/cron/config.ini
+  renovate_config:
+    file: ./config/renovate/config.js
 
 volumes:
   git_data: {}
