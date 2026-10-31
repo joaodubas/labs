@@ -88,6 +88,14 @@ uc ls
 uc caddy config
 ```
 
+## Lab-Grade Security Notes
+
+This lab optimizes for convenience, not hardening — keep that in mind before reusing these patterns elsewhere:
+
+- The Terraform state (`terraform/terraform.tfstate`) and `.cache/id_ed25519` contain the cluster SSH **private key** in plaintext. Don't copy or publish them.
+- The `uc` CLI is installed via `curl | sh`, pinned to a release (`UNCLOUD_VERSION`, default `v0.21.0`); the VM user has passwordless sudo.
+- The Technitium console uses a default password (`dns_admin_password`) bound to the bridge gateway only.
+
 ## Teardown
 
 ```bash

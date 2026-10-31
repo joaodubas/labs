@@ -78,13 +78,18 @@ ensure_services() {
   fi
 }
 
+# Pinned by default for supply-chain reproducibility; the install script
+# accepts VERSION with or without the 'v' prefix. Override with
+# UNCLOUD_VERSION=latest (or another tag) to float/change the version.
+UNCLOUD_VERSION="${UNCLOUD_VERSION:-v0.21.0}"
+
 ensure_uc_cli() {
   if command -v uc >/dev/null 2>&1; then
     echo ">> uncloud CLI (uc) already installed: $(command -v uc)"
     return 0
   fi
-  echo ">> installing uncloud CLI (uc) via https://get.uncloud.run/install.sh"
-  curl -fsS https://get.uncloud.run/install.sh | sh
+  echo ">> installing uncloud CLI (uc) ${UNCLOUD_VERSION} via https://get.uncloud.run/install.sh"
+  curl -fsS https://get.uncloud.run/install.sh | VERSION="$UNCLOUD_VERSION" sh
 }
 
 configure_resolved() {
