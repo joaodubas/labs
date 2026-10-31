@@ -1,0 +1,7 @@
+services:
+  whoami:
+    image: traefik/whoami:latest
+    scale: 2
+    x-ports:
+      - whoami.internal:80/https
+      - whoami.internal:80/http

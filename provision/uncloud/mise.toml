@@ -25,6 +25,20 @@ run = [
 description = "Extract and trust Caddy's internal Root CA on Linux/WSL2 (and Windows if WSL2)"
 run = "./scripts/host-linux.sh trust-ca"
 
+[tasks.deploy-demo]
+description = "Deploy the sample multi-replica whoami service (https://whoami.internal & http://whoami.internal)"
+run = [
+  "uc deploy -y -f apps/whoami/compose.yaml",
+  "./scripts/host-linux.sh trust-ca"
+]
+
+[tasks.deploy-gitea]
+description = "Deploy the Gitea + Chadburn + Renovate stack from ../../gitea/docker-compose.yml"
+run = [
+  "uc deploy -y -f ../../gitea/docker-compose.yml",
+  "./scripts/host-linux.sh trust-ca"
+]
+
 [tasks.status]
 description = "Display Uncloud machines, services, and DNS resolution status"
 run = """

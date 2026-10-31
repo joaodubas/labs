@@ -20,11 +20,14 @@ services:
     restart: unless-stopped
     volumes:
       - "git_data:/data"
-    networks:
-      - git_cicd_net
     ports:
       - "${GIT_HTTP_PORT:-3000}:3000"
       - "222:22"
+    x-machines: ${GIT_MACHINE:-uc-node-1}
+    x-ports:
+      - ${GIT_DOMAIN:-gitea.internal}:3000/https
+      - ${GIT_DOMAIN:-gitea.internal}:3000/http
+      - 222:22/tcp@host
 
   cron:
     image: "premoweb/chadburn:1.0.7"
@@ -36,9 +39,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: unless-stopped
-    networks:
-      - git_cicd_net
     command: daemon --config=/opt/chadburn/config.ini
+    x-machines: ${GIT_MACHINE:-uc-node-1}
 
   # TODO (jpd): to start renovate we must change ownership of renovate_data to
   # ubuntu user
@@ -63,10 +65,9 @@ services:
     volumes:
       - "renovate_data:/opt/renovate_data"
     restart: unless-stopped
-    networks:
-      - git_cicd_net
     entrypoint: sleep
     command: infinity
+    x-machines: ${GIT_MACHINE:-uc-node-1}
 
 configs:
   chadburn_config:
@@ -77,7 +78,3 @@ configs:
 volumes:
   git_data: {}
   renovate_data: {}
-
-networks:
-  git_cicd_net:
-    name: git_cicd_net

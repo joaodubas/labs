@@ -23,6 +23,12 @@ From `provision/uncloud`:
 # 1. Provision the bridge network, Technitium DNS, KVM VMs, Uncloud cluster, and Root CA trust
 mise run up
 
+# 2. Deploy the sample 2-replica whoami service (exposes https://whoami.internal & http://whoami.internal)
+mise run deploy-demo
+
+# 3. (Optional) Deploy the Gitea + Chadburn + Renovate stack from ../../gitea/docker-compose.yml
+mise run deploy-gitea
+
 # 4. Check cluster & DNS status
 mise run status
 
@@ -38,6 +44,11 @@ When running inside WSL2, `mise run up` automatically imports the Root CA into y
 ```powershell
 pwsh -ExecutionPolicy Bypass -File .\provision\uncloud\scripts\host-access.ps1 -Action Up
 ```
+
+Once applied, open any browser on Windows or Ubuntu and visit:
+- **`https://whoami.internal`** (or `http://whoami.internal`) — load-balanced across `uc-node-1` and `uc-node-2`
+- **`https://gitea.internal`** — Gitea web interface (when deployed via `mise run deploy-gitea`)
+- **`http://dns.internal:5380`** — Technitium DNS Web Console (default credentials: `admin` / `uncloud-lab-admin`)
 
 ## Deploying Services Outside `provision/uncloud` (e.g., `gitea/docker-compose.yml`)
 
