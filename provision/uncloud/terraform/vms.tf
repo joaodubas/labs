@@ -14,6 +14,25 @@ resource "local_file" "ssh_public_key" {
   file_permission = "0644"
 }
 
+# Single source of SSH connection settings, referenced by the local-exec
+# provisioners in uncloud.tf (-F flag) and handy for interactive access:
+#   ssh -F .cache/ssh_config uc-node-1
+resource "local_file" "ssh_config" {
+  filename        = "${local.cache_dir}/ssh_config"
+  file_permission = "0600"
+  content = join("\n", [
+    for node in local.nodes : <<-EOT
+      Host ${node.name} ${node.ip}
+        HostName ${node.ip}
+        User ${var.ssh_user}
+        IdentityFile ${local.ssh_key_path}
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+        LogLevel ERROR
+    EOT
+  ])
+}
+
 resource "libvirt_pool" "uncloud" {
   name = "uncloud-pool"
   type = "dir"

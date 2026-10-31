@@ -31,6 +31,17 @@ SEED_NODE_IP="${SEED_NODE_IP:-$(tf_output seed_node_ip)}"
 SEED_NODE_IP="${SEED_NODE_IP:-10.240.0.11}"
 SSH_USER="${SSH_USER:-playground}"
 
+# Single place for the lab SSH options; the Terraform-generated
+# .cache/ssh_config is not used here because this script must also work
+# before the first apply.
+ssh_node() {
+  ssh -i "$SSH_KEY_FILE" \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    -o LogLevel=ERROR \
+    "$@"
+}
+
 is_wsl() {
   grep -qi microsoft /proc/version 2>/dev/null
 }
@@ -100,19 +111,11 @@ extract_root_ca_if_missing() {
   curl -ksS --resolve "init.${DOMAIN_SUFFIX}:443:${SEED_NODE_IP}" "https://init.${DOMAIN_SUFFIX}" >/dev/null 2>&1 || true
 
   local caddy_cid
-  caddy_cid=$(ssh -i "$SSH_KEY_FILE" \
-    -o StrictHostKeyChecking=no \
-    -o UserKnownHostsFile=/dev/null \
-    -o LogLevel=ERROR \
-    "${SSH_USER}@${SEED_NODE_IP}" \
+  caddy_cid=$(ssh_node "${SSH_USER}@${SEED_NODE_IP}" \
     "sudo docker ps --filter 'name=caddy' --format '{{.ID}}' | head -n1" 2>/dev/null || true)
 
   if [ -n "$caddy_cid" ]; then
-    ssh -i "$SSH_KEY_FILE" \
-      -o StrictHostKeyChecking=no \
-      -o UserKnownHostsFile=/dev/null \
-      -o LogLevel=ERROR \
-      "${SSH_USER}@${SEED_NODE_IP}" \
+    ssh_node "${SSH_USER}@${SEED_NODE_IP}" \
       "sudo docker exec $caddy_cid cat /data/caddy/pki/authorities/local/root.crt" > "$ROOT_CA_FILE" 2>/dev/null || true
   fi
 

@@ -25,7 +25,7 @@ output "nodes" {
       name = node.name
       ip   = node.ip
       fqdn = node.fqdn
-      ssh  = "ssh -i ${local.ssh_key_path} ${var.ssh_user}@${node.ip}"
+      ssh  = "ssh -F ${local_file.ssh_config.filename} ${node.name}"
     }
   ]
 }

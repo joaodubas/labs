@@ -13,12 +13,9 @@ resource "terraform_data" "wait_for_vms_ssh" {
       node_ip="${local.nodes[count.index].ip}"
       echo ">> waiting for SSH and cloud-init on $${node_name} ($${node_ip}) ..."
       for _ in $(seq 1 120); do
-        if ssh -i "${local.ssh_key_path}" \
-             -o StrictHostKeyChecking=no \
-             -o UserKnownHostsFile=/dev/null \
-             -o LogLevel=ERROR \
+        if ssh -F "${local_file.ssh_config.filename}" \
              -o ConnectTimeout=5 \
-             "${var.ssh_user}@$${node_ip}" "cloud-init status --wait >/dev/null 2>&1 || true; true" 2>/dev/null; then
+             "$${node_ip}" "cloud-init status --wait >/dev/null 2>&1 || true; true" 2>/dev/null; then
           echo ">> $${node_name} ($${node_ip}) SSH is up"
           exit 0
         fi
@@ -143,25 +140,16 @@ resource "terraform_data" "uncloud_caddy" {
       curl -ksS --resolve "init.${var.domain_suffix}:443:$${seed_ip}" "https://init.${var.domain_suffix}" >/dev/null 2>&1 || true
 
       for _ in $(seq 1 30); do
-        caddy_cid=$(ssh -i "${local.ssh_key_path}" \
-          -o StrictHostKeyChecking=no \
-          -o UserKnownHostsFile=/dev/null \
-          -o LogLevel=ERROR \
-          "${var.ssh_user}@$${seed_ip}" \
+        caddy_cid=$(ssh -F "${local_file.ssh_config.filename}" \
+          "$${seed_ip}" \
           "sudo docker ps --filter 'name=caddy' --format '{{.ID}}' | head -n1" 2>/dev/null || true)
 
         if [ -n "$${caddy_cid}" ]; then
-          if ssh -i "${local.ssh_key_path}" \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            -o LogLevel=ERROR \
-            "${var.ssh_user}@$${seed_ip}" \
+          if ssh -F "${local_file.ssh_config.filename}" \
+            "$${seed_ip}" \
             "sudo docker exec $${caddy_cid} test -f /data/caddy/pki/authorities/local/root.crt" 2>/dev/null; then
-            ssh -i "${local.ssh_key_path}" \
-              -o StrictHostKeyChecking=no \
-              -o UserKnownHostsFile=/dev/null \
-              -o LogLevel=ERROR \
-              "${var.ssh_user}@$${seed_ip}" \
+            ssh -F "${local_file.ssh_config.filename}" \
+              "$${seed_ip}" \
               "sudo docker exec $${caddy_cid} cat /data/caddy/pki/authorities/local/root.crt" > "${local.root_ca_path}"
             echo ">> extracted Caddy Root CA to ${local.root_ca_path}"
             exit 0
