@@ -74,6 +74,12 @@ variable "ssh_user" {
   default     = "playground"
 }
 
+variable "dns_image" {
+  description = "Technitium DNS Server container image (pinned for reproducible applies)"
+  type        = string
+  default     = "technitium/dns-server:15.6.2"
+}
+
 variable "dns_admin_password" {
   description = "Admin password for the Technitium DNS Server web console and HTTP API"
   type        = string

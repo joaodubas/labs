@@ -1,5 +1,5 @@
 resource "docker_image" "technitium" {
-  name         = "technitium/dns-server:latest"
+  name         = var.dns_image
   keep_locally = true
 }
 
