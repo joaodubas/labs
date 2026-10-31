@@ -45,6 +45,8 @@ When running inside WSL2, `mise run up` automatically imports the Root CA into y
 pwsh -ExecutionPolicy Bypass -File .\provision\uncloud\scripts\host-access.ps1 -Action Up
 ```
 
+The Windows route is intentionally **not persistent**: the WSL2 IP changes on every reboot, so a persistent route would point at a stale gateway. Re-run the elevated command above after each Windows reboot.
+
 Once applied, open any browser on Windows or Ubuntu and visit:
 - **`https://whoami.internal`** (or `http://whoami.internal`) — load-balanced across `uc-node-1` and `uc-node-2`
 - **`https://gitea.internal`** — Gitea web interface (when deployed via `mise run deploy-gitea`)

@@ -87,6 +87,10 @@ if ($Action -eq "Up") {
 
     Clear-DnsClientCache
     Write-Host ">> Windows host access configured! You can now browse https://whoami.internal and http://dns.internal:5380" -ForegroundColor Green
+    # The route is deliberately NOT persistent (-p): the WSL2 IP changes on every
+    # Windows reboot, so a persistent route would point at a stale gateway.
+    Write-Host "Note: the route does not survive a Windows reboot (WSL2 IP changes). Re-run in an elevated PowerShell:" -ForegroundColor Yellow
+    Write-Host "  pwsh -ExecutionPolicy Bypass -File `"$PSCommandPath`" -Action Up" -ForegroundColor Cyan
 }
 elseif ($Action -eq "Down") {
     # 1. Remove Caddy Local Authority certs from Cert:\CurrentUser\Root
