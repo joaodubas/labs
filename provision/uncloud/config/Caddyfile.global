@@ -1,0 +1,9 @@
+{
+    # Issue certificates for all sites using Caddy's internal, locally-trusted CA
+    # synchronized across all Uncloud nodes via caddy.storage.uncloud.
+    local_certs
+
+    # Skip attempting to install the root CA inside the headless Caddy container;
+    # the host-linux.sh / host-access.ps1 scripts extract and trust root.crt on the host.
+    skip_install_trust
+}
