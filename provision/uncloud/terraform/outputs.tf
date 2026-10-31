@@ -3,6 +3,16 @@ output "bridge_gateway_ip" {
   value       = local.gateway_ip
 }
 
+output "seed_node_ip" {
+  description = "IP of the Uncloud seed node (uc-node-1)"
+  value       = local.nodes[0].ip
+}
+
+output "domain_suffix" {
+  description = "Internal DNS zone suffix for the lab"
+  value       = var.domain_suffix
+}
+
 output "technitium_web_console" {
   description = "Technitium DNS Server web console URL"
   value       = "http://dns.${var.domain_suffix}:${var.dns_web_port}"

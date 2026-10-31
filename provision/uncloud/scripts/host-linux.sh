@@ -14,8 +14,20 @@ SSH_KEY_FILE="$CACHE_DIR/id_ed25519"
 SYSTEM_CA_DEST="/usr/local/share/ca-certificates/uncloud-internal-root.crt"
 RESOLVED_DROPIN="/etc/systemd/resolved.conf.d/uncloud-internal.conf"
 CERT_NICKNAME="Uncloud Internal Lab Root CA"
+# Prefer Terraform outputs so custom variable values (subnet_cidr,
+# domain_suffix, ...) stay in sync; fall back to the defaults when there is
+# no state yet (e.g. 'prereqs' before the first apply) or terraform is
+# not installed yet.
+tf_output() {
+  command -v terraform >/dev/null 2>&1 || return 0
+  terraform -chdir="$LAB_DIR/terraform" output -raw "$1" 2>/dev/null || true
+}
+
+DNS_IP="${DNS_IP:-$(tf_output bridge_gateway_ip)}"
 DNS_IP="${DNS_IP:-10.240.0.1}"
+DOMAIN_SUFFIX="${DOMAIN_SUFFIX:-$(tf_output domain_suffix)}"
 DOMAIN_SUFFIX="${DOMAIN_SUFFIX:-internal}"
+SEED_NODE_IP="${SEED_NODE_IP:-$(tf_output seed_node_ip)}"
 SEED_NODE_IP="${SEED_NODE_IP:-10.240.0.11}"
 SSH_USER="${SSH_USER:-playground}"
 
