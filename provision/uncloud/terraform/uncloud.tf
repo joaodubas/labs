@@ -66,10 +66,34 @@ resource "terraform_data" "uncloud_init" {
 resource "terraform_data" "uncloud_add_node" {
   count = var.vm_count > 1 ? var.vm_count - 1 : 0
 
+  # Destroy-time provisioners may only reference `self`, so the values the
+  # destroy provisioner needs must be stored in `input`.
+  input = {
+    node_name   = local.nodes[count.index + 1].name
+    uncloud_cfg = local.uncloud_cfg
+  }
+
   triggers_replace = [
     terraform_data.uncloud_init.id,
     libvirt_domain.node[count.index + 1].id,
   ]
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["/usr/bin/env", "bash", "-c"]
+    command     = <<-EOT
+      set -euo pipefail
+      export UNCLOUD_CONFIG="${self.input.uncloud_cfg}"
+      node_name="${self.input.node_name}"
+
+      # --no-reset: the VM itself is destroyed right after, so wiping its
+      # containers/data first would be wasted work (and fails if unreachable).
+      if [ -f "$UNCLOUD_CONFIG" ] && uc machine ls 2>/dev/null | grep -qw "$${node_name}"; then
+        echo ">> deregistering $${node_name} from Uncloud cluster ..."
+        uc machine rm -y --no-reset "$${node_name}" || true
+      fi
+    EOT
+  }
 
   provisioner "local-exec" {
     interpreter = ["/usr/bin/env", "bash", "-c"]
