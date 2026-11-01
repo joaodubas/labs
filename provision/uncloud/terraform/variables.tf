@@ -80,10 +80,14 @@ variable "ssh_user" {
   default     = "playground"
 }
 
+# Pinned for reproducibility AND provider compatibility: kenske/technitium
+# 0.2.2 parses the login response as map[string]string, which breaks against
+# Technitium 15.x (its login JSON gained boolean fields). 13.6.0 is the
+# version the provider's own CI tests against.
 variable "dns_image" {
-  description = "Technitium DNS Server container image (pinned for reproducible applies)"
+  description = "Technitium DNS Server container image (pinned; must stay compatible with the kenske/technitium provider)"
   type        = string
-  default     = "technitium/dns-server:15.6.2"
+  default     = "technitium/dns-server:13.6.0"
 }
 
 variable "dns_admin_password" {
