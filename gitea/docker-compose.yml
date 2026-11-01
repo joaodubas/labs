@@ -20,9 +20,8 @@ services:
     restart: unless-stopped
     volumes:
       - "git_data:/data"
-    ports:
-      - "${GIT_HTTP_PORT:-3000}:3000"
-      - "222:22"
+    # NOTE: local port publishing lives in docker-compose.override.yml —
+    # Uncloud rejects services that declare both 'ports' and 'x-ports'.
     x-machines: ${GIT_MACHINE:-uc-node-1}
     x-ports:
       - ${GIT_DOMAIN:-gitea.internal}:3000/https

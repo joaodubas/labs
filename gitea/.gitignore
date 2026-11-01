@@ -1,0 +1,4 @@
+# The root .gitignore ignores **/docker-compose.override.yml (they are usually
+# personal), but this one is canonical: it carries the local-only port
+# publishing for 'docker compose up' (see the file header).
+!docker-compose.override.yml

@@ -1,0 +1,10 @@
+---
+# Local-only port publishing, loaded automatically by `docker compose up` and
+# never read by `uc deploy -f docker-compose.yml` (Uncloud rejects services
+# that declare both 'ports' and 'x-ports', so these cannot live in the main
+# file). Port exposure on the Uncloud cluster is handled by x-ports instead.
+services:
+  git:
+    ports:
+      - "${GIT_HTTP_PORT:-3000}:3000"
+      - "222:22"

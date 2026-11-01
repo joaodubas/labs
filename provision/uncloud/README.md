@@ -56,8 +56,8 @@ Once applied, open any browser on Windows or Ubuntu and visit:
 
 Services do not need to live inside `provision/uncloud`. For example, [`../../gitea/docker-compose.yml`](../../gitea/docker-compose.yml) lives in its own top-level folder and works with **both** local `docker compose up` and `uc deploy`:
 
-1. **`x-ports` and `x-machines` alongside `ports`**:
-   Docker Compose ignores `x-*` extensions, while Uncloud uses `x-ports` (exposing `gitea.internal:3000/https`, `/http`, and `222:22/tcp@host`) and `x-machines` (pinning stateful volumes and co-locating `cron` + `renovate` on `uc-node-1`).
+1. **`x-ports`/`x-machines` in the compose file, `ports` in `docker-compose.override.yml`**:
+   Uncloud rejects services that declare both `ports` and `x-ports`, so the canonical file carries only `x-ports` (exposing `gitea.internal:3000/https`, `/http`, and `222:22/tcp@host`) and `x-machines` (pinning stateful volumes and co-locating `cron` + `renovate` on `uc-node-1`). Local port publishing (`3000:3000`, `222:22`) lives in [`gitea/docker-compose.override.yml`](../../gitea/docker-compose.override.yml), which `docker compose up` loads automatically and `uc deploy -f docker-compose.yml` never reads.
 2. **File-based `configs:` instead of directory bind mounts**:
    [`gitea/docker-compose.yml`](../../gitea/docker-compose.yml) references `./config/cron/config.ini` and `./config/renovate/config.js` via top-level `configs:` (`file: ./config/...`). Local Docker Compose mounts them as files, and `uc deploy` automatically uploads them to the remote VM containers without needing manual `scp`/`rsync`.
 3. **Default compose network**:
