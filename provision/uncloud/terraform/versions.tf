@@ -33,6 +33,11 @@ provider "docker" {
   host = var.docker_host
 }
 
+# NOTE: this provider authenticates against the Technitium HTTP API at plan
+# time, which only exists after docker_container.technitium is applied. The
+# provider rejects unknown values, so the endpoint cannot be deferred — fresh
+# bootstraps must apply the network + DNS container first (see the 'up' task
+# in mise.toml, which does a targeted bootstrap apply before the full one).
 provider "technitium" {
   host     = "http://${local.gateway_ip}:${var.dns_web_port}"
   username = "admin"

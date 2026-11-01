@@ -16,7 +16,11 @@ run = "terraform init"
 [tasks.up]
 description = "Provision the Uncloud VM cluster, Technitium DNS (*.internal), Caddy internal PKI, and host trust"
 depends = ["prereqs", "init"]
+# The technitium provider authenticates against the DNS API at plan time and
+# rejects unknown values, so a fresh bootstrap must create the bridge network
+# and DNS container (and wait for the API) before a full plan can succeed.
 run = [
+  "terraform -chdir=terraform apply -auto-approve -target=libvirt_network.uncloud -target=docker_image.technitium -target=docker_volume.technitium_config -target=docker_container.technitium -target=terraform_data.wait_for_technitium",
   "terraform -chdir=terraform apply -auto-approve",
   "./scripts/host-linux.sh trust-ca"
 ]
