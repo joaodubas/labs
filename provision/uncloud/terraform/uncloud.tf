@@ -130,7 +130,10 @@ resource "terraform_data" "uncloud_caddy" {
       set -euo pipefail
       export UNCLOUD_CONFIG="${local.uncloud_cfg}"
       echo ">> deploying global Caddy configuration (local_certs) across cluster ..."
-      uc caddy deploy --caddyfile "${local.lab_root}/config/Caddyfile.global"
+      # uc caddy deploy has no -y flag (unlike uc deploy); its TUI runs in huh's
+      # accessible mode when stdin is not a TTY, so piping 'y' is the supported
+      # non-interactive path (EOF would cancel the deploy).
+      echo y | uc caddy deploy --caddyfile "${local.lab_root}/config/Caddyfile.global"
 
       echo ">> waiting for Caddy internal PKI root certificate to be generated ..."
       seed_ip="${local.nodes[0].ip}"
