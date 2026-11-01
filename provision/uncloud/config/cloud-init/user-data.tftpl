@@ -1,0 +1,21 @@
+#cloud-config
+hostname: ${hostname}
+fqdn: ${hostname}.${domain_suffix}
+manage_etc_hosts: true
+users:
+  - name: ${ssh_user}
+    groups: [adm, sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+ssh_pwauth: false
+package_update: true
+packages:
+  - curl
+  - ca-certificates
+  - gnupg
+growpart:
+  mode: auto
+  devices: ["/"]

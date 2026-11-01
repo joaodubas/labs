@@ -1,0 +1,19 @@
+version: 2
+ethernets:
+  id0:
+    match:
+      macaddress: "${mac_address}"
+    set-name: eth0
+    dhcp4: false
+    dhcp6: false
+    addresses:
+      - ${ip_address}/${subnet_prefix}
+    routes:
+      - to: default
+        via: ${gateway_ip}
+    nameservers:
+      search:
+        - ${domain_suffix}
+      addresses:
+        - ${dns_ip}
+        - 1.1.1.1

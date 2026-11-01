@@ -1,0 +1,9 @@
+.cache/
+# .terraform.lock.hcl is committed on purpose: it pins provider versions
+# for reproducible applies (bump deliberately via 'terraform init -upgrade').
+# The root .gitignore has **/.terraform*, so it needs an explicit negation.
+terraform/.terraform/
+!terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.*
+terraform/*.tfvars

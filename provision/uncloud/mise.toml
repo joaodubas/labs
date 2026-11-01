@@ -1,0 +1,71 @@
+[tools]
+terraform = "1.17.0"
+
+[env]
+UNCLOUD_CONFIG = "{{config_root}}/.cache/uncloud/config.yaml"
+
+[tasks.prereqs]
+description = "Install/verify Linux & WSL2 prerequisites (libvirtd, docker, uc CLI, systemd-resolved)"
+run = "./scripts/host-linux.sh prereqs"
+
+[tasks.init]
+description = "Initialize Terraform providers in terraform/"
+dir = "{{config_root}}/terraform"
+run = "terraform init"
+
+[tasks.up]
+description = "Provision the Uncloud VM cluster, Technitium DNS (*.internal), Caddy internal PKI, and host trust"
+depends = ["prereqs", "init"]
+# The technitium provider authenticates against the DNS API at plan time and
+# rejects unknown values, so a fresh bootstrap must create the bridge network
+# and DNS container (and wait for the API) before a full plan can succeed.
+run = [
+  "terraform -chdir=terraform apply -auto-approve -target=libvirt_network.uncloud -target=docker_image.technitium -target=docker_volume.technitium_config -target=docker_container.technitium -target=terraform_data.wait_for_technitium",
+  "terraform -chdir=terraform apply -auto-approve",
+  "./scripts/host-linux.sh trust-ca"
+]
+
+[tasks.trust-ca]
+description = "Extract and trust Caddy's internal Root CA on Linux/WSL2 (and Windows if WSL2)"
+run = "./scripts/host-linux.sh trust-ca"
+
+[tasks.deploy-demo]
+description = "Deploy the sample multi-replica whoami service (https://whoami.internal & http://whoami.internal)"
+run = [
+  "uc deploy -y -f apps/whoami/compose.yaml",
+  "./scripts/host-linux.sh trust-ca"
+]
+
+[tasks.deploy-gitea]
+description = "Deploy the Gitea + Chadburn + Renovate stack from ../../gitea/docker-compose.yml"
+run = [
+  "uc deploy -y -f ../../gitea/docker-compose.yml",
+  "./scripts/host-linux.sh trust-ca"
+]
+
+[tasks.status]
+description = "Display Uncloud machines, services, and DNS resolution status"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+echo "=== Uncloud Machines ==="
+uc machine ls || true
+echo ""
+echo "=== Uncloud Services ==="
+uc ls || true
+echo ""
+echo "=== DNS Resolution (whoami.internal @ 10.240.0.1) ==="
+resolvectl query whoami.internal 2>/dev/null || getent hosts whoami.internal || true
+"""
+
+[tasks.down]
+description = "Destroy the Terraform-managed Uncloud cluster, DNS container, and host DNS/CA overrides"
+run = [
+  "terraform -chdir=terraform destroy -auto-approve",
+  "./scripts/host-linux.sh cleanup"
+]
+
+[tasks.clean]
+description = "Destroy cluster and remove all cached images, volumes, and state in .cache/"
+depends = ["down"]
+run = "rm -rf .cache"
