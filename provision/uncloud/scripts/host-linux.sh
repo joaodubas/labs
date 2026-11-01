@@ -46,6 +46,23 @@ is_wsl() {
   grep -qi microsoft /proc/version 2>/dev/null
 }
 
+# Terraform's libvirt and docker providers talk to root-owned sockets
+# (/var/run/libvirt/libvirt-sock, /var/run/docker.sock), and qemu needs
+# /dev/kvm — a non-root user must be in these groups. Groups are created by
+# the packages, so this must run after ensure_packages/ensure_services.
+ensure_groups() {
+  if [ "$(id -u)" -eq 0 ]; then
+    return 0
+  fi
+  local grp
+  for grp in docker libvirt kvm; do
+    if getent group "$grp" >/dev/null && ! id -nG | grep -qw "$grp"; then
+      sudo usermod -aG "$grp" "$(id -un)"
+      echo ">> added $(id -un) to $grp group — re-login (or 'sg $grp') for it to apply"
+    fi
+  done
+}
+
 ensure_packages() {
   local missing=()
   command -v virsh >/dev/null 2>&1 || missing+=(libvirt-daemon-system libvirt-clients bridge-utils)
@@ -185,6 +202,7 @@ sync_windows_host() {
 cmd_prereqs() {
   ensure_packages
   ensure_services
+  ensure_groups
   ensure_uc_cli
   configure_resolved
   echo ">> Linux/WSL2 prerequisites ready"
